@@ -1,5 +1,6 @@
 const healthController = require("../controllers/health.controller");
 const projectStatusController = require("../controllers/project.controller");
+const storageStatusController = require("../controllers/storage.controller");
 
 function routeRequest(req, res, sendJson) {
   const method = req.method;
@@ -17,7 +18,8 @@ function routeRequest(req, res, sendJson) {
       routes: [
         "/",
         "/api/health",
-        "/api/project-status"
+        "/api/project-status",
+        "/api/storage/status"
       ]
     });
   }
@@ -28,6 +30,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/project-status") {
     return projectStatusController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/storage/status") {
+    return storageStatusController(req, res, sendJson);
   }
 
   return sendJson(res, 404, {

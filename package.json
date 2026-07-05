@@ -11,7 +11,9 @@
     "start": "node src/server.js",
     "dev": "node src/server.js",
     "version:1a": "node tools/version1a-server-smoke-test.js",
-    "server:smoke": "node tools/version1a-server-smoke-test.js"
+    "server:smoke": "node tools/version1a-server-smoke-test.js",
+    "version:1b": "node tools/version1b-storage-smoke-test.js",
+    "storage:smoke": "node tools/version1b-storage-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

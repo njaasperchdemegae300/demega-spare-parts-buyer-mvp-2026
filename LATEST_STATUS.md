@@ -1,20 +1,17 @@
 # LATEST STATUS
 
 Current Phase:
-Version 1A-FIX2 — Backend server foundation verified
+Version 1B-FIX1 — Basic Data Storage Foundation Verified
 
 Current Verdict:
 APPROVED
 
-Latest Approved Commit Before This Phase:
-63fff7d Version 1A-FIX1 repair smoke test command
-
-Fix Applied:
-- Added start script
-- Added dev script
-- Added version:1a smoke-test script
-- Added server:smoke script
-- Verified backend smoke test
+Approved Features:
+- JSON storage files exist
+- Data store service exists
+- Storage controller exists
+- GET /api/storage/status works
+- Version 1B storage smoke test returned APPROVED
 
 Next Phase:
-Version 1B — Basic data storage foundation
+Version 2A — Buyer Intake API Foundation
