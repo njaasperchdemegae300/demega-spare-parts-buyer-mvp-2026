@@ -30,7 +30,8 @@
     "version:7a": "node tools/version7a-buyer-pipeline-smoke-test.js",
     "version:7b": "node tools/version7b-buyer-pipeline-dashboard-smoke-test.js",
     "version:8a": "node tools/version8a-followup-reminder-smoke-test.js",
-    "version:8b": "node tools/version8b-followup-dashboard-smoke-test.js"
+    "version:8b": "node tools/version8b-followup-dashboard-smoke-test.js",
+    "version:9a": "node tools/version9a-admin-navigation-hub-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

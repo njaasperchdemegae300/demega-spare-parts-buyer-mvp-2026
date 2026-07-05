@@ -1,28 +1,27 @@
 # LATEST STATUS
 
 Current Phase:
-Version 8B — Follow-Up Reminder Dashboard Display
+Version 9A — Admin Navigation Hub Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /followups
-- GET /follow-up-reminders
-- Follow-up dashboard page
-- Follow-up metric cards
-- Follow-up reminder table
-- Status filter
-- Type filter
-- Due time display
-- Manual-action safety labels
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /api/admin-navigation/summary
+- Navigation links to Buyer Lead Dashboard
+- Navigation links to Inventory Command Center
+- Navigation links to Quote Draft Dashboard
+- Navigation links to Buyer Pipeline Dashboard
+- Navigation links to Follow-Up Reminder Dashboard
 
 Safety Confirmed:
-- Follow-up dashboard does not send WhatsApp
-- Follow-up dashboard does not message buyer automatically
-- Follow-up dashboard does not create quote automatically
-- sentToBuyer remains false
-- Manual action remains required
+- Admin hub is navigation-only
+- Admin hub does not send WhatsApp
+- Admin hub does not create quote automatically
+- Admin hub does not move pipeline stage automatically
+- Manual review remains required
 
 Next Phase:
-Version 9A — Admin Navigation Hub Foundation
+Version 9B — Admin Navigation Hub Dashboard Polish

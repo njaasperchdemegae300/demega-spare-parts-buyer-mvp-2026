@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Admin Navigation Hub</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 24px; }
+    header h1 { margin: 0; font-size: 26px; }
+    header p { margin: 8px 0 0; color: #d1d5db; }
+    main { padding: 24px; display: grid; gap: 20px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .card { background: white; border-radius: 14px; padding: 18px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); border: 1px solid #e5e7eb; }
+    .card h2 { margin: 0 0 8px; font-size: 18px; color: #111827; }
+    .card p { margin: 0 0 14px; color: #4b5563; font-size: 14px; line-height: 1.45; }
+    .card a { display: inline-block; padding: 10px 12px; background: #111827; color: white; text-decoration: none; border-radius: 8px; font-size: 14px; }
+    .card a:hover { opacity: 0.9; }
+    .badge { display: inline-block; padding: 5px 9px; border-radius: 999px; background: #dcfce7; color: #166534; font-size: 12px; margin-top: 10px; }
+    .panel { background: white; border-radius: 14px; padding: 18px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); border: 1px solid #e5e7eb; }
+    ul { margin: 8px 0 0; padding-left: 20px; color: #374151; }
+    li { margin: 6px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Admin Navigation Hub</h1>
+    <p>One safe command center for Spare-parts-bulk-buyer_Engine_2026 Ai Morden.</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Safety Status</h2>
+      <span class="badge">NO AUTO SEND</span>
+      <span class="badge">MANUAL REVIEW REQUIRED</span>
+      <span class="badge">NO QUOTE BEFORE STOCK CONFIRMATION</span>
+      <span class="badge">NO QUOTE BEFORE COMPATIBILITY CONFIRMATION</span>
+      <ul>
+        <li>This hub is navigation-only.</li>
+        <li>It does not send WhatsApp messages.</li>
+        <li>It does not create quotes automatically.</li>
+        <li>It does not move buyer pipeline stages automatically.</li>
+      </ul>
+    </section>
+
+    <section class="cards">
+      <div class="card">
+        <h2>Buyer Lead Dashboard</h2>
+        <p>View captured buyer leads, scoring, temperature, source quality, and manual review status.</p>
+        <a href="/dashboard">Open Buyer Dashboard</a>
+      </div>
+
+      <div class="card">
+        <h2>Inventory Command Center</h2>
+        <p>View inventory items, stock status, condition, compatibility notes, and quote-blocking safety.</p>
+        <a href="/inventory">Open Inventory</a>
+      </div>
+
+      <div class="card">
+        <h2>Quote Draft Dashboard</h2>
+        <p>View safe draft-only quote messages. Copy Draft is manual-only and does not send WhatsApp.</p>
+        <a href="/quotes">Open Quote Drafts</a>
+      </div>
+
+      <div class="card">
+        <h2>Buyer Pipeline Dashboard</h2>
+        <p>Track buyers through stages such as follow-up needed, manual contacted, won, lost, and blocked.</p>
+        <a href="/pipeline">Open Pipeline</a>
+      </div>
+
+      <div class="card">
+        <h2>Follow-Up Reminder Dashboard</h2>
+        <p>View manual follow-up reminders, due times, status, and safety labels.</p>
+        <a href="/followups">Open Follow-Ups</a>
+      </div>
+
+      <div class="card">
+        <h2>System Health</h2>
+        <p>Check whether the backend server foundation is alive and responding.</p>
+        <a href="/api/health">Open Health API</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

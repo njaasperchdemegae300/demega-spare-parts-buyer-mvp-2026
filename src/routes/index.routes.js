@@ -9,6 +9,7 @@ const inventoryMatchingController = require("../controllers/inventory-matching.c
 const quoteDraftController = require("../controllers/quote-draft.controller");
 const buyerPipelineController = require("../controllers/buyer-pipeline.controller");
 const followUpController = require("../controllers/followup.controller");
+const adminNavigationController = require("../controllers/admin-navigation.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -26,6 +27,8 @@ function routeRequest(req, res, sendJson) {
       message: "Small Smart Backend Server Foundation is alive.",
       routes: [
         "/",
+        "/admin-navigation-hub",
+        "/admin-hub",
         "/dashboard",
         "/admin",
         "/inventory",
@@ -35,6 +38,7 @@ function routeRequest(req, res, sendJson) {
         "/buyer-pipeline",
         "/followups",
         "/follow-up-reminders",
+        "/api/admin-navigation/summary",
         "/api/health",
         "/api/project-status",
         "/api/storage/status",
@@ -62,6 +66,14 @@ function routeRequest(req, res, sendJson) {
         "GET /api/leads"
       ]
     });
+  }
+
+  if (method === "GET" && (url.pathname === "/admin-navigation-hub" || url.pathname === "/admin-hub")) {
+    return adminNavigationController.adminNavigationHubController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/admin-navigation/summary") {
+    return adminNavigationController.adminNavigationSummaryController(req, res, sendJson);
   }
 
   if (method === "GET" && (url.pathname === "/dashboard" || url.pathname === "/admin")) {
