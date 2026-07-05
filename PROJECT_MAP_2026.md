@@ -83,3 +83,34 @@ Show buyer scoring intelligence inside the admin dashboard.
 
 ## Next Phase After Approval
 Version 5A — Inventory Command Center Foundation
+
+# Version 5B — Inventory Matching Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Match buyer requests to inventory while keeping quote gates blocked until manual stock and compatibility confirmation.
+
+## Routes
+- POST /api/inventory/match
+- GET /api/inventory/match-preview
+
+## Matching Fields
+- partName
+- partCategory
+- vehicleBrand
+- vehicleModel
+- vehicleYear
+- engineCode
+- stockStatus
+
+## Safety Rules
+- No automatic quote creation
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- Manual review remains required
+- safeToQuoteNow remains false unless all gates pass
+
+## Next Phase After Approval
+Version 6A — Safe Auto Quote Draft Foundation

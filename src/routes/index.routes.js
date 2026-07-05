@@ -5,6 +5,7 @@ const buyerIntakeController = require("../controllers/buyer-intake.controller");
 const dashboardController = require("../controllers/dashboard.controller");
 const scoringController = require("../controllers/scoring.controller");
 const inventoryController = require("../controllers/inventory.controller");
+const inventoryMatchingController = require("../controllers/inventory-matching.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -33,8 +34,10 @@ function routeRequest(req, res, sendJson) {
         "/api/scoring/summary",
         "/api/inventory",
         "/api/inventory/summary",
+        "/api/inventory/match-preview",
         "POST /api/buyer-intake",
         "POST /api/inventory",
+        "POST /api/inventory/match",
         "GET /api/leads"
       ]
     });
@@ -70,6 +73,14 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/inventory/summary") {
     return inventoryController.inventorySummaryController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/inventory/match-preview") {
+    return inventoryMatchingController.matchingPreviewController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/inventory/match") {
+    return inventoryMatchingController.matchInventoryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/health") {

@@ -1,27 +1,26 @@
 # LATEST STATUS
 
 Current Phase:
-Version 5A — Inventory Command Center Foundation
+Version 5B — Inventory Matching Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /inventory
-- GET /api/inventory
-- POST /api/inventory
-- GET /api/inventory/summary
-- Inventory validation
-- Inventory summary metrics
-- Read-only Inventory Command Center page
-- Invalid stock status blocking
+- POST /api/inventory/match
+- GET /api/inventory/match-preview
+- Direct buyer request inventory matching
+- Existing leadId inventory matching
+- Match score
+- Match reasons
+- Quote blocked reasons
+- safeToQuoteNow gate
 
 Safety Confirmed:
-- Inventory item does not become quote-ready automatically
-- stockConfirmedForQuote remains false at creation
-- compatibilityConfirmed remains false at creation
+- No automatic quote creation
+- No quote before stock confirmation
+- No quote before compatibility confirmation
 - Manual review remains required
-- No WhatsApp auto-send
 
 Next Phase:
-Version 5B — Inventory Matching Foundation
+Version 6A — Safe Auto Quote Draft Foundation
