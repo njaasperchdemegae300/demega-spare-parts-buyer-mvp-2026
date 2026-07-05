@@ -1,19 +1,22 @@
 # LATEST STATUS
 
 Current Phase:
-Version 2A — Buyer Intake API Foundation
+Version 2B — Buyer Intake Validation Hardening
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- POST /api/buyer-intake
-- GET /api/leads
-- Approved source validation
-- Manual review required before buyer reply
+- Strong buyer intake validation
+- Phone normalization
+- Approved urgency validation
+- Vehicle year validation
+- Message length protection
+- Possible duplicate detection
+- Unapproved/private-data source blocking
+- Manual review remains required
 - No automatic stock confirmation
 - No automatic compatibility confirmation
-- Unapproved private-data source blocked
 
 Next Phase:
-Version 2B — Buyer Intake Validation Hardening
+Version 2C — Buyer Intake Data Integrity Gate
