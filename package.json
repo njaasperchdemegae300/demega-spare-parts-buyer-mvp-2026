@@ -4,8 +4,10 @@
   "description": "Small Smart MVP for spare parts buyer capture, inventory match, safe quote, WhatsApp reply, and follow-up.",
   "main": "src/server.js",
   "scripts": {
-    "project:status": "node -e \"console.log('Demega Spare Parts Buyer MVP 2026 - Phase 0A Ready')\"",
-    "project:list": "node -e \"const fs=require('fs'); console.log(fs.readdirSync('.').sort().join('\\n'))\""
+    "project:status": "node -e \"console.log('Demega Spare Parts Buyer MVP 2026 - Ready')\"",
+    "project:list": "node -e \"const fs=require('fs'); console.log(fs.readdirSync('.').sort().join('\\\\n'))\"",
+    "project:health": "node tools/project-health-check.js",
+    "phase:0b": "node tools/project-health-check.js"
   },
   "keywords": [
     "spare-parts",

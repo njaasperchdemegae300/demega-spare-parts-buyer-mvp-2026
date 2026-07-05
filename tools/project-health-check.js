@@ -4,7 +4,7 @@ const { execSync } = require("child_process");
 
 const ROOT = process.cwd();
 const reportDir = path.join(ROOT, "reports");
-const reportPath = path.join(reportDir, "phase0b-project-health-check-report.md");
+const reportPath = path.join(reportDir, "phase0b-fix1-project-health-check-report.md");
 
 fs.mkdirSync(reportDir, { recursive: true });
 
@@ -45,49 +45,39 @@ function exists(item) {
 
 function run(command) {
   try {
-    return execSync(command, { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+    return execSync(command, {
+      cwd: ROOT,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"]
+    }).trim();
   } catch (error) {
-    return (error.stdout || error.stderr || error.message || "").trim();
+    return String(error.stdout || error.stderr || error.message || "").trim();
   }
 }
 
-const fileResults = requiredFiles.map(file => ({
-  file,
-  ok: exists(file)
-}));
-
-const folderResults = requiredFolders.map(folder => ({
-  folder,
-  ok: exists(folder)
-}));
-
-const nodeVersion = run("node -v");
-const npmVersion = run("npm -v");
-const gitStatus = run("git status --short");
-const latestCommit = run("git log -1 --oneline");
+const fileResults = requiredFiles.map(file => ({ file, ok: exists(file) }));
+const folderResults = requiredFolders.map(folder => ({ folder, ok: exists(folder) }));
 
 const failedFiles = fileResults.filter(x => !x.ok);
 const failedFolders = folderResults.filter(x => !x.ok);
 
-const verdict =
-  failedFiles.length === 0 &&
-  failedFolders.length === 0
-    ? "APPROVED"
-    : "NEEDS FIX";
+const verdict = failedFiles.length === 0 && failedFolders.length === 0
+  ? "APPROVED"
+  : "NEEDS FIX";
 
-const report = `# Phase 0B Project Health Check Report
+const report = `# Phase 0B-FIX1 Project Health Check Report
 
 ## Verdict
 ${verdict}
 
 ## Node Version
-${nodeVersion}
+${run("node -v")}
 
 ## NPM Version
-${npmVersion}
+${run("npm -v")}
 
 ## Latest Commit
-${latestCommit}
+${run("git log -1 --oneline")}
 
 ## Required Files
 ${fileResults.map(x => `- ${x.ok ? "PASS" : "FAIL"}: ${x.file}`).join("\n")}
@@ -97,16 +87,15 @@ ${folderResults.map(x => `- ${x.ok ? "PASS" : "FAIL"}: ${x.folder}`).join("\n")}
 
 ## Git Status Before Commit
 \`\`\`txt
-${gitStatus || "clean"}
+${run("git status --short") || "clean"}
 \`\`\`
 
 ## Rule
-APPROVED means the fresh project structure is ready for Version 1 backend foundation.
+APPROVED means the fresh project structure is ready for Version 1A backend server foundation.
 NEEDS FIX means missing files or folders must be repaired before coding backend.
 `;
 
 fs.writeFileSync(reportPath, report, "utf8");
-
 console.log(report);
 console.log("");
 console.log("Report saved:", reportPath);
