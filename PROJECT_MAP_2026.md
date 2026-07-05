@@ -209,3 +209,37 @@ Show manual follow-up reminders in a read-only dashboard.
 
 ## Next Phase After Approval
 Version 9A — Admin Navigation Hub Foundation
+
+# Version 9B — Admin Navigation Hub Dashboard Polish
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Polish the admin navigation hub with read-only live MVP metrics and safety-lock visibility.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+
+## Features
+- Live Business Snapshot
+- Buyer lead metrics
+- Inventory metrics
+- Quote draft metrics
+- Pipeline metrics
+- Follow-up metrics
+- Admin Safety Locks panel
+
+## Safety Rules
+- Navigation and visibility only
+- Metrics API is read-only
+- No WhatsApp auto-send
+- No automatic quote creation
+- No automatic pipeline movement
+- Manual review remains required
+
+## Next Phase After Approval
+Version 10A — Buyer Action Queue Foundation

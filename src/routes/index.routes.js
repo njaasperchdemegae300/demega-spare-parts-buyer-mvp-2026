@@ -39,6 +39,7 @@ function routeRequest(req, res, sendJson) {
         "/followups",
         "/follow-up-reminders",
         "/api/admin-navigation/summary",
+        "/api/admin-navigation/dashboard-metrics",
         "/api/health",
         "/api/project-status",
         "/api/storage/status",
@@ -74,6 +75,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/admin-navigation/summary") {
     return adminNavigationController.adminNavigationSummaryController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/admin-navigation/dashboard-metrics") {
+    return adminNavigationController.adminNavigationDashboardMetricsController(req, res, sendJson);
   }
 
   if (method === "GET" && (url.pathname === "/dashboard" || url.pathname === "/admin")) {
