@@ -177,3 +177,35 @@ Show buyer pipeline leads and pipeline events in a read-only admin dashboard.
 
 ## Next Phase After Approval
 Version 8A — Follow-Up Reminder Foundation
+
+# Version 8B — Follow-Up Reminder Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Show manual follow-up reminders in a read-only dashboard.
+
+## Routes
+- GET /followups
+- GET /follow-up-reminders
+- GET /api/followups
+- GET /api/followups/summary
+
+## Features
+- Follow-up metric cards
+- Follow-up reminder table
+- Status filter
+- Type filter
+- Due time display
+- Manual-action safety labels
+
+## Safety Rules
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic quote creation
+- sentToBuyer remains false
+- Manual action remains required
+
+## Next Phase After Approval
+Version 9A — Admin Navigation Hub Foundation

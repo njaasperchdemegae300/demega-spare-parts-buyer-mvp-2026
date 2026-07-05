@@ -1,28 +1,28 @@
 # LATEST STATUS
 
 Current Phase:
-Version 8A — Follow-Up Reminder Foundation
+Version 8B — Follow-Up Reminder Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /api/followups/preview
-- GET /api/followups
-- GET /api/followups/summary
-- POST /api/followups/create
-- Manual follow-up reminder creation
-- Follow-up type validation
-- Follow-up due time
-- Follow-up summary metrics
-- Unsafe follow-up type blocking
+- GET /followups
+- GET /follow-up-reminders
+- Follow-up dashboard page
+- Follow-up metric cards
+- Follow-up reminder table
+- Status filter
+- Type filter
+- Due time display
+- Manual-action safety labels
 
 Safety Confirmed:
-- Follow-up reminder does not send WhatsApp
-- Follow-up reminder does not message buyer automatically
-- Follow-up reminder does not create quote automatically
+- Follow-up dashboard does not send WhatsApp
+- Follow-up dashboard does not message buyer automatically
+- Follow-up dashboard does not create quote automatically
 - sentToBuyer remains false
 - Manual action remains required
 
 Next Phase:
-Version 8B — Follow-Up Reminder Dashboard Display
+Version 9A — Admin Navigation Hub Foundation

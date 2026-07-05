@@ -33,6 +33,8 @@ function routeRequest(req, res, sendJson) {
         "/quote-drafts",
         "/pipeline",
         "/buyer-pipeline",
+        "/followups",
+        "/follow-up-reminders",
         "/api/health",
         "/api/project-status",
         "/api/storage/status",
@@ -76,6 +78,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/pipeline" || url.pathname === "/buyer-pipeline")) {
     return buyerPipelineController.buyerPipelineDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/followups" || url.pathname === "/follow-up-reminders")) {
+    return followUpController.followUpDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/dashboard/summary") {

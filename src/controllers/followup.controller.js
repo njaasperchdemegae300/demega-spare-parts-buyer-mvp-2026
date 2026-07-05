@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const followUpService = require("../services/followup.service");
+
+function followUpDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "followup-reminder-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Follow-up reminder dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function followUpPreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -55,6 +71,7 @@ function followUpSummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  followUpDashboardController,
   followUpPreviewController,
   createFollowUpController,
   listFollowUpsController,
