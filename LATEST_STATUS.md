@@ -1,25 +1,27 @@
 # LATEST STATUS
 
 Current Phase:
-Version 4B-FIX1 — Buyer Scoring Dashboard Display Verified
+Version 5A — Inventory Command Center Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Lead Score display
-- Hot / Warm / Cold dashboard cards
-- Temperature column
-- Buyer Type column
-- Source Quality column
-- Scoring Reasons column
-- Dashboard remains read-only
-- Manual review remains required
+- GET /inventory
+- GET /api/inventory
+- POST /api/inventory
+- GET /api/inventory/summary
+- Inventory validation
+- Inventory summary metrics
+- Read-only Inventory Command Center page
+- Invalid stock status blocking
 
 Safety Confirmed:
+- Inventory item does not become quote-ready automatically
+- stockConfirmedForQuote remains false at creation
+- compatibilityConfirmed remains false at creation
+- Manual review remains required
 - No WhatsApp auto-send
-- No quote before stock confirmation
-- No quote before compatibility confirmation
 
 Next Phase:
-Version 5A — Inventory Command Center Foundation
+Version 5B — Inventory Matching Foundation

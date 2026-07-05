@@ -4,6 +4,7 @@ const storageStatusController = require("../controllers/storage.controller");
 const buyerIntakeController = require("../controllers/buyer-intake.controller");
 const dashboardController = require("../controllers/dashboard.controller");
 const scoringController = require("../controllers/scoring.controller");
+const inventoryController = require("../controllers/inventory.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -23,13 +24,17 @@ function routeRequest(req, res, sendJson) {
         "/",
         "/dashboard",
         "/admin",
+        "/inventory",
         "/api/health",
         "/api/project-status",
         "/api/storage/status",
         "/api/dashboard/summary",
         "/api/scoring/preview",
         "/api/scoring/summary",
+        "/api/inventory",
+        "/api/inventory/summary",
         "POST /api/buyer-intake",
+        "POST /api/inventory",
         "GET /api/leads"
       ]
     });
@@ -37,6 +42,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/dashboard" || url.pathname === "/admin")) {
     return dashboardController.adminDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/inventory") {
+    return inventoryController.inventoryPageController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/dashboard/summary") {
@@ -49,6 +58,18 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/scoring/summary") {
     return scoringController.scoringSummaryController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/inventory") {
+    return inventoryController.listInventoryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/inventory") {
+    return inventoryController.createInventoryController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/inventory/summary") {
+    return inventoryController.inventorySummaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/health") {
