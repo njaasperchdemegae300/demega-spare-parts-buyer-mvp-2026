@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const pipelineService = require("../services/buyer-pipeline.service");
+
+function buyerPipelineDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "buyer-pipeline-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Buyer pipeline dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function pipelinePreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -56,6 +72,7 @@ async function moveLeadStageController(req, res, sendJson) {
 }
 
 module.exports = {
+  buyerPipelineDashboardController,
   pipelinePreviewController,
   pipelineSummaryController,
   pipelineEventsController,

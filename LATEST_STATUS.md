@@ -1,27 +1,27 @@
 # LATEST STATUS
 
 Current Phase:
-Version 7A-FIX1 — Buyer Pipeline Foundation Verified
+Version 7B — Buyer Pipeline Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /api/pipeline/preview
-- GET /api/pipeline/summary
-- GET /api/pipeline/events
-- POST /api/pipeline/move
-- Manual pipeline stage movement
-- Pipeline event history
-- Pipeline summary metrics
-- Invalid/unsafe stage blocking
+- GET /pipeline
+- GET /buyer-pipeline
+- Buyer pipeline dashboard page
+- Pipeline metric cards
+- Buyer pipeline lead table
+- Pipeline stage filter
+- Pipeline event table
+- Manual-action safety labels
 
 Safety Confirmed:
-- Pipeline movement is manual-action only
-- Pipeline does not auto-send WhatsApp
-- Pipeline does not create quote automatically
+- Pipeline dashboard does not send WhatsApp
+- Pipeline dashboard does not auto-create quote
+- Pipeline dashboard does not move stages automatically
 - sentToBuyer remains false
 - Manual review remains required
 
 Next Phase:
-Version 7B — Buyer Pipeline Dashboard Display
+Version 8A — Follow-Up Reminder Foundation

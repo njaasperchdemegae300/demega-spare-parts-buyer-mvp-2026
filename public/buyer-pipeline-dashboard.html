@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Buyer Pipeline Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1150px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 180px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Buyer Pipeline Dashboard</h1>
+    <p>Manual-action only buyer pipeline. No WhatsApp auto-send. No automatic quote creation.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Leads</h2><strong id="totalLeads">0</strong></div>
+      <div class="card"><h2>Hot Leads</h2><strong id="hotLeads">0</strong></div>
+      <div class="card"><h2>Follow Up Needed</h2><strong id="followUpNeeded">0</strong></div>
+      <div class="card"><h2>Manual Review Required</h2><strong id="manualReviewRequired">0</strong></div>
+      <div class="card"><h2>Pipeline Events</h2><strong id="totalPipelineEvents">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">NO AUTO SEND</strong></div>
+    </section>
+
+    <section class="panel">
+      <h2>Buyer Pipeline Leads</h2>
+      <p class="muted">Read-only pipeline display. Stage movement stays manual through approved API only.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, stage..." />
+        <select id="stageFilter">
+          <option value="">All stages</option>
+          <option value="new">New</option>
+          <option value="manual_review">Manual Review</option>
+          <option value="inventory_matching">Inventory Matching</option>
+          <option value="quote_draft_ready">Quote Draft Ready</option>
+          <option value="manual_contacted">Manual Contacted</option>
+          <option value="follow_up_needed">Follow Up Needed</option>
+          <option value="won">Won</option>
+          <option value="lost">Lost</option>
+          <option value="blocked">Blocked</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Lead Score</th>
+            <th>Temperature</th>
+            <th>Pipeline Stage</th>
+            <th>Manual Review</th>
+            <th>Auto Send</th>
+            <th>Sent To Buyer</th>
+            <th>Updated</th>
+          </tr>
+        </thead>
+        <tbody id="pipelineRows">
+          <tr><td colspan="11">Loading pipeline...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>Pipeline Events</h2>
+      <p class="muted">Latest manual buyer-stage movements.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Note</th>
+            <th>Changed By</th>
+            <th>Safety</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="eventRows">
+          <tr><td colspan="9">Loading events...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allLeads = [];
+    let allEvents = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function getStage(lead) {
+      return lead.pipelineStage || lead.status || "new";
+    }
+
+    function getFilteredLeads() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const stage = document.getElementById("stageFilter").value;
+
+      return allLeads.filter(lead => {
+        const currentStage = getStage(lead);
+        const haystack = [
+          lead.buyerName,
+          lead.phone,
+          lead.partNeeded,
+          lead.vehicleBrand,
+          lead.vehicleModel,
+          lead.vehicleYear,
+          lead.engineCode,
+          lead.leadScore,
+          lead.temperature,
+          currentStage
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) && (!stage || currentStage === stage);
+      });
+    }
+
+    function renderLeads() {
+      const tbody = document.getElementById("pipelineRows");
+      const leads = getFilteredLeads();
+
+      if (!leads.length) {
+        tbody.innerHTML = '<tr><td colspan="11">No matching pipeline leads.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = leads.map(lead => {
+        const stage = getStage(lead);
+        const tempType = lead.temperature === "hot" ? "danger" : lead.temperature === "cold" ? "safe" : "";
+        return `
+          <tr>
+            <td>${escapeHtml(lead.buyerName)}</td>
+            <td>${escapeHtml(lead.phone)}</td>
+            <td>${escapeHtml(lead.partNeeded)}</td>
+            <td>${escapeHtml(`${lead.vehicleBrand || ""} ${lead.vehicleModel || ""} ${lead.vehicleYear || ""}`)}</td>
+            <td>${escapeHtml(lead.leadScore ?? "")}</td>
+            <td>${badge(lead.temperature || "unknown", tempType)}</td>
+            <td>${badge(stage)}</td>
+            <td>${lead.manualReviewRequired ? badge("Required", "danger") : badge("Reviewed", "safe")}</td>
+            <td>${lead.autoSendWhatsApp ? badge("Risk", "danger") : badge("False", "safe")}</td>
+            <td>${lead.sentToBuyer ? badge("Sent", "") : badge("False", "safe")}</td>
+            <td>${formatDate(lead.pipelineUpdatedAt || lead.updatedAt || lead.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderEvents() {
+      const tbody = document.getElementById("eventRows");
+
+      if (!allEvents.length) {
+        tbody.innerHTML = '<tr><td colspan="9">No pipeline events yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allEvents.slice(0, 40).map(event => {
+        const safety = [
+          event.manualActionOnly ? badge("Manual", "safe") : badge("Risk", "danger"),
+          event.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          event.quoteCreatedAutomatically ? badge("Auto-quote risk", "danger") : badge("No auto-quote", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(event.buyerName)}</td>
+            <td>${escapeHtml(event.buyerPhone)}</td>
+            <td>${escapeHtml(event.partNeeded)}</td>
+            <td>${badge(event.fromStage || "new")}</td>
+            <td>${badge(event.toStage || "")}</td>
+            <td>${escapeHtml(event.note)}</td>
+            <td>${escapeHtml(event.changedBy)}</td>
+            <td>${safety}</td>
+            <td>${formatDate(event.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadPipelineDashboard() {
+      const summaryResponse = await fetch("/api/pipeline/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalLeads").textContent = summary.totalLeads || 0;
+      document.getElementById("hotLeads").textContent = summary.hotLeads || 0;
+      document.getElementById("followUpNeeded").textContent = summary.followUpNeeded || 0;
+      document.getElementById("manualReviewRequired").textContent = summary.manualReviewRequired || 0;
+      document.getElementById("totalPipelineEvents").textContent = summary.totalPipelineEvents || 0;
+
+      const leadsResponse = await fetch("/api/leads");
+      const leadsData = await leadsResponse.json();
+      allLeads = Array.isArray(leadsData.leads) ? leadsData.leads : [];
+
+      const eventsResponse = await fetch("/api/pipeline/events");
+      const eventsData = await eventsResponse.json();
+      allEvents = Array.isArray(eventsData.events) ? eventsData.events : [];
+
+      renderLeads();
+      renderEvents();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderLeads);
+    document.getElementById("stageFilter").addEventListener("change", renderLeads);
+
+    loadPipelineDashboard().catch(error => {
+      document.getElementById("pipelineRows").innerHTML =
+        `<tr><td colspan="11">Pipeline dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

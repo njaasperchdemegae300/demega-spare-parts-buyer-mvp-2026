@@ -145,3 +145,35 @@ Show safe quote drafts in a read-only dashboard with copy-only manual review wor
 
 ## Next Phase After Approval
 Version 7A — Buyer Pipeline Foundation
+
+# Version 7B — Buyer Pipeline Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Show buyer pipeline leads and pipeline events in a read-only admin dashboard.
+
+## Routes
+- GET /pipeline
+- GET /buyer-pipeline
+- GET /api/pipeline/summary
+- GET /api/pipeline/events
+- GET /api/leads
+
+## Features
+- Pipeline metric cards
+- Buyer pipeline lead table
+- Pipeline stage filter
+- Pipeline event table
+- Manual-action safety labels
+
+## Safety Rules
+- No WhatsApp auto-send
+- No automatic quote creation
+- No automatic stage movement from dashboard
+- sentToBuyer remains false
+- Manual review remains required
+
+## Next Phase After Approval
+Version 8A — Follow-Up Reminder Foundation

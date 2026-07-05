@@ -30,6 +30,8 @@ function routeRequest(req, res, sendJson) {
         "/inventory",
         "/quotes",
         "/quote-drafts",
+        "/pipeline",
+        "/buyer-pipeline",
         "/api/health",
         "/api/project-status",
         "/api/storage/status",
@@ -65,6 +67,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/quotes" || url.pathname === "/quote-drafts")) {
     return quoteDraftController.quoteDraftDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/pipeline" || url.pathname === "/buyer-pipeline")) {
+    return buyerPipelineController.buyerPipelineDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/dashboard/summary") {
@@ -140,7 +146,7 @@ function routeRequest(req, res, sendJson) {
   }
 
   if (method === "GET" && url.pathname === "/api/storage/status") {
-    return storageStatusController(req, res, sendJson);
+    return storageController(req, res, sendJson);
   }
 
   if (method === "POST" && url.pathname === "/api/buyer-intake") {
