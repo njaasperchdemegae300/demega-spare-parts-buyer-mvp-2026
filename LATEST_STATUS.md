@@ -1,29 +1,30 @@
 # LATEST STATUS
 
 Current Phase:
-Version 10A — Buyer Action Queue Foundation
+Version 10B — Buyer Action Queue Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /api/action-queue/preview
-- GET /api/action-queue
-- GET /api/action-queue/summary
-- POST /api/action-queue/create
-- Manual buyer action creation
-- Action type validation
-- Priority and due-time calculation
-- Action queue summary metrics
-- Unsafe auto-send action blocking
+- GET /action-queue
+- GET /buyer-action-queue
+- Buyer action queue dashboard page
+- Action queue metric cards
+- Buyer action table
+- Status filter
+- Priority filter
+- Action type filter
+- Due time display
+- Manual-action safety labels
 
 Safety Confirmed:
-- Buyer action queue does not send WhatsApp
-- Buyer action queue does not message buyer automatically
-- Buyer action queue does not create quote automatically
-- Buyer action queue does not move pipeline stage automatically
+- Action queue dashboard does not send WhatsApp
+- Action queue dashboard does not message buyer automatically
+- Action queue dashboard does not create quote automatically
+- Action queue dashboard does not move pipeline stage automatically
 - sentToBuyer remains false
 - Manual action remains required
 
 Next Phase:
-Version 10B — Buyer Action Queue Dashboard Display
+Version 10C — Admin Hub Link Action Queue

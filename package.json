@@ -33,7 +33,8 @@
     "version:8b": "node tools/version8b-followup-dashboard-smoke-test.js",
     "version:9a": "node tools/version9a-admin-navigation-hub-smoke-test.js",
     "version:9b": "node tools/version9b-admin-navigation-hub-polish-smoke-test.js",
-    "version:10a": "node tools/version10a-buyer-action-queue-smoke-test.js"
+    "version:10a": "node tools/version10a-buyer-action-queue-smoke-test.js",
+    "version:10b": "node tools/version10b-buyer-action-queue-dashboard-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

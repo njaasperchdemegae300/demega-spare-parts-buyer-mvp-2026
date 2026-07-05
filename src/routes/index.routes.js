@@ -39,6 +39,8 @@ function routeRequest(req, res, sendJson) {
         "/buyer-pipeline",
         "/followups",
         "/follow-up-reminders",
+        "/action-queue",
+        "/buyer-action-queue",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/action-queue/preview",
@@ -84,6 +86,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/admin-navigation/dashboard-metrics") {
     return adminNavigationController.adminNavigationDashboardMetricsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && (url.pathname === "/action-queue" || url.pathname === "/buyer-action-queue")) {
+    return actionQueueController.actionQueueDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/action-queue/preview") {

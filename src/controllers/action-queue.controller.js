@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const actionQueueService = require("../services/action-queue.service");
+
+function actionQueueDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "buyer-action-queue-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Buyer action queue dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function actionQueuePreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -57,6 +73,7 @@ function actionQueueSummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  actionQueueDashboardController,
   actionQueuePreviewController,
   createActionController,
   listActionsController,

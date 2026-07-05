@@ -243,3 +243,37 @@ Polish the admin navigation hub with read-only live MVP metrics and safety-lock 
 
 ## Next Phase After Approval
 Version 10A — Buyer Action Queue Foundation
+
+# Version 10B — Buyer Action Queue Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Show safe manual buyer actions in a read-only dashboard.
+
+## Routes
+- GET /action-queue
+- GET /buyer-action-queue
+- GET /api/action-queue
+- GET /api/action-queue/summary
+
+## Features
+- Action queue metric cards
+- Buyer action table
+- Status filter
+- Priority filter
+- Action type filter
+- Due time display
+- Manual-action safety labels
+
+## Safety Rules
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic quote creation
+- No automatic pipeline movement
+- sentToBuyer remains false
+- Manual action remains required
+
+## Next Phase After Approval
+Version 10C — Admin Hub Link Action Queue
