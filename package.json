@@ -21,7 +21,8 @@
     "version:2c": "node tools/version2c-data-integrity-gate.js",
     "version:3a": "node tools/version3a-admin-dashboard-smoke-test.js",
     "version:3b": "node tools/version3b-dashboard-hardening-smoke-test.js",
-    "version:4a": "node tools/version4a-buyer-scoring-smoke-test.js"
+    "version:4a": "node tools/version4a-buyer-scoring-smoke-test.js",
+    "version:4b": "node tools/version4b-scoring-dashboard-display-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

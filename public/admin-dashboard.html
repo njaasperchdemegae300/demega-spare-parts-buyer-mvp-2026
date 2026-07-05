@@ -5,135 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Demega Admin Lead Dashboard</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #1f2937;
-    }
-    header {
-      background: #111827;
-      color: white;
-      padding: 22px;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-    header p {
-      margin: 6px 0 0;
-      color: #d1d5db;
-    }
-    main {
-      padding: 22px;
-      display: grid;
-      gap: 18px;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 14px;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
-    }
-    .card h2 {
-      margin: 0;
-      font-size: 14px;
-      color: #6b7280;
-    }
-    .card strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 30px;
-      color: #111827;
-    }
-    .panel {
-      background: white;
-      border-radius: 12px;
-      padding: 18px;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
-      overflow-x: auto;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 980px;
-    }
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #e5e7eb;
-      text-align: left;
-      font-size: 14px;
-      vertical-align: top;
-    }
-    th {
-      background: #f3f4f6;
-      color: #374151;
-    }
-    .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #fef3c7;
-      color: #92400e;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-    .safe {
-      background: #dcfce7;
-      color: #166534;
-    }
-    .danger {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-    .muted {
-      color: #6b7280;
-      font-size: 13px;
-    }
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    input, select {
-      padding: 9px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      min-width: 180px;
-    }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1250px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .score { font-weight: 700; font-size: 16px; }
+    .score-hot { color: #b91c1c; }
+    .score-warm { color: #92400e; }
+    .score-cold { color: #1d4ed8; }
+    .reasons { max-width: 280px; color: #4b5563; font-size: 12px; line-height: 1.4; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 180px; }
   </style>
 </head>
 <body>
   <header>
     <h1>Demega Admin Lead Dashboard</h1>
-    <p>Buyer lead review center for Spare-parts-bulk-buyer_Engine_2026 Ai Morden</p>
+    <p>Buyer scoring command center for Spare-parts-bulk-buyer_Engine_2026 Ai Morden</p>
   </header>
 
   <main>
     <section class="cards">
-      <div class="card">
-        <h2>Total Leads</h2>
-        <strong id="totalLeads">0</strong>
-      </div>
-      <div class="card">
-        <h2>Manual Review Required</h2>
-        <strong id="manualReviewRequired">0</strong>
-      </div>
-      <div class="card">
-        <h2>Possible Duplicates</h2>
-        <strong id="possibleDuplicates">0</strong>
-      </div>
-      <div class="card">
-        <h2>Safety Status</h2>
-        <strong class="badge safe">NO AUTO SEND</strong>
-      </div>
+      <div class="card"><h2>Total Leads</h2><strong id="totalLeads">0</strong></div>
+      <div class="card"><h2>Manual Review Required</h2><strong id="manualReviewRequired">0</strong></div>
+      <div class="card"><h2>Possible Duplicates</h2><strong id="possibleDuplicates">0</strong></div>
+      <div class="card"><h2>Hot Leads</h2><strong id="hotLeads">0</strong></div>
+      <div class="card"><h2>Warm Leads</h2><strong id="warmLeads">0</strong></div>
+      <div class="card"><h2>Cold Leads</h2><strong id="coldLeads">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">NO AUTO SEND</strong></div>
     </section>
 
     <section class="panel">
@@ -142,13 +54,14 @@
 
       <div class="toolbar">
         <input id="searchInput" placeholder="Search buyer, part, vehicle, location..." />
-        <select id="sourceFilter">
-          <option value="">All sources</option>
-        </select>
+        <select id="sourceFilter"><option value="">All sources</option></select>
         <select id="reviewFilter">
           <option value="">All review status</option>
           <option value="required">Manual review required</option>
           <option value="duplicate">Possible duplicate</option>
+          <option value="hot">Hot leads</option>
+          <option value="warm">Warm leads</option>
+          <option value="cold">Cold leads</option>
         </select>
       </div>
 
@@ -162,15 +75,18 @@
             <th>Location</th>
             <th>Source</th>
             <th>Urgency</th>
+            <th>Lead Score</th>
+            <th>Temperature</th>
+            <th>Buyer Type</th>
+            <th>Source Quality</th>
+            <th>Scoring Reasons</th>
             <th>Status</th>
             <th>Review</th>
             <th>Created</th>
           </tr>
         </thead>
         <tbody id="leadRows">
-          <tr>
-            <td colspan="10">Loading leads...</td>
-          </tr>
+          <tr><td colspan="15">Loading leads...</td></tr>
         </tbody>
       </table>
     </section>
@@ -227,7 +143,11 @@
           lead.location,
           lead.source,
           lead.urgency,
-          lead.status
+          lead.status,
+          lead.temperature,
+          lead.buyerType,
+          lead.sourceQuality,
+          lead.leadScore
         ].join(" ").toLowerCase();
 
         const searchOk = !search || haystack.includes(search);
@@ -235,7 +155,10 @@
         const reviewOk =
           !review ||
           (review === "required" && lead.manualReviewRequired === true) ||
-          (review === "duplicate" && lead.duplicateStatus === "possible_duplicate");
+          (review === "duplicate" && lead.duplicateStatus === "possible_duplicate") ||
+          (review === "hot" && lead.temperature === "hot") ||
+          (review === "warm" && lead.temperature === "warm") ||
+          (review === "cold" && lead.temperature === "cold");
 
         return searchOk && sourceOk && reviewOk;
       });
@@ -246,18 +169,16 @@
       const leads = getFilteredLeads();
 
       if (!leads.length) {
-        tbody.innerHTML = '<tr><td colspan="10">No matching buyer leads.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="15">No matching buyer leads.</td></tr>';
         return;
       }
 
       tbody.innerHTML = leads.map(lead => {
-        const reviewBadge = lead.manualReviewRequired
-          ? badge("Manual review", "danger")
-          : badge("Reviewed", "safe");
-
-        const duplicateBadge = lead.duplicateStatus === "possible_duplicate"
-          ? badge("Possible duplicate", "danger")
-          : badge("Unique", "safe");
+        const temp = lead.temperature || "cold";
+        const tempBadgeType = temp === "hot" ? "danger" : temp === "warm" ? "" : "safe";
+        const reviewBadge = lead.manualReviewRequired ? badge("Manual review", "danger") : badge("Reviewed", "safe");
+        const duplicateBadge = lead.duplicateStatus === "possible_duplicate" ? badge("Possible duplicate", "danger") : badge("Unique", "safe");
+        const reasons = Array.isArray(lead.scoringReasons) ? lead.scoringReasons.slice(0, 3).join(", ") : "";
 
         return `
           <tr>
@@ -268,6 +189,11 @@
             <td>${escapeHtml(lead.location)}</td>
             <td>${badge(lead.source || "unknown")}</td>
             <td>${badge(lead.urgency || "normal")}</td>
+            <td class="score score-${escapeHtml(temp)}">${escapeHtml(lead.leadScore ?? "")}</td>
+            <td>${badge(temp, tempBadgeType)}</td>
+            <td>${escapeHtml(lead.buyerType || "")}</td>
+            <td>${badge(lead.sourceQuality || "unknown")}</td>
+            <td class="reasons">${escapeHtml(reasons)}</td>
             <td>${escapeHtml(lead.status || "new")}</td>
             <td>${reviewBadge}<br>${duplicateBadge}</td>
             <td>${formatDate(lead.createdAt)}</td>
@@ -283,6 +209,9 @@
       document.getElementById("totalLeads").textContent = summary.totalLeads || 0;
       document.getElementById("manualReviewRequired").textContent = summary.manualReviewRequired || 0;
       document.getElementById("possibleDuplicates").textContent = summary.possibleDuplicates || 0;
+      document.getElementById("hotLeads").textContent = summary.hotLeads || 0;
+      document.getElementById("warmLeads").textContent = summary.warmLeads || 0;
+      document.getElementById("coldLeads").textContent = summary.coldLeads || 0;
 
       const leadsResponse = await fetch("/api/leads");
       const leadsData = await leadsResponse.json();
@@ -298,7 +227,7 @@
 
     loadDashboard().catch(error => {
       document.getElementById("leadRows").innerHTML =
-        `<tr><td colspan="10">Dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+        `<tr><td colspan="15">Dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
     });
   </script>
 </body>

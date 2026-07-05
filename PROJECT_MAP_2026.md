@@ -58,3 +58,28 @@ Seller-heavy marketplaces and catalog platforms are not buyer-lead sources by de
 
 ## Next Phase After Approval
 Version 2A — Buyer Intake API Foundation
+
+# Version 4B — Buyer Scoring Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Show buyer scoring intelligence inside the admin dashboard.
+
+## Features
+- Lead Score display
+- Hot / Warm / Cold dashboard cards
+- Temperature column
+- Buyer Type column
+- Source Quality column
+- Scoring Reasons column
+
+## Safety Rules
+- No auto-send WhatsApp
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- Manual review remains required
+
+## Next Phase After Approval
+Version 5A — Inventory Command Center Foundation
