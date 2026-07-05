@@ -1,19 +1,33 @@
 # LATEST STATUS
 
 Current Phase:
-Version 1C — Project Alignment Gate
+Version 1D-FIX1 — Traffic Source Registry + Source TrustGate Verified
 
 Current Verdict:
 APPROVED
 
 Approved Decision:
-The small smart MVP is aligned with the original Spare-parts-bulk-buyer_Engine_2026 Ai Morden project.
+The project now separates true buyer-intent traffic sources from market-intelligence-only sources.
 
-Latest Approved Features:
-- Backend server foundation
-- Basic JSON data storage
-- Project alignment gate
-- Exact Product Picture Agent recorded as future planned feature
+Approved Buyer-Intent Sources:
+- RFQ
+- opt-in form
+- inbound WhatsApp click-to-chat
+- public business inquiry
+- approved API
+- approved partnership
+- manual real-buyer intake
+
+Market Intelligence Only:
+- eBay Motors
+- OEC Marketplace / RepairLink
+- PartsTech
+- RockAuto
+- AutoZone
+- RevolutionParts
+- Car-Part.com
+- Marketparts
+- Jiji-like seller-heavy marketplaces
 
 Next Phase:
 Version 2A — Buyer Intake API Foundation

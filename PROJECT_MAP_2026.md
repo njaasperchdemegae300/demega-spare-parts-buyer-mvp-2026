@@ -29,3 +29,32 @@ Goal: Test server, routes, files, logs, and screenshots.
 
 ## Version 9 — Version Guardian and Controlled Test
 Goal: Approve, block, or mark needs-fix before live testing.
+
+# Version 1D — Traffic Source Registry + Source TrustGate
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Keep the MVP aligned with Spare-parts-bulk-buyer_Engine_2026 Ai Morden.
+
+## Traffic Source Registry
+docs/TRAFFIC_SOURCE_REGISTRY.md
+
+## TrustGate Rule
+Only buyer-intent sources are approved.
+
+## Approved Buyer-Intent Source Types
+- RFQ
+- opt-in form
+- inbound WhatsApp click-to-chat
+- public business inquiry
+- approved API
+- approved partnership
+- manual buyer intake after real buyer conversation
+
+## Market Intelligence Only
+Seller-heavy marketplaces and catalog platforms are not buyer-lead sources by default.
+
+## Next Phase After Approval
+Version 2A — Buyer Intake API Foundation

@@ -14,7 +14,8 @@
     "server:smoke": "node tools/version1a-server-smoke-test.js",
     "version:1b": "node tools/version1b-storage-smoke-test.js",
     "storage:smoke": "node tools/version1b-storage-smoke-test.js",
-    "version:1c": "node tools/version1c-project-alignment-gate.js"
+    "version:1c": "node tools/version1c-project-alignment-gate.js",
+    "version:1d": "node tools/version1d-traffic-source-gate.js"
   },
   "keywords": [
     "spare-parts",
