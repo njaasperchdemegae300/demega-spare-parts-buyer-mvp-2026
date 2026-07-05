@@ -8,6 +8,7 @@ const inventoryController = require("../controllers/inventory.controller");
 const inventoryMatchingController = require("../controllers/inventory-matching.controller");
 const quoteDraftController = require("../controllers/quote-draft.controller");
 const buyerPipelineController = require("../controllers/buyer-pipeline.controller");
+const followUpController = require("../controllers/followup.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -47,11 +48,15 @@ function routeRequest(req, res, sendJson) {
         "/api/pipeline/preview",
         "/api/pipeline/summary",
         "/api/pipeline/events",
+        "/api/followups/preview",
+        "/api/followups",
+        "/api/followups/summary",
         "POST /api/buyer-intake",
         "POST /api/inventory",
         "POST /api/inventory/match",
         "POST /api/quotes/draft",
         "POST /api/pipeline/move",
+        "POST /api/followups/create",
         "GET /api/leads"
       ]
     });
@@ -137,6 +142,22 @@ function routeRequest(req, res, sendJson) {
     return buyerPipelineController.moveLeadStageController(req, res, sendJson);
   }
 
+  if (method === "GET" && url.pathname === "/api/followups/preview") {
+    return followUpController.followUpPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/followups") {
+    return followUpController.listFollowUpsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/followups/summary") {
+    return followUpController.followUpSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/followups/create") {
+    return followUpController.createFollowUpController(req, res, sendJson);
+  }
+
   if (method === "GET" && url.pathname === "/api/health") {
     return healthController(req, res, sendJson);
   }
@@ -146,7 +167,7 @@ function routeRequest(req, res, sendJson) {
   }
 
   if (method === "GET" && url.pathname === "/api/storage/status") {
-    return storageController(req, res, sendJson);
+    return storageStatusController(req, res, sendJson);
   }
 
   if (method === "POST" && url.pathname === "/api/buyer-intake") {

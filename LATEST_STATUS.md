@@ -1,27 +1,28 @@
 # LATEST STATUS
 
 Current Phase:
-Version 7B — Buyer Pipeline Dashboard Display
+Version 8A — Follow-Up Reminder Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /pipeline
-- GET /buyer-pipeline
-- Buyer pipeline dashboard page
-- Pipeline metric cards
-- Buyer pipeline lead table
-- Pipeline stage filter
-- Pipeline event table
-- Manual-action safety labels
+- GET /api/followups/preview
+- GET /api/followups
+- GET /api/followups/summary
+- POST /api/followups/create
+- Manual follow-up reminder creation
+- Follow-up type validation
+- Follow-up due time
+- Follow-up summary metrics
+- Unsafe follow-up type blocking
 
 Safety Confirmed:
-- Pipeline dashboard does not send WhatsApp
-- Pipeline dashboard does not auto-create quote
-- Pipeline dashboard does not move stages automatically
+- Follow-up reminder does not send WhatsApp
+- Follow-up reminder does not message buyer automatically
+- Follow-up reminder does not create quote automatically
 - sentToBuyer remains false
-- Manual review remains required
+- Manual action remains required
 
 Next Phase:
-Version 8A — Follow-Up Reminder Foundation
+Version 8B — Follow-Up Reminder Dashboard Display
