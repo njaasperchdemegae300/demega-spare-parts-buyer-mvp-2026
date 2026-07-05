@@ -1,4 +1,5 @@
 const dataStore = require("./data-store");
+const buyerScoring = require("./buyer-scoring.service");
 
 const allowedSources = [
   "owned_landing_page",
@@ -100,6 +101,8 @@ function validateBuyerLead(input) {
 
 function createBuyerLead(input) {
   const duplicate = findPossibleDuplicate(input);
+  const duplicateStatus = duplicate ? "possible_duplicate" : "unique";
+  const scoring = buyerScoring.calculateBuyerScore({ ...input, duplicateStatus });
 
   const lead = {
     id: dataStore.createId("lead"),
@@ -115,8 +118,9 @@ function createBuyerLead(input) {
     urgency: cleanText(input.urgency || "normal"),
     message: cleanText(input.message),
     status: "new",
-    duplicateStatus: duplicate ? "possible_duplicate" : "unique",
+    duplicateStatus,
     possibleDuplicateLeadId: duplicate ? duplicate.id : null,
+    ...scoring,
     quoteStatus: "not_ready",
     stockConfirmed: false,
     compatibilityConfirmed: false,

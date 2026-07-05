@@ -23,6 +23,9 @@ function dashboardSummaryController(req, res, sendJson) {
   const bySource = {};
   let manualReviewRequired = 0;
   let possibleDuplicates = 0;
+  let hotLeads = 0;
+  let warmLeads = 0;
+  let coldLeads = 0;
 
   for (const lead of leads) {
     byStatus[lead.status || "unknown"] = (byStatus[lead.status || "unknown"] || 0) + 1;
@@ -30,6 +33,10 @@ function dashboardSummaryController(req, res, sendJson) {
 
     if (lead.manualReviewRequired === true) manualReviewRequired += 1;
     if (lead.duplicateStatus === "possible_duplicate") possibleDuplicates += 1;
+
+    if (lead.temperature === "hot") hotLeads += 1;
+    else if (lead.temperature === "warm") warmLeads += 1;
+    else coldLeads += 1;
   }
 
   return sendJson(res, 200, {
@@ -38,6 +45,9 @@ function dashboardSummaryController(req, res, sendJson) {
     totalLeads: leads.length,
     manualReviewRequired,
     possibleDuplicates,
+    hotLeads,
+    warmLeads,
+    coldLeads,
     byStatus,
     bySource,
     safety: {

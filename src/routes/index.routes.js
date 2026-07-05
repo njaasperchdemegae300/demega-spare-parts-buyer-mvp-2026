@@ -3,6 +3,7 @@ const projectStatusController = require("../controllers/project.controller");
 const storageStatusController = require("../controllers/storage.controller");
 const buyerIntakeController = require("../controllers/buyer-intake.controller");
 const dashboardController = require("../controllers/dashboard.controller");
+const scoringController = require("../controllers/scoring.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -26,6 +27,8 @@ function routeRequest(req, res, sendJson) {
         "/api/project-status",
         "/api/storage/status",
         "/api/dashboard/summary",
+        "/api/scoring/preview",
+        "/api/scoring/summary",
         "POST /api/buyer-intake",
         "GET /api/leads"
       ]
@@ -38,6 +41,14 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/dashboard/summary") {
     return dashboardController.dashboardSummaryController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/scoring/preview") {
+    return scoringController.scoringPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/scoring/summary") {
+    return scoringController.scoringSummaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/health") {
