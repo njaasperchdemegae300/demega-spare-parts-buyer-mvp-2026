@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const quoteDraftService = require("../services/quote-draft.service");
+
+function quoteDraftDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "quote-drafts-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Quote draft dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 async function createQuoteDraftController(req, res, sendJson) {
   try {
@@ -69,6 +85,7 @@ function quotePreviewController(req, res, sendJson) {
 }
 
 module.exports = {
+  quoteDraftDashboardController,
   createQuoteDraftController,
   listQuoteDraftsController,
   quoteSummaryController,

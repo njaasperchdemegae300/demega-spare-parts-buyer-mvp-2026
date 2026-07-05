@@ -1,26 +1,28 @@
 # LATEST STATUS
 
 Current Phase:
-Version 6A — Safe Auto Quote Draft Foundation
+Version 6B-FIX1 — Quote Draft Dashboard Display Verified
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- POST /api/quotes/draft
-- GET /api/quotes
-- GET /api/quotes/summary
-- GET /api/quotes/preview
-- Safe WhatsApp-ready quote draft generation
-- Quote gate blocking before confirmation
-- Draft-only quote status
+- GET /quotes
+- GET /quote-drafts
+- Quote draft dashboard page
+- Quote draft table
+- Draft message display
+- Copy Draft button
+- Draft-only metrics
+- Manual review metrics
+- Auto-send safety metrics
 
 Safety Confirmed:
-- No quote before stock confirmation
-- No quote before compatibility confirmation
-- No WhatsApp auto-send
+- Quote dashboard does not send WhatsApp
+- Copy Draft only copies text
 - sentToBuyer remains false
-- Manual review before sending
+- autoSendWhatsApp remains false
+- Manual review before sending remains required
 
 Next Phase:
-Version 6B — Quote Draft Dashboard Display
+Version 7A — Buyer Pipeline Foundation

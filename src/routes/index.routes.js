@@ -27,6 +27,8 @@ function routeRequest(req, res, sendJson) {
         "/dashboard",
         "/admin",
         "/inventory",
+        "/quotes",
+        "/quote-drafts",
         "/api/health",
         "/api/project-status",
         "/api/storage/status",
@@ -54,6 +56,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/inventory") {
     return inventoryController.inventoryPageController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/quotes" || url.pathname === "/quote-drafts")) {
+    return quoteDraftController.quoteDraftDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/dashboard/summary") {

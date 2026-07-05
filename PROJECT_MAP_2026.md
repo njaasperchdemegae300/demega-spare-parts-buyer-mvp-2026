@@ -114,3 +114,34 @@ Match buyer requests to inventory while keeping quote gates blocked until manual
 
 ## Next Phase After Approval
 Version 6A — Safe Auto Quote Draft Foundation
+
+# Version 6B — Quote Draft Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Show safe quote drafts in a read-only dashboard with copy-only manual review workflow.
+
+## Routes
+- GET /quotes
+- GET /quote-drafts
+- GET /api/quotes
+- GET /api/quotes/summary
+
+## Features
+- Quote draft table
+- Draft message display
+- Copy Draft button
+- Draft-only metrics
+- Manual review metrics
+- Auto-send safety metrics
+
+## Safety Rules
+- No WhatsApp auto-send
+- Copy Draft only copies text
+- sentToBuyer remains false
+- Manual review before sending
+
+## Next Phase After Approval
+Version 7A — Buyer Pipeline Foundation
