@@ -29,7 +29,7 @@
 <body>
   <header>
     <h1>Demega Admin Navigation Hub</h1>
-    <p>One polished safe command center for Spare-parts-bulk-buyer_Engine_2026 Ai Morden.</p>
+    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, and buyer action queue.</p>
   </header>
 
   <main>
@@ -39,12 +39,14 @@
       <span class="badge">MANUAL REVIEW REQUIRED</span>
       <span class="badge">NO AUTO QUOTE</span>
       <span class="badge">NO AUTO PIPELINE MOVE</span>
+      <span class="badge">ACTION QUEUE IS MANUAL ONLY</span>
       <span class="badge warn">QUOTE ONLY AFTER STOCK + COMPATIBILITY CONFIRMATION</span>
       <ul>
         <li>This hub is navigation and visibility only.</li>
         <li>It does not send WhatsApp messages.</li>
         <li>It does not create quotes automatically.</li>
         <li>It does not move buyer pipeline stages automatically.</li>
+        <li>It does not complete buyer actions automatically.</li>
       </ul>
     </section>
 
@@ -57,6 +59,8 @@
         <div class="metric"><h2>Quote Drafts</h2><strong id="quoteDrafts">0</strong></div>
         <div class="metric"><h2>Pipeline Events</h2><strong id="pipelineEvents">0</strong></div>
         <div class="metric"><h2>Follow-Up Reminders</h2><strong id="followUps">0</strong></div>
+        <div class="metric"><h2>Buyer Actions</h2><strong id="buyerActions">0</strong></div>
+        <div class="metric"><h2>Urgent Actions</h2><strong id="urgentActions">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -93,6 +97,12 @@
       </div>
 
       <div class="card">
+        <h2>Buyer Action Queue</h2>
+        <p>View urgent manual buyer actions: call buyer, verify stock, verify compatibility, prepare quote draft, confirm delivery, close sale, or block lead.</p>
+        <a href="/action-queue">Open Action Queue</a>
+      </div>
+
+      <div class="card">
         <h2>System Health</h2>
         <p>Check whether the backend server foundation is alive and responding.</p>
         <a href="/api/health">Open Health API</a>
@@ -116,9 +126,13 @@
       document.getElementById("quoteDrafts").textContent = safeNumber(metrics.quotes && metrics.quotes.totalQuotes);
       document.getElementById("pipelineEvents").textContent = safeNumber(metrics.pipeline && metrics.pipeline.totalPipelineEvents);
       document.getElementById("followUps").textContent = safeNumber(metrics.followUps && metrics.followUps.totalFollowUps);
+      document.getElementById("buyerActions").textContent = safeNumber(metrics.actionQueue && metrics.actionQueue.totalActions);
+      document.getElementById("urgentActions").textContent = safeNumber(metrics.actionQueue && metrics.actionQueue.urgent);
+
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
-        safeNumber(metrics.followUps && metrics.followUps.autoSendWhatsAppCount);
+        safeNumber(metrics.followUps && metrics.followUps.autoSendWhatsAppCount) +
+        safeNumber(metrics.actionQueue && metrics.actionQueue.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {

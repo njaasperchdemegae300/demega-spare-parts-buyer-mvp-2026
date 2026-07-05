@@ -5,6 +5,7 @@ const inventoryService = require("../services/inventory.service");
 const quoteDraftService = require("../services/quote-draft.service");
 const buyerPipelineService = require("../services/buyer-pipeline.service");
 const followUpService = require("../services/followup.service");
+const actionQueueService = require("../services/action-queue.service");
 
 const modules = [
   {
@@ -31,6 +32,11 @@ const modules = [
     name: "Follow-Up Reminder Dashboard",
     path: "/followups",
     purpose: "Manual follow-up reminder tracking."
+  },
+  {
+    name: "Buyer Action Queue",
+    path: "/action-queue",
+    purpose: "Manual buyer action tracking for calls, verification, quote preparation, delivery, closing, and blocking."
   }
 ];
 
@@ -59,9 +65,13 @@ function adminNavigationHubController(req, res, sendJson, sendHtml) {
 function getSafety() {
   return {
     navigationOnly: true,
+    visibilityOnly: true,
+    metricsReadOnly: true,
     autoSendWhatsApp: false,
+    automaticBuyerMessage: false,
     autoCreateQuote: false,
     autoMovePipelineStage: false,
+    autoCompleteBuyerAction: false,
     manualReviewRequired: true,
     quoteBeforeStockConfirmation: false,
     quoteBeforeCompatibilityConfirmation: false
@@ -83,6 +93,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const quotes = safeRead(() => quoteDraftService.getQuoteSummary(), {});
   const pipeline = safeRead(() => buyerPipelineService.getPipelineSummary(), {});
   const followUps = safeRead(() => followUpService.getFollowUpSummary(), {});
+  const actionQueue = safeRead(() => actionQueueService.getActionQueueSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -96,7 +107,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       inventory,
       quotes,
       pipeline,
-      followUps
+      followUps,
+      actionQueue
     },
     safety: getSafety()
   });
