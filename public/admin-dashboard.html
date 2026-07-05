@@ -51,19 +51,24 @@
       font-size: 30px;
       color: #111827;
     }
+    .panel {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+      overflow-x: auto;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+      min-width: 980px;
     }
     th, td {
       padding: 12px;
       border-bottom: 1px solid #e5e7eb;
       text-align: left;
       font-size: 14px;
+      vertical-align: top;
     }
     th {
       background: #f3f4f6;
@@ -76,17 +81,39 @@
       background: #fef3c7;
       color: #92400e;
       font-size: 12px;
+      white-space: nowrap;
     }
     .safe {
       background: #dcfce7;
       color: #166534;
+    }
+    .danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .muted {
+      color: #6b7280;
+      font-size: 13px;
+    }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    input, select {
+      padding: 9px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      min-width: 180px;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Demega Admin Lead Dashboard</h1>
-    <p>Small Smart MVP for Spare-parts-bulk-buyer_Engine_2026 Ai Morden</p>
+    <p>Buyer lead review center for Spare-parts-bulk-buyer_Engine_2026 Ai Morden</p>
   </header>
 
   <main>
@@ -105,27 +132,44 @@
       </div>
       <div class="card">
         <h2>Safety Status</h2>
-        <strongh2>Possible Duplicates</ class="badge safe">NO AUTO SEND</strong>
+        <strong class="badge safe">NO AUTO SEND</strong>
       </div>
     </section>
 
-    <section>
+    <section class="panel">
       <h2>Buyer Leads</h2>
+      <p class="muted">Read-only view. Manual review is required before reply, quote, stock confirmation, or compatibility confirmation.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, part, vehicle, location..." />
+        <select id="sourceFilter">
+          <option value="">All sources</option>
+        </select>
+        <select id="reviewFilter">
+          <option value="">All review status</option>
+          <option value="required">Manual review required</option>
+          <option value="duplicate">Possible duplicate</option>
+        </select>
+      </div>
+
       <table>
         <thead>
           <tr>
             <th>Buyer</th>
+            <th>Phone</th>
             <th>Part Needed</th>
             <th>Vehicle</th>
             <th>Location</th>
             <th>Source</th>
+            <th>Urgency</th>
             <th>Status</th>
             <th>Review</th>
+            <th>Created</th>
           </tr>
         </thead>
         <tbody id="leadRows">
           <tr>
-            <td colspan="7">Loading leads...</td>
+            <td colspan="10">Loading leads...</td>
           </tr>
         </tbody>
       </table>
@@ -133,6 +177,105 @@
   </main>
 
   <script>
+    let allLeads = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function renderSourceOptions(leads) {
+      const select = document.getElementById("sourceFilter");
+      const current = select.value;
+      const sources = [...new Set(leads.map(lead => lead.source).filter(Boolean))].sort();
+
+      select.innerHTML = '<option value="">All sources</option>' +
+        sources.map(source => `<option value="${escapeHtml(source)}">${escapeHtml(source)}</option>`).join("");
+
+      select.value = current;
+    }
+
+    function getFilteredLeads() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const source = document.getElementById("sourceFilter").value;
+      const review = document.getElementById("reviewFilter").value;
+
+      return allLeads.filter(lead => {
+        const haystack = [
+          lead.buyerName,
+          lead.phone,
+          lead.partNeeded,
+          lead.vehicleBrand,
+          lead.vehicleModel,
+          lead.vehicleYear,
+          lead.engineCode,
+          lead.location,
+          lead.source,
+          lead.urgency,
+          lead.status
+        ].join(" ").toLowerCase();
+
+        const searchOk = !search || haystack.includes(search);
+        const sourceOk = !source || lead.source === source;
+        const reviewOk =
+          !review ||
+          (review === "required" && lead.manualReviewRequired === true) ||
+          (review === "duplicate" && lead.duplicateStatus === "possible_duplicate");
+
+        return searchOk && sourceOk && reviewOk;
+      });
+    }
+
+    function renderLeads() {
+      const tbody = document.getElementById("leadRows");
+      const leads = getFilteredLeads();
+
+      if (!leads.length) {
+        tbody.innerHTML = '<tr><td colspan="10">No matching buyer leads.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = leads.map(lead => {
+        const reviewBadge = lead.manualReviewRequired
+          ? badge("Manual review", "danger")
+          : badge("Reviewed", "safe");
+
+        const duplicateBadge = lead.duplicateStatus === "possible_duplicate"
+          ? badge("Possible duplicate", "danger")
+          : badge("Unique", "safe");
+
+        return `
+          <tr>
+            <td>${escapeHtml(lead.buyerName)}</td>
+            <td>${escapeHtml(lead.phone)}</td>
+            <td>${escapeHtml(lead.partNeeded)}</td>
+            <td>${escapeHtml(`${lead.vehicleBrand || ""} ${lead.vehicleModel || ""} ${lead.vehicleYear || ""} ${lead.engineCode || ""}`)}</td>
+            <td>${escapeHtml(lead.location)}</td>
+            <td>${badge(lead.source || "unknown")}</td>
+            <td>${badge(lead.urgency || "normal")}</td>
+            <td>${escapeHtml(lead.status || "new")}</td>
+            <td>${reviewBadge}<br>${duplicateBadge}</td>
+            <td>${formatDate(lead.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
     async function loadDashboard() {
       const summaryResponse = await fetch("/api/dashboard/summary");
       const summary = await summaryResponse.json();
@@ -143,30 +286,19 @@
 
       const leadsResponse = await fetch("/api/leads");
       const leadsData = await leadsResponse.json();
-      const leads = Array.isArray(leadsData.leads) ? leadsData.leads : [];
-      const tbody = document.getElementById("leadRows");
+      allLeads = Array.isArray(leadsData.leads) ? leadsData.leads : [];
 
-      if (!leads.length) {
-        tbody.innerHTML = '<tr><td colspan="7">No buyer leads yet. Buyer Intake API is ready.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = leads.map(lead => `
-        <tr>
-          <td>${lead.buyerName || ""}</td>
-          <td>${lead.partNeeded || ""}</td>
-          <td>${lead.vehicleBrand || ""} ${lead.vehicleModel || ""} ${lead.vehicleYear || ""}</td>
-          <td>${lead.location || ""}</td>
-          <td>${lead.source || ""}</td>
-          <td>${lead.status || ""}</td>
-          <td><span class="badge">${lead.manualReviewRequired ? "Required" : "Not Required"}</span></td>
-        </tr>
-      `).join("");
+      renderSourceOptions(allLeads);
+      renderLeads();
     }
+
+    document.getElementById("searchInput").addEventListener("input", renderLeads);
+    document.getElementById("sourceFilter").addEventListener("change", renderLeads);
+    document.getElementById("reviewFilter").addEventListener("change", renderLeads);
 
     loadDashboard().catch(error => {
       document.getElementById("leadRows").innerHTML =
-        `<tr><td colspan="7">Dashboard load failed: ${error.message}</td></tr>`;
+        `<tr><td colspan="10">Dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
     });
   </script>
 </body>
