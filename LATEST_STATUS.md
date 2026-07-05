@@ -1,26 +1,26 @@
 # LATEST STATUS
 
 Current Phase:
-Version 5B — Inventory Matching Foundation
+Version 6A — Safe Auto Quote Draft Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- POST /api/inventory/match
-- GET /api/inventory/match-preview
-- Direct buyer request inventory matching
-- Existing leadId inventory matching
-- Match score
-- Match reasons
-- Quote blocked reasons
-- safeToQuoteNow gate
+- POST /api/quotes/draft
+- GET /api/quotes
+- GET /api/quotes/summary
+- GET /api/quotes/preview
+- Safe WhatsApp-ready quote draft generation
+- Quote gate blocking before confirmation
+- Draft-only quote status
 
 Safety Confirmed:
-- No automatic quote creation
 - No quote before stock confirmation
 - No quote before compatibility confirmation
-- Manual review remains required
+- No WhatsApp auto-send
+- sentToBuyer remains false
+- Manual review before sending
 
 Next Phase:
-Version 6A — Safe Auto Quote Draft Foundation
+Version 6B — Quote Draft Dashboard Display
