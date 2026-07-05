@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Admin Lead Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+    header {
+      background: #111827;
+      color: white;
+      padding: 22px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    header p {
+      margin: 6px 0 0;
+      color: #d1d5db;
+    }
+    main {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+    }
+    .card h2 {
+      margin: 0;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 30px;
+      color: #111827;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background: #f3f4f6;
+      color: #374151;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #fef3c7;
+      color: #92400e;
+      font-size: 12px;
+    }
+    .safe {
+      background: #dcfce7;
+      color: #166534;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Admin Lead Dashboard</h1>
+    <p>Small Smart MVP for Spare-parts-bulk-buyer_Engine_2026 Ai Morden</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card">
+        <h2>Total Leads</h2>
+        <strong id="totalLeads">0</strong>
+      </div>
+      <div class="card">
+        <h2>Manual Review Required</h2>
+        <strong id="manualReviewRequired">0</strong>
+      </div>
+      <div class="card">
+        <h2>Possible Duplicates</h2>
+        <strong id="possibleDuplicates">0</strong>
+      </div>
+      <div class="card">
+        <h2>Safety Status</h2>
+        <strongh2>Possible Duplicates</ class="badge safe">NO AUTO SEND</strong>
+      </div>
+    </section>
+
+    <section>
+      <h2>Buyer Leads</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Location</th>
+            <th>Source</th>
+            <th>Status</th>
+            <th>Review</th>
+          </tr>
+        </thead>
+        <tbody id="leadRows">
+          <tr>
+            <td colspan="7">Loading leads...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/dashboard/summary");
+      const summary = await summaryResponse.json();
+
+      document.getElementById("totalLeads").textContent = summary.totalLeads || 0;
+      document.getElementById("manualReviewRequired").textContent = summary.manualReviewRequired || 0;
+      document.getElementById("possibleDuplicates").textContent = summary.possibleDuplicates || 0;
+
+      const leadsResponse = await fetch("/api/leads");
+      const leadsData = await leadsResponse.json();
+      const leads = Array.isArray(leadsData.leads) ? leadsData.leads : [];
+      const tbody = document.getElementById("leadRows");
+
+      if (!leads.length) {
+        tbody.innerHTML = '<tr><td colspan="7">No buyer leads yet. Buyer Intake API is ready.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = leads.map(lead => `
+        <tr>
+          <td>${lead.buyerName || ""}</td>
+          <td>${lead.partNeeded || ""}</td>
+          <td>${lead.vehicleBrand || ""} ${lead.vehicleModel || ""} ${lead.vehicleYear || ""}</td>
+          <td>${lead.location || ""}</td>
+          <td>${lead.source || ""}</td>
+          <td>${lead.status || ""}</td>
+          <td><span class="badge">${lead.manualReviewRequired ? "Required" : "Not Required"}</span></td>
+        </tr>
+      `).join("");
+    }
+
+    loadDashboard().catch(error => {
+      document.getElementById("leadRows").innerHTML =
+        `<tr><td colspan="7">Dashboard load failed: ${error.message}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

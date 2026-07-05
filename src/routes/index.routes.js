@@ -2,6 +2,8 @@ const healthController = require("../controllers/health.controller");
 const projectStatusController = require("../controllers/project.controller");
 const storageStatusController = require("../controllers/storage.controller");
 const buyerIntakeController = require("../controllers/buyer-intake.controller");
+const dashboardController = require("../controllers/dashboard.controller");
+const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
   const method = req.method;
@@ -18,13 +20,24 @@ function routeRequest(req, res, sendJson) {
       message: "Small Smart Backend Server Foundation is alive.",
       routes: [
         "/",
+        "/dashboard",
+        "/admin",
         "/api/health",
         "/api/project-status",
         "/api/storage/status",
+        "/api/dashboard/summary",
         "POST /api/buyer-intake",
         "GET /api/leads"
       ]
     });
+  }
+
+  if (method === "GET" && (url.pathname === "/dashboard" || url.pathname === "/admin")) {
+    return dashboardController.adminDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/dashboard/summary") {
+    return dashboardController.dashboardSummaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/health") {

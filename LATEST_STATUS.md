@@ -1,19 +1,19 @@
 # LATEST STATUS
 
 Current Phase:
-Version 2C — Buyer Intake Data Integrity Gate
+Version 3A — Admin Lead Dashboard Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Test lead cleanup
-- leads.json integrity verification
-- Approved source verification
-- Manual review rule verification
-- No automatic stock confirmation
-- No automatic compatibility confirmation
-- Project map updated with Version 2C
+- GET /dashboard
+- GET /admin
+- GET /api/dashboard/summary
+- Read-only admin dashboard HTML
+- Lead metrics summary
+- Lead table foundation
+- Dashboard safety rules confirmed
 
 Next Phase:
-Version 3A — Admin Lead Dashboard Foundation
+Version 3B — Dashboard Buyer Lead Display Hardening
