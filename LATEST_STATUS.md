@@ -1,7 +1,7 @@
 # LATEST STATUS
 
 Current Phase:
-Phase 0B-FIX1 — Health-check script repaired
+Version 1A — Backend Server Foundation
 
 Current Verdict:
 IN PROGRESS
@@ -10,16 +10,16 @@ Project Folder:
 demega-spare-parts-buyer-mvp-2026
 
 Latest Approved Commit:
-652cff5 Phase 0A approved and foundation reports locked
+1ac7f98 Phase 0B-FIX1 repair project health command
 
-Issue Found:
-Phase 0B created project structure but package.json did not receive the project:health script.
-
-Fix Applied:
-- Repaired tools/project-health-check.js
-- Added project:health script
-- Added phase:0b script
-- Re-ran health check
+What Version 1A Adds:
+- Native Node.js backend server
+- GET /
+- GET /api/health
+- GET /api/project-status
+- 404 route handling
+- Server smoke-test command
+- Version 1A report
 
 Next Phase After Approval:
-Version 1A — Backend server foundation
+Version 1B — Basic data storage foundation
