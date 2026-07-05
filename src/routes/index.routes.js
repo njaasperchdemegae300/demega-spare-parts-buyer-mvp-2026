@@ -10,6 +10,7 @@ const quoteDraftController = require("../controllers/quote-draft.controller");
 const buyerPipelineController = require("../controllers/buyer-pipeline.controller");
 const followUpController = require("../controllers/followup.controller");
 const adminNavigationController = require("../controllers/admin-navigation.controller");
+const actionQueueController = require("../controllers/action-queue.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -40,6 +41,9 @@ function routeRequest(req, res, sendJson) {
         "/follow-up-reminders",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
+        "/api/action-queue/preview",
+        "/api/action-queue",
+        "/api/action-queue/summary",
         "/api/health",
         "/api/project-status",
         "/api/storage/status",
@@ -64,6 +68,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/quotes/draft",
         "POST /api/pipeline/move",
         "POST /api/followups/create",
+        "POST /api/action-queue/create",
         "GET /api/leads"
       ]
     });
@@ -79,6 +84,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/admin-navigation/dashboard-metrics") {
     return adminNavigationController.adminNavigationDashboardMetricsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/action-queue/preview") {
+    return actionQueueController.actionQueuePreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/action-queue") {
+    return actionQueueController.listActionsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/action-queue/summary") {
+    return actionQueueController.actionQueueSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/action-queue/create") {
+    return actionQueueController.createActionController(req, res, sendJson);
   }
 
   if (method === "GET" && (url.pathname === "/dashboard" || url.pathname === "/admin")) {

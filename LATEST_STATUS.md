@@ -1,31 +1,29 @@
 # LATEST STATUS
 
 Current Phase:
-Version 9B — Admin Navigation Hub Dashboard Polish
+Version 10A — Buyer Action Queue Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /admin-navigation-hub
-- GET /admin-hub
-- GET /api/admin-navigation/summary
-- GET /api/admin-navigation/dashboard-metrics
-- Live Business Snapshot
-- Buyer lead metrics
-- Inventory metrics
-- Quote draft metrics
-- Pipeline metrics
-- Follow-up metrics
-- Admin Safety Locks panel
+- GET /api/action-queue/preview
+- GET /api/action-queue
+- GET /api/action-queue/summary
+- POST /api/action-queue/create
+- Manual buyer action creation
+- Action type validation
+- Priority and due-time calculation
+- Action queue summary metrics
+- Unsafe auto-send action blocking
 
 Safety Confirmed:
-- Admin hub remains navigation and visibility only
-- Metrics API is read-only
-- Admin hub does not send WhatsApp
-- Admin hub does not create quote automatically
-- Admin hub does not move pipeline stage automatically
-- Manual review remains required
+- Buyer action queue does not send WhatsApp
+- Buyer action queue does not message buyer automatically
+- Buyer action queue does not create quote automatically
+- Buyer action queue does not move pipeline stage automatically
+- sentToBuyer remains false
+- Manual action remains required
 
 Next Phase:
-Version 10A — Buyer Action Queue Foundation
+Version 10B — Buyer Action Queue Dashboard Display
