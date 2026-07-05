@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "id": "lead_20260705212534673_7t7di4",
+    "buyerName": "Test Buyer",
+    "phone": "08000000000",
+    "source": "manual_shop_visitor",
+    "partNeeded": "1ZZ alternator",
+    "vehicleBrand": "Toyota",
+    "vehicleModel": "Corolla",
+    "vehicleYear": "2005",
+    "engineCode": "1ZZ",
+    "location": "Lagos",
+    "urgency": "urgent",
+    "message": "Need 1ZZ alternator urgently.",
+    "status": "new",
+    "quoteStatus": "not_ready",
+    "stockConfirmed": false,
+    "compatibilityConfirmed": false,
+    "manualReviewRequired": true,
+    "createdAt": "2026-07-05T21:25:34.682Z",
+    "updatedAt": "2026-07-05T21:25:34.682Z"
+  }
+]
