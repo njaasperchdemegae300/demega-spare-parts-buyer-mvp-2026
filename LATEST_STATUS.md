@@ -1,25 +1,21 @@
 # LATEST STATUS
 
 Current Phase:
-Version 1A — Backend Server Foundation
+Version 1A-FIX1 — Backend server smoke test repaired
 
 Current Verdict:
 IN PROGRESS
 
-Project Folder:
-demega-spare-parts-buyer-mvp-2026
+Issue Found:
+Version 1A backend files were created, but package.json was missing the version:1a script.
 
-Latest Approved Commit:
-1ac7f98 Phase 0B-FIX1 repair project health command
+Fix Applied:
+- Repaired version:1a script
+- Repaired server:smoke script
+- Re-ran backend smoke test
 
-What Version 1A Adds:
-- Native Node.js backend server
-- GET /
-- GET /api/health
-- GET /api/project-status
-- 404 route handling
-- Server smoke-test command
-- Version 1A report
+Approval Rule:
+Version 1A is approved only if npm run version:1a returns APPROVED.
 
 Next Phase After Approval:
 Version 1B — Basic data storage foundation
