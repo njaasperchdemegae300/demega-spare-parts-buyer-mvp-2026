@@ -1,22 +1,19 @@
 # LATEST STATUS
 
 Current Phase:
-Version 2B — Buyer Intake Validation Hardening
+Version 2C — Buyer Intake Data Integrity Gate
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Strong buyer intake validation
-- Phone normalization
-- Approved urgency validation
-- Vehicle year validation
-- Message length protection
-- Possible duplicate detection
-- Unapproved/private-data source blocking
-- Manual review remains required
+- Test lead cleanup
+- leads.json integrity verification
+- Approved source verification
+- Manual review rule verification
 - No automatic stock confirmation
 - No automatic compatibility confirmation
+- Project map updated with Version 2C
 
 Next Phase:
-Version 2C — Buyer Intake Data Integrity Gate
+Version 3A — Admin Lead Dashboard Foundation
