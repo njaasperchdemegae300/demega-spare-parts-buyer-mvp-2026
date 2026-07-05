@@ -7,7 +7,11 @@
     "project:status": "node -e \"console.log('Demega Spare Parts Buyer MVP 2026 - Ready')\"",
     "project:list": "node -e \"const fs=require('fs'); console.log(fs.readdirSync('.').sort().join('\\\\n'))\"",
     "project:health": "node tools/project-health-check.js",
-    "phase:0b": "node tools/project-health-check.js"
+    "phase:0b": "node tools/project-health-check.js",
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "version:1a": "node tools/version1a-server-smoke-test.js",
+    "server:smoke": "node tools/version1a-server-smoke-test.js"
   },
   "keywords": [
     "spare-parts",
