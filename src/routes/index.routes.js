@@ -7,6 +7,7 @@ const scoringController = require("../controllers/scoring.controller");
 const inventoryController = require("../controllers/inventory.controller");
 const inventoryMatchingController = require("../controllers/inventory-matching.controller");
 const quoteDraftController = require("../controllers/quote-draft.controller");
+const buyerPipelineController = require("../controllers/buyer-pipeline.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -41,10 +42,14 @@ function routeRequest(req, res, sendJson) {
         "/api/quotes",
         "/api/quotes/summary",
         "/api/quotes/preview",
+        "/api/pipeline/preview",
+        "/api/pipeline/summary",
+        "/api/pipeline/events",
         "POST /api/buyer-intake",
         "POST /api/inventory",
         "POST /api/inventory/match",
         "POST /api/quotes/draft",
+        "POST /api/pipeline/move",
         "GET /api/leads"
       ]
     });
@@ -108,6 +113,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/quotes/preview") {
     return quoteDraftController.quotePreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/pipeline/preview") {
+    return buyerPipelineController.pipelinePreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/pipeline/summary") {
+    return buyerPipelineController.pipelineSummaryController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/pipeline/events") {
+    return buyerPipelineController.pipelineEventsController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/pipeline/move") {
+    return buyerPipelineController.moveLeadStageController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/health") {

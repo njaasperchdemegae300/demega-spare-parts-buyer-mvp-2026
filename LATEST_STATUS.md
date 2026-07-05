@@ -1,28 +1,27 @@
 # LATEST STATUS
 
 Current Phase:
-Version 6B-FIX1 — Quote Draft Dashboard Display Verified
+Version 7A-FIX1 — Buyer Pipeline Foundation Verified
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /quotes
-- GET /quote-drafts
-- Quote draft dashboard page
-- Quote draft table
-- Draft message display
-- Copy Draft button
-- Draft-only metrics
-- Manual review metrics
-- Auto-send safety metrics
+- GET /api/pipeline/preview
+- GET /api/pipeline/summary
+- GET /api/pipeline/events
+- POST /api/pipeline/move
+- Manual pipeline stage movement
+- Pipeline event history
+- Pipeline summary metrics
+- Invalid/unsafe stage blocking
 
 Safety Confirmed:
-- Quote dashboard does not send WhatsApp
-- Copy Draft only copies text
+- Pipeline movement is manual-action only
+- Pipeline does not auto-send WhatsApp
+- Pipeline does not create quote automatically
 - sentToBuyer remains false
-- autoSendWhatsApp remains false
-- Manual review before sending remains required
+- Manual review remains required
 
 Next Phase:
-Version 7A — Buyer Pipeline Foundation
+Version 7B — Buyer Pipeline Dashboard Display
