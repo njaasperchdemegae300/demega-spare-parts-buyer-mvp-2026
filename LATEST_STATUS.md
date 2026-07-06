@@ -1,37 +1,42 @@
 # LATEST STATUS
 
 Current Phase:
-Version 19C — Admin Hub Link Buyer Reply Tracking
+Version 20A — Buyer Reply Follow-Up Action Gate Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Buyer Reply Tracking linked inside Admin Navigation Hub
-- Buyer Replies metric
-- Hot Replies metric
-- Manual Entry Replies metric
-- System Read Count metric
-- Scraping Count metric
-- Auto Reply Count metric
-- Buyer reply metrics inside admin metrics API
-- Buyer reply safety locks inside admin summary
-- Linked Buyer Reply Tracking dashboard reachable
+- GET /api/buyer-reply-followup/preview
+- GET /api/buyer-reply-followups
+- GET /api/buyer-reply-followup/summary
+- POST /api/buyer-reply-followup/plan
+- Manual follow-up action planning
+- Buyer reply requirement
+- Admin reviewed buyer reply requirement
+- Manual action approval requirement
+- Follow-up action type validation
+- Priority validation
+- Due window validation
+- Missing buyer reply blocking
+- Unsafe auto-send/reply/browser/pipeline/read/scrape request blocking
+- Safe follow-up action metrics
 
 Safety Confirmed:
-- Admin hub remains navigation and visibility only
-- Metrics API is read-only
-- Buyer Reply Tracking remains manual-entry only
-- Manual sent confirmation is required
-- Admin observed reply is required
-- Admin hub does not read WhatsApp messages
-- Admin hub does not scrape private messages
-- Admin hub does not harvest hidden data
-- Admin hub does not auto-reply to buyer
-- Admin hub does not send WhatsApp
-- Admin hub does not open browser automatically
-- Admin hub does not move pipeline automatically
-- Manual review remains required
+- Buyer Reply Follow-Up Action Gate prepares manual action only
+- Buyer reply record is required before follow-up action planning
+- Admin reviewed buyer reply is required
+- Manual action approval is required
+- System does not execute the action
+- System does not send WhatsApp
+- System does not auto-reply to buyer
+- System does not open browser automatically
+- System does not move pipeline automatically
+- System does not close sale automatically
+- System does not read buyer messages
+- System does not scrape private messages
+- System does not harvest hidden data
+- Manual review is required before action execution
 
 Next Phase:
-Version 20A — Buyer Reply Follow-Up Action Gate Foundation
+Version 20B — Buyer Reply Follow-Up Action Dashboard Display

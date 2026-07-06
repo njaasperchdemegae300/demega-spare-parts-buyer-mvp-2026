@@ -20,6 +20,7 @@ const manualQuoteDraftController = require("../controllers/manual-quote-draft.co
 const manualQuoteCopyController = require("../controllers/manual-quote-copy.controller");
 const manualQuoteSentConfirmationController = require("../controllers/manual-quote-sent-confirmation.controller");
 const buyerReplyController = require("../controllers/buyer-reply.controller");
+const buyerReplyFollowupActionController = require("../controllers/buyer-reply-followup-action.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -94,6 +95,9 @@ function routeRequest(req, res, sendJson) {
         "/api/buyer-reply/preview",
         "/api/buyer-replies",
         "/api/buyer-reply/summary",
+        "/api/buyer-reply-followup/preview",
+        "/api/buyer-reply-followups",
+        "/api/buyer-reply-followup/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -133,6 +137,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/manual-quote-copy/prepare",
         "POST /api/manual-quote-sent-confirmation/confirm",
         "POST /api/buyer-reply/record",
+        "POST /api/buyer-reply-followup/plan",
         "GET /api/leads"
       ]
     });
@@ -180,6 +185,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/buyer-reply" || url.pathname === "/buyer-replies")) {
     return buyerReplyController.buyerReplyDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/buyer-reply-followup/preview") {
+    return buyerReplyFollowupActionController.buyerReplyFollowupActionPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/buyer-reply-followups") {
+    return buyerReplyFollowupActionController.listBuyerReplyFollowupActionsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/buyer-reply-followup/summary") {
+    return buyerReplyFollowupActionController.buyerReplyFollowupActionSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/buyer-reply-followup/plan") {
+    return buyerReplyFollowupActionController.planBuyerReplyFollowupActionController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/buyer-reply/preview") {
