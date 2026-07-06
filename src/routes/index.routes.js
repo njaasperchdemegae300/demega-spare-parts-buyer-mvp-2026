@@ -24,6 +24,7 @@ const buyerReplyFollowupActionController = require("../controllers/buyer-reply-f
 const manualDealOutcomeController = require("../controllers/manual-deal-outcome.controller");
 const manualStockMovementReviewController = require("../controllers/manual-stock-movement-review.controller");
 const manualAccountingReviewController = require("../controllers/manual-accounting-review.controller");
+const manualFinalBusinessReviewController = require("../controllers/manual-final-business-review.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -118,6 +119,9 @@ function routeRequest(req, res, sendJson) {
         "/api/manual-accounting-review/preview",
         "/api/manual-accounting-reviews",
         "/api/manual-accounting-review/summary",
+        "/api/manual-final-business-review/preview",
+        "/api/manual-final-business-reviews",
+        "/api/manual-final-business-review/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -161,6 +165,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/manual-deal-outcome/record",
         "POST /api/manual-stock-movement-review/record",
         "POST /api/manual-accounting-review/record",
+        "POST /api/manual-final-business-review/record",
         "GET /api/leads"
       ]
     });
@@ -224,6 +229,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-accounting-review" || url.pathname === "/manual-accounting-reviews")) {
     return manualAccountingReviewController.manualAccountingReviewDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-final-business-review/preview") {
+    return manualFinalBusinessReviewController.manualFinalBusinessReviewPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-final-business-reviews") {
+    return manualFinalBusinessReviewController.listManualFinalBusinessReviewsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-final-business-review/summary") {
+    return manualFinalBusinessReviewController.manualFinalBusinessReviewSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/manual-final-business-review/record") {
+    return manualFinalBusinessReviewController.recordManualFinalBusinessReviewController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/manual-accounting-review/preview") {

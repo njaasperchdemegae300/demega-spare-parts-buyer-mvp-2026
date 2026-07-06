@@ -74,7 +74,8 @@
     "version:22c": "node tools/version22c-admin-hub-link-manual-stock-movement-review-smoke-test.js",
     "version:23a": "node tools/version23a-manual-accounting-review-gate-smoke-test.js",
     "version:23b": "node tools/version23b-manual-accounting-review-dashboard-smoke-test.js",
-    "version:23c": "node tools/version23c-admin-hub-link-manual-accounting-review-smoke-test.js"
+    "version:23c": "node tools/version23c-admin-hub-link-manual-accounting-review-smoke-test.js",
+    "version:24a": "node tools/version24a-manual-final-business-review-gate-smoke-test.js"
   },
   "keywords": [
     "spare-parts",
