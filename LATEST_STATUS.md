@@ -1,34 +1,39 @@
 # LATEST STATUS
 
 Current Phase:
-Version 15C — Admin Hub Link Safe Final Quote Eligibility Gate
+Version 16A — Safe Manual Quote Draft Builder Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Safe Final Quote Eligibility Gate linked inside Admin Navigation Hub
-- Quote Eligibility Checks metric
-- Eligible For Manual Quote Draft metric
-- Final Quote Gate Passed metric
-- Blocked Quote Gate metric
-- Quote eligibility metrics inside admin metrics API
-- Quote eligibility safety locks inside admin summary
-- Linked Safe Final Quote Eligibility dashboard reachable
+- GET /api/manual-quote-draft/preview
+- GET /api/manual-quote-drafts
+- GET /api/manual-quote-draft/summary
+- POST /api/manual-quote-draft/build
+- Manual quote draft builder
+- Final quote eligibility linkage
+- Draft blocked before final eligibility
+- Quote amount accepted only inside safe draft after eligibility
+- Draft message generation
+- Draft-only storage
+- Unsafe WhatsApp sending blocking
+- Automatic buyer message blocking
+- Automatic browser opening blocking
+- Automatic pipeline movement blocking
+- Safe manual quote draft metrics
 
 Safety Confirmed:
-- Admin hub remains navigation and visibility only
-- Metrics API is read-only
-- Quote eligibility gate is check-only
-- Manual quote draft is allowed only after stock and compatibility are both confirmed
-- Admin hub does not create quote automatically
-- Admin hub does not include price or quote amount
-- Admin hub does not send WhatsApp
-- Admin hub does not message buyer automatically
-- Admin hub does not open browser automatically
-- Admin hub does not move pipeline automatically
+- Manual quote draft builder is draft-only
+- Final quote eligibility gate must pass before draft creation
+- Price is allowed inside draft only after eligibility
+- Price is not sent to buyer
+- System does not send WhatsApp
+- System does not message buyer automatically
+- System does not open browser automatically
+- System does not move pipeline automatically
 - sentToBuyer remains false
 - Manual review remains required
 
 Next Phase:
-Version 16A — Safe Manual Quote Draft Builder Foundation
+Version 16B — Safe Manual Quote Draft Builder Dashboard Display

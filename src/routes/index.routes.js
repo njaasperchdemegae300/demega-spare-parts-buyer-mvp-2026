@@ -16,6 +16,7 @@ const whatsappManualController = require("../controllers/whatsapp-manual.control
 const stockConfirmationController = require("../controllers/stock-confirmation.controller");
 const compatibilityConfirmationController = require("../controllers/compatibility-confirmation.controller");
 const quoteEligibilityController = require("../controllers/quote-eligibility.controller");
+const manualQuoteDraftController = require("../controllers/manual-quote-draft.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -70,6 +71,9 @@ function routeRequest(req, res, sendJson) {
         "/api/quote-eligibility/preview",
         "/api/quote-eligibilities",
         "/api/quote-eligibility/summary",
+        "/api/manual-quote-draft/preview",
+        "/api/manual-quote-drafts",
+        "/api/manual-quote-draft/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -105,6 +109,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/stock-confirmation/confirm",
         "POST /api/compatibility-confirmation/confirm",
         "POST /api/quote-eligibility/check",
+        "POST /api/manual-quote-draft/build",
         "GET /api/leads"
       ]
     });
@@ -136,6 +141,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/quote-eligibility" || url.pathname === "/quote-eligibility-gate")) {
     return quoteEligibilityController.quoteEligibilityDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-quote-draft/preview") {
+    return manualQuoteDraftController.manualQuoteDraftPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-quote-drafts") {
+    return manualQuoteDraftController.listManualQuoteDraftsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-quote-draft/summary") {
+    return manualQuoteDraftController.manualQuoteDraftSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/manual-quote-draft/build") {
+    return manualQuoteDraftController.createManualQuoteDraftController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/quote-eligibility/preview") {
