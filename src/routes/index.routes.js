@@ -13,6 +13,7 @@ const adminNavigationController = require("../controllers/admin-navigation.contr
 const actionQueueController = require("../controllers/action-queue.controller");
 const hotBuyerController = require("../controllers/hot-buyer.controller");
 const whatsappManualController = require("../controllers/whatsapp-manual.controller");
+const stockConfirmationController = require("../controllers/stock-confirmation.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -52,6 +53,9 @@ function routeRequest(req, res, sendJson) {
         "/api/whatsapp-manual/preview",
         "/api/whatsapp-manual/links",
         "/api/whatsapp-manual/summary",
+        "/api/stock-confirmation/preview",
+        "/api/stock-confirmations",
+        "/api/stock-confirmation/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -84,6 +88,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/followups/create",
         "POST /api/action-queue/create",
         "POST /api/whatsapp-manual/open-link",
+        "POST /api/stock-confirmation/confirm",
         "GET /api/leads"
       ]
     });
@@ -103,6 +108,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/whatsapp-manual" || url.pathname === "/whatsapp-manual-links")) {
     return whatsappManualController.whatsappManualDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/stock-confirmation/preview") {
+    return stockConfirmationController.stockConfirmationPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/stock-confirmations") {
+    return stockConfirmationController.listStockConfirmationsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/stock-confirmation/summary") {
+    return stockConfirmationController.stockConfirmationSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/stock-confirmation/confirm") {
+    return stockConfirmationController.createStockConfirmationController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/whatsapp-manual/preview") {

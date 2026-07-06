@@ -385,3 +385,41 @@ Display safe WhatsApp manual open links in a read-only dashboard.
 
 ## Next Phase After Approval
 Version 12C — Admin Hub Link WhatsApp Manual Open Dashboard
+
+# Version 13A — Stock Confirmation Gate Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create a manual stock confirmation gate that records whether a requested part is physically available while keeping quote creation blocked until compatibility confirmation is completed.
+
+## Routes
+- GET /api/stock-confirmation/preview
+- GET /api/stock-confirmations
+- GET /api/stock-confirmation/summary
+- POST /api/stock-confirmation/confirm
+
+## Features
+- Manual stock confirmation
+- Stock status validation
+- Confirmation method validation
+- Quote/price blocking
+- WhatsApp auto-send blocking
+- Automatic buyer message blocking
+- Automatic pipeline movement blocking
+- Safe stock gate metrics
+
+## Safety Rules
+- Manual stock confirmation only
+- No quote at stock confirmation stage
+- Compatibility confirmation is still required before quote
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic pipeline movement
+- sentToBuyer remains false
+- Price is not included
+- Manual review remains required
+
+## Next Phase After Approval
+Version 13B — Stock Confirmation Gate Dashboard Display
