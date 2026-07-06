@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Compatibility Confirmation Gate Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1650px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 210px; }
+    .warning { border-left: 5px solid #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Compatibility Confirmation Gate Dashboard</h1>
+    <p>Read-only compatibility confirmation display. Manual quote draft is allowed only after stock and compatibility are both confirmed.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Compatibility Confirmations</h2><strong id="totalCompatibilityConfirmations">0</strong></div>
+      <div class="card"><h2>Compatibility Confirmed</h2><strong id="compatibilityConfirmed">0</strong></div>
+      <div class="card"><h2>Stock Confirmed Count</h2><strong id="stockConfirmedCount">0</strong></div>
+      <div class="card"><h2>Quote Gate Ready</h2><strong id="quoteGateReadyCount">0</strong></div>
+      <div class="card"><h2>Auto Quote Count</h2><strong id="autoCreateQuoteCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">MANUAL GATE</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Compatibility Gate Safety Rule</h2>
+      <p class="muted">
+        Compatibility confirmation checks whether the requested part matches the buyer vehicle, engine code, socket/plug,
+        part number, or photo evidence. Manual quote draft is allowed only after both stock confirmation and compatibility confirmation are true.
+        This dashboard must not create quote, send WhatsApp, include price, or move pipeline automatically.
+      </p>
+      <span class="badge safe">Manual compatibility confirmation only</span>
+      <span class="badge safe">Stock + compatibility required before quote</span>
+      <span class="badge safe">Manual quote draft allowed after both confirmed</span>
+      <span class="badge safe">No auto-send</span>
+      <span class="badge safe">No auto-quote</span>
+      <span class="badge safe">No price included</span>
+    </section>
+
+    <section class="panel">
+      <h2>Compatibility Confirmation Records</h2>
+      <p class="muted">Read-only list of compatibility confirmations. Manual review remains required.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, vehicle, engine, part number..." />
+        <select id="compatibilityStatusFilter">
+          <option value="">All compatibility status</option>
+          <option value="confirmed_compatible">Confirmed Compatible</option>
+          <option value="not_compatible">Not Compatible</option>
+          <option value="needs_more_details">Needs More Details</option>
+          <option value="unknown">Unknown</option>
+        </select>
+        <select id="methodFilter">
+          <option value="">All methods</option>
+          <option value="engine_code_match">Engine Code Match</option>
+          <option value="part_number_match">Part Number Match</option>
+          <option value="photo_check">Photo Check</option>
+          <option value="mechanic_confirmation">Mechanic Confirmation</option>
+          <option value="manual_admin_check">Manual Admin Check</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Stock Gate</th>
+            <th>Compatibility Status</th>
+            <th>Method</th>
+            <th>Matched Engine</th>
+            <th>Matched Part No.</th>
+            <th>Photo / Socket Check</th>
+            <th>Quote Gate</th>
+            <th>Safety</th>
+            <th>Confirmed By</th>
+            <th>Note</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="compatibilityRows">
+          <tr><td colspan="15">Loading compatibility confirmations...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allConfirmations = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function getFilteredConfirmations() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const compatibilityStatus = document.getElementById("compatibilityStatusFilter").value;
+      const method = document.getElementById("methodFilter").value;
+
+      return allConfirmations.filter(item => {
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.stockStatus,
+          item.compatibilityStatus,
+          item.confirmationMethod,
+          item.matchedEngineCode,
+          item.matchedPartNumber,
+          item.confirmedBy,
+          item.note
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!compatibilityStatus || item.compatibilityStatus === compatibilityStatus) &&
+          (!method || item.confirmationMethod === method);
+      });
+    }
+
+    function renderConfirmations() {
+      const tbody = document.getElementById("compatibilityRows");
+      const confirmations = getFilteredConfirmations();
+
+      if (!confirmations.length) {
+        tbody.innerHTML = '<tr><td colspan="15">No matching compatibility confirmations.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = confirmations.map(item => {
+        const compatType = item.compatibilityConfirmed ? "safe" : item.compatibilityStatus === "not_compatible" ? "danger" : "";
+        const stockGate = [
+          item.stockConfirmed ? badge("Stock confirmed", "safe") : badge("Stock missing", "danger"),
+          badge(item.stockStatus || "unknown")
+        ].join("<br>");
+
+        const photoSocket = [
+          item.buyerPhotoChecked ? badge("Photo checked", "safe") : badge("Photo not checked"),
+          item.socketOrPlugMatched ? badge("Socket matched", "safe") : badge("Socket not matched")
+        ].join("<br>");
+
+        const quoteGate = [
+          item.quoteGateReady ? badge("Quote gate ready", "safe") : badge("Quote gate blocked", "danger"),
+          item.manualQuoteDraftAllowed ? badge("Manual quote draft allowed", "safe") : badge("Manual quote draft blocked", "danger"),
+          item.quoteAllowed ? badge("Quote allowed after both gates", "safe") : badge("Quote not allowed", "danger")
+        ].join("<br>");
+
+        const safety = [
+          item.manualActionOnly ? badge("Manual only", "safe") : badge("Manual risk", "danger"),
+          item.autoCreateQuote ? badge("Auto-quote risk", "danger") : badge("No auto-quote", "safe"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.automaticBuyerMessage ? badge("Auto-message risk", "danger") : badge("No auto-message", "safe"),
+          item.sentToBuyer ? badge("Sent risk", "danger") : badge("Not sent", "safe"),
+          item.priceIncluded ? badge("Price risk", "danger") : badge("No price", "safe"),
+          item.pipelineMovedAutomatically ? badge("Auto-pipeline risk", "danger") : badge("No auto-pipeline", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""} ${item.engineCode || ""}`)}</td>
+            <td>${stockGate}</td>
+            <td>${badge(item.compatibilityStatus || "unknown", compatType)}</td>
+            <td>${badge(item.confirmationMethod || "manual_admin_check")}</td>
+            <td>${escapeHtml(item.matchedEngineCode)}</td>
+            <td>${escapeHtml(item.matchedPartNumber)}</td>
+            <td>${photoSocket}</td>
+            <td>${quoteGate}</td>
+            <td>${safety}</td>
+            <td>${escapeHtml(item.confirmedBy)}</td>
+            <td>${escapeHtml(item.note)}</td>
+            <td>${formatDate(item.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadCompatibilityDashboard() {
+      const summaryResponse = await fetch("/api/compatibility-confirmation/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalCompatibilityConfirmations").textContent = summary.totalCompatibilityConfirmations || 0;
+      document.getElementById("compatibilityConfirmed").textContent = summary.compatibilityConfirmed || 0;
+      document.getElementById("stockConfirmedCount").textContent = summary.stockConfirmedCount || 0;
+      document.getElementById("quoteGateReadyCount").textContent = summary.quoteGateReadyCount || 0;
+      document.getElementById("autoCreateQuoteCount").textContent = summary.autoCreateQuoteCount || 0;
+
+      const listResponse = await fetch("/api/compatibility-confirmations");
+      const listData = await listResponse.json();
+      allConfirmations = Array.isArray(listData.confirmations) ? listData.confirmations : [];
+
+      renderConfirmations();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderConfirmations);
+    document.getElementById("compatibilityStatusFilter").addEventListener("change", renderConfirmations);
+    document.getElementById("methodFilter").addEventListener("change", renderConfirmations);
+
+    loadCompatibilityDashboard().catch(error => {
+      document.getElementById("compatibilityRows").innerHTML =
+        `<tr><td colspan="15">Compatibility confirmation dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

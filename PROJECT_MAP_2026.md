@@ -464,3 +464,41 @@ Connect the Stock Confirmation Gate into the polished Admin Navigation Hub and L
 
 ## Next Phase After Approval
 Version 14A — Compatibility Confirmation Gate Foundation
+
+# Version 14B — Compatibility Confirmation Gate Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display manual compatibility confirmations in a read-only dashboard while allowing manual quote draft only after stock and compatibility are both confirmed.
+
+## Routes
+- GET /compatibility-confirmation
+- GET /compatibility-confirmation-gate
+- GET /api/compatibility-confirmations
+- GET /api/compatibility-confirmation/summary
+
+## Features
+- Compatibility confirmation dashboard
+- Compatibility gate metric cards
+- Compatibility confirmation table
+- Compatibility status filter
+- Confirmation method filter
+- Stock gate display
+- Quote gate readiness display
+- Safety labels
+
+## Safety Rules
+- Read-only dashboard
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic quote creation
+- No automatic pipeline movement
+- Manual quote draft allowed only after stock and compatibility are both confirmed
+- sentToBuyer remains false
+- Price is not included
+- Manual review remains required
+
+## Next Phase After Approval
+Version 14C — Admin Hub Link Compatibility Confirmation Gate

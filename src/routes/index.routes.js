@@ -51,6 +51,8 @@ function routeRequest(req, res, sendJson) {
         "/whatsapp-manual-links",
         "/stock-confirmation",
         "/stock-confirmation-gate",
+        "/compatibility-confirmation",
+        "/compatibility-confirmation-gate",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -119,6 +121,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/stock-confirmation" || url.pathname === "/stock-confirmation-gate")) {
     return stockConfirmationController.stockConfirmationDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/compatibility-confirmation" || url.pathname === "/compatibility-confirmation-gate")) {
+    return compatibilityConfirmationController.compatibilityConfirmationDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/compatibility-confirmation/preview") {

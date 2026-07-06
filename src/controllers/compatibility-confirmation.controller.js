@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const compatibilityConfirmationService = require("../services/compatibility-confirmation.service");
+
+function compatibilityConfirmationDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "compatibility-confirmation-gate-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Compatibility Confirmation Gate dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function compatibilityConfirmationPreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -58,6 +74,7 @@ function compatibilityConfirmationSummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  compatibilityConfirmationDashboardController,
   compatibilityConfirmationPreviewController,
   createCompatibilityConfirmationController,
   listCompatibilityConfirmationsController,
