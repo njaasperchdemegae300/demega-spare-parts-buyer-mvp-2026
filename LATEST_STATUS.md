@@ -1,30 +1,29 @@
 # LATEST STATUS
 
 Current Phase:
-Version 12B — WhatsApp Manual Open Link Dashboard Display
+Version 12C — Admin Hub Link WhatsApp Manual Open Dashboard
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /whatsapp-manual
-- GET /whatsapp-manual-links
-- WhatsApp manual link dashboard
-- Manual link metric cards
-- Manual WhatsApp open link display
-- Search filter
-- Safe message preview
-- Manual-open safety labels
+- WhatsApp Manual Open Dashboard linked inside Admin Navigation Hub
+- Manual WhatsApp Links metric
+- Manual Review Links metric
+- WhatsApp manual-link metrics inside admin metrics API
+- WhatsApp manual-link safety locks inside admin summary
+- Linked WhatsApp Manual Open Dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays manual-open links only
-- Dashboard does not send WhatsApp
-- Dashboard does not open browser automatically
-- Dashboard does not message buyer automatically
-- sentToBuyer remains false
-- Price is not included
-- Quote is not created automatically
+- Admin hub remains navigation and visibility only
+- Metrics API is read-only
+- WhatsApp links remain manual-open only
+- Admin hub does not send WhatsApp
+- Admin hub does not open browser automatically
+- Admin hub does not message buyer automatically
+- Admin hub does not include price
+- Admin hub does not create quote automatically
 - Manual review remains required
 
 Next Phase:
-Version 12C — Admin Hub Link WhatsApp Manual Open Dashboard
+Version 13A — Stock Confirmation Gate Foundation

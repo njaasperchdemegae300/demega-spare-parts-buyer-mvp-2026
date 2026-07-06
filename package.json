@@ -40,7 +40,8 @@
     "version:11b": "node tools/version11b-hot-buyer-dashboard-smoke-test.js",
     "version:11c": "node tools/version11c-admin-hub-link-hot-buyers-smoke-test.js",
     "version:12a": "node tools/version12a-whatsapp-manual-open-link-smoke-test.js",
-    "version:12b": "node tools/version12b-whatsapp-manual-dashboard-smoke-test.js"
+    "version:12b": "node tools/version12b-whatsapp-manual-dashboard-smoke-test.js",
+    "version:12c": "node tools/version12c-admin-hub-link-whatsapp-manual-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

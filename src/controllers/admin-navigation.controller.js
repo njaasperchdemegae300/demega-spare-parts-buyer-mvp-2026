@@ -7,6 +7,7 @@ const buyerPipelineService = require("../services/buyer-pipeline.service");
 const followUpService = require("../services/followup.service");
 const actionQueueService = require("../services/action-queue.service");
 const hotBuyerService = require("../services/hot-buyer.service");
+const whatsappManualService = require("../services/whatsapp-manual.service");
 
 const modules = [
   {
@@ -43,6 +44,11 @@ const modules = [
     name: "Hot Buyer Command Center",
     path: "/hot-buyers",
     purpose: "Read-only serious-buyer ranking using lead, action, follow-up, and pipeline signals."
+  },
+  {
+    name: "WhatsApp Manual Open Dashboard",
+    path: "/whatsapp-manual",
+    purpose: "Manual WhatsApp open-link visibility with no auto-send, no auto-open, no price, and no auto-quote."
   }
 ];
 
@@ -74,12 +80,16 @@ function getSafety() {
     visibilityOnly: true,
     metricsReadOnly: true,
     hotBuyerRankingReadOnly: true,
+    whatsappManualOpenOnly: true,
     autoSendWhatsApp: false,
+    autoOpenBrowser: false,
     automaticBuyerMessage: false,
     autoCreateQuote: false,
     autoMovePipelineStage: false,
     autoCompleteBuyerAction: false,
     autoContactHotBuyer: false,
+    sentToBuyer: false,
+    priceIncluded: false,
     manualReviewRequired: true,
     quoteBeforeStockConfirmation: false,
     quoteBeforeCompatibilityConfirmation: false
@@ -103,6 +113,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const followUps = safeRead(() => followUpService.getFollowUpSummary(), {});
   const actionQueue = safeRead(() => actionQueueService.getActionQueueSummary(), {});
   const hotBuyers = safeRead(() => hotBuyerService.getHotBuyerSummary(), {});
+  const whatsappManual = safeRead(() => whatsappManualService.getManualWhatsAppSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -118,7 +129,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       pipeline,
       followUps,
       actionQueue,
-      hotBuyers
+      hotBuyers,
+      whatsappManual
     },
     safety: getSafety()
   });
