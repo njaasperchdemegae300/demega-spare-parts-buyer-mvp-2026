@@ -42,7 +42,8 @@
     "version:12a": "node tools/version12a-whatsapp-manual-open-link-smoke-test.js",
     "version:12b": "node tools/version12b-whatsapp-manual-dashboard-smoke-test.js",
     "version:12c": "node tools/version12c-admin-hub-link-whatsapp-manual-smoke-test.js",
-    "version:13a": "node tools/version13a-stock-confirmation-gate-smoke-test.js"
+    "version:13a": "node tools/version13a-stock-confirmation-gate-smoke-test.js",
+    "version:13b": "node tools/version13b-stock-confirmation-dashboard-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

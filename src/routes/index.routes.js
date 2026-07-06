@@ -48,6 +48,8 @@ function routeRequest(req, res, sendJson) {
         "/hot-buyer-command-center",
         "/whatsapp-manual",
         "/whatsapp-manual-links",
+        "/stock-confirmation",
+        "/stock-confirmation-gate",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -108,6 +110,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/whatsapp-manual" || url.pathname === "/whatsapp-manual-links")) {
     return whatsappManualController.whatsappManualDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/stock-confirmation" || url.pathname === "/stock-confirmation-gate")) {
+    return stockConfirmationController.stockConfirmationDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/stock-confirmation/preview") {

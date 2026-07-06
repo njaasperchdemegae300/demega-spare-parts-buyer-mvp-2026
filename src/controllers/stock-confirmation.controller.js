@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const stockConfirmationService = require("../services/stock-confirmation.service");
+
+function stockConfirmationDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "stock-confirmation-gate-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Stock Confirmation Gate dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function stockConfirmationPreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -58,6 +74,7 @@ function stockConfirmationSummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  stockConfirmationDashboardController,
   stockConfirmationPreviewController,
   createStockConfirmationController,
   listStockConfirmationsController,
