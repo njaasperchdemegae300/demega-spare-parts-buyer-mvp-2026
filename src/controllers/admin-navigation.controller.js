@@ -18,6 +18,7 @@ const buyerReplyService = require("../services/buyer-reply.service");
 const buyerReplyFollowupActionService = require("../services/buyer-reply-followup-action.service");
 const manualDealOutcomeService = require("../services/manual-deal-outcome.service");
 const manualStockMovementReviewService = require("../services/manual-stock-movement-review.service");
+const manualAccountingReviewService = require("../services/manual-accounting-review.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -38,7 +39,8 @@ const modules = [
   { name: "Buyer Reply Follow-Up Action Gate", path: "/buyer-reply-followup", purpose: "Manual follow-up action visibility. Manual action only; system does not execute, send, auto-reply, move pipeline, close sale, read messages, scrape, or harvest data." }
 ,
   { name: "Manual Deal Outcome Gate", path: "/manual-deal-outcome", purpose: "Manual deal outcome visibility. Outcome record only; system does not close sale, move pipeline, send, auto-reply, handle payment, change stock, read messages, scrape, or harvest data." },
-  { name: "Manual Stock Movement Review Gate", path: "/manual-stock-movement-review", purpose: "Manual stock movement review visibility. Review-only; system does not update inventory, reduce stock, reserve stock, release stock, create stock ledger, handle payment, send, read messages, scrape, or harvest data." }];
+  { name: "Manual Stock Movement Review Gate", path: "/manual-stock-movement-review", purpose: "Manual stock movement review visibility. Review-only; system does not update inventory, reduce stock, reserve stock, release stock, create stock ledger, handle payment, send, read messages, scrape, or harvest data." },
+  { name: "Manual Accounting Review Gate", path: "/manual-accounting-review", purpose: "Manual accounting review visibility. Review-only; system does not create accounting entries, financial ledger, verify payment, generate receipts, create invoices, record revenue, move pipeline, update inventory, send, read messages, scrape, or harvest data." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -80,6 +82,35 @@ function getSafety() {
     buyerReplyFollowupActionGateOnly: true,
     manualDealOutcomeGateOnly: true,
     manualStockMovementReviewGateOnly: true,
+    manualAccountingReviewGateOnly: true,
+    manualAccountingReviewOnly: true,
+    accountingEntryPreparedOnly: true,
+    requiresManualStockMovementReview: true,
+    requiresAdminReviewedStockMovement: true,
+    requiresManualAccountingReviewApproval: true,
+    systemDoesNotCreateAccountingEntry: true,
+    systemDoesNotCreateFinancialLedger: true,
+    systemDoesNotVerifyPayment: true,
+    systemDoesNotCollectPayment: true,
+    systemDoesNotGenerateReceipt: true,
+    systemDoesNotSendReceipt: true,
+    systemDoesNotCreateInvoice: true,
+    systemDoesNotRecordRevenue: true,
+    manualAccountingEntryRequired: true,
+    manualPaymentVerificationRequired: true,
+    manualReceiptRequired: true,
+    manualInvoiceRequiredIfNeeded: true,
+    manualFinancialLedgerEntryRequired: true,
+    manualReviewRequiredBeforeAccountingEntry: true,
+    autoCreateAccountingEntry: false,
+    createAccountingEntryAutomatically: false,
+    autoCreateFinancialLedgerEntry: false,
+    autoVerifyPayment: false,
+    verifyPaymentAutomatically: false,
+    autoGenerateReceipt: false,
+    autoSendReceipt: false,
+    autoCreateInvoice: false,
+    autoUpdateRevenue: false,
 
     manualEntryOnly: true,
     manualActionOnly: true,
@@ -231,6 +262,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const buyerReplyFollowupAction = safeRead(() => buyerReplyFollowupActionService.getBuyerReplyFollowupActionSummary(), {});
   const manualDealOutcome = safeRead(() => manualDealOutcomeService.getManualDealOutcomeSummary(), {});
   const manualStockMovementReview = safeRead(() => manualStockMovementReviewService.getManualStockMovementReviewSummary(), {});
+  const manualAccountingReview = safeRead(() => manualAccountingReviewService.getManualAccountingReviewSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -257,7 +289,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       buyerReply,
       buyerReplyFollowupAction,
       manualDealOutcome,
-      manualStockMovementReview
+      manualStockMovementReview,
+      manualAccountingReview
     },
     safety: getSafety()
   });

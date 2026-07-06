@@ -1076,3 +1076,56 @@ Create a safe manual accounting review gate after manual stock movement review. 
 
 ## Next Phase After Approval
 Version 23B — Manual Accounting Review Dashboard Display
+
+# Version 23C — Admin Hub Link Manual Accounting Review Gate
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect Manual Accounting Review Gate into the polished Admin Navigation Hub and Live Business Snapshot.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /manual-accounting-review
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/manual-accounting-review/summary
+
+## Features
+- Manual Accounting Review Gate card in Admin Hub
+- Accounting Reviews metric
+- Payment Received Reviews metric
+- Manual Accounting Approved metric
+- Amount Confirmed metric
+- Auto Accounting Entry metric
+- Auto Receipt Count metric
+- Auto Revenue Count metric
+- Manual accounting review metrics inside admin metrics API
+- Manual accounting review safety locks inside admin summary
+
+## Safety Rules
+- Navigation and visibility only
+- Metrics API is read-only
+- Manual Accounting Review Gate is accounting-review-only
+- Manual stock movement review is required
+- Admin reviewed stock movement is required
+- Manual accounting review approval is required
+- No automatic accounting entry
+- No automatic financial ledger entry
+- No automatic payment verification
+- No automatic receipt generation
+- No automatic invoice creation
+- No automatic revenue recording
+- No automatic pipeline movement
+- No automatic inventory update
+- No WhatsApp auto-send
+- No buyer message reading
+- No private message scraping
+- No hidden data harvesting
+- Manual accounting entry required
+- Manual receipt and financial ledger entry required
+
+## Next Phase After Approval
+Version 24A — Manual Final Business Review Gate Foundation

@@ -54,6 +54,10 @@
       <span class="badge">MANUAL STOCK MOVEMENT REVIEW IS REVIEW ONLY</span>
       <span class="badge">NO AUTOMATIC INVENTORY UPDATE</span>
       <span class="badge">NO AUTOMATIC STOCK LEDGER</span>
+      <span class="badge">MANUAL ACCOUNTING REVIEW IS REVIEW ONLY</span>
+      <span class="badge">NO AUTOMATIC ACCOUNTING ENTRY</span>
+      <span class="badge">NO AUTOMATIC RECEIPT</span>
+      <span class="badge">NO AUTOMATIC REVENUE RECORDING</span>
       <span class="badge">NO AUTOMATIC CLOSING</span>
       <span class="badge warn">ADMIN MUST MANUALLY OBSERVE BUYER REPLY OUTSIDE THE SYSTEM</span>
       <ul>
@@ -76,6 +80,11 @@
         <li>Manual stock movement review only displays admin-reviewed stock movement decisions.</li>
         <li>It does not update inventory automatically.</li>
         <li>It does not create stock ledger automatically.</li>
+        <li>Manual accounting review only displays admin-reviewed accounting decisions.</li>
+        <li>It does not create accounting entries automatically.</li>
+        <li>It does not verify payment automatically.</li>
+        <li>It does not generate receipts automatically.</li>
+        <li>It does not record revenue automatically.</li>
       </ul>
     </section>
 
@@ -120,6 +129,13 @@
         <div class="metric"><h2>Inventory Changed By System</h2><strong id="inventoryChangedBySystem">0</strong></div>
         <div class="metric"><h2>Auto Inventory Update</h2><strong id="autoInventoryUpdate">0</strong></div>
         <div class="metric"><h2>Auto Ledger Count</h2><strong id="autoLedgerCount">0</strong></div>
+        <div class="metric"><h2>Accounting Reviews</h2><strong id="manualAccountingReviews">0</strong></div>
+        <div class="metric"><h2>Payment Received Reviews</h2><strong id="paymentReceivedReviews">0</strong></div>
+        <div class="metric"><h2>Manual Accounting Approved</h2><strong id="manualAccountingApproved">0</strong></div>
+        <div class="metric"><h2>Amount Confirmed</h2><strong id="manualAccountingAmountConfirmed">0</strong></div>
+        <div class="metric"><h2>Auto Accounting Entry</h2><strong id="autoAccountingEntry">0</strong></div>
+        <div class="metric"><h2>Auto Receipt Count</h2><strong id="autoReceiptCount">0</strong></div>
+        <div class="metric"><h2>Auto Revenue Count</h2><strong id="autoRevenueCount">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -143,6 +159,7 @@
       <div class="card"><h2>Buyer Reply Follow-Up Action Gate</h2><p>View manual next-action plans after buyer replies. No system execution, auto-send, auto-reply, pipeline movement, automatic closing, message reading, scraping, or hidden harvesting.</p><a href="/buyer-reply-followup">Open Follow-Up Action Gate</a></div>
       <div class="card"><h2>Manual Deal Outcome Gate</h2><p>View admin-recorded deal outcomes after manual action completion. No automatic sale closing, pipeline movement, payment handling, stock change, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-deal-outcome">Open Manual Deal Outcome Gate</a></div>
       <div class="card"><h2>Manual Stock Movement Review Gate</h2><p>View manual stock movement reviews after deal outcomes. No automatic inventory update, stock reduction, stock reservation, stock release, stock ledger, payment handling, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-stock-movement-review">Open Stock Movement Review Gate</a></div>
+      <div class="card"><h2>Manual Accounting Review Gate</h2><p>View manual accounting reviews after stock movement reviews. No automatic accounting entry, financial ledger, payment verification, receipt, invoice, revenue recording, pipeline movement, inventory update, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-accounting-review">Open Accounting Review Gate</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -195,6 +212,13 @@
       document.getElementById("inventoryChangedBySystem").textContent = safeNumber(metrics.manualStockMovementReview && metrics.manualStockMovementReview.inventoryChangedBySystemCount);
       document.getElementById("autoInventoryUpdate").textContent = safeNumber(metrics.manualStockMovementReview && metrics.manualStockMovementReview.autoUpdateInventoryCount);
       document.getElementById("autoLedgerCount").textContent = safeNumber(metrics.manualStockMovementReview && metrics.manualStockMovementReview.autoLedgerCount);
+      document.getElementById("manualAccountingReviews").textContent = safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.totalManualAccountingReviews);
+      document.getElementById("paymentReceivedReviews").textContent = safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.paymentReceivedReviewCount);
+      document.getElementById("manualAccountingApproved").textContent = safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.approvedForManualAccountingEntryCount);
+      document.getElementById("manualAccountingAmountConfirmed").textContent = safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.amountConfirmedByAdminTotal).toLocaleString();
+      document.getElementById("autoAccountingEntry").textContent = safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.autoAccountingEntryCount);
+      document.getElementById("autoReceiptCount").textContent = safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.autoReceiptCount);
+      document.getElementById("autoRevenueCount").textContent = safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.autoRevenueCount);
 
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
@@ -211,7 +235,8 @@
         safeNumber(metrics.buyerReply && metrics.buyerReply.autoSendWhatsAppCount) +
         safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.autoSendWhatsAppCount) +
         safeNumber(metrics.manualDealOutcome && metrics.manualDealOutcome.autoSendWhatsAppCount) +
-        safeNumber(metrics.manualStockMovementReview && metrics.manualStockMovementReview.autoSendWhatsAppCount);
+        safeNumber(metrics.manualStockMovementReview && metrics.manualStockMovementReview.autoSendWhatsAppCount) +
+        safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {

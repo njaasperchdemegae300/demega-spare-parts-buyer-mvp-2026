@@ -1,46 +1,44 @@
 # LATEST STATUS
 
 Current Phase:
-Version 23B — Manual Accounting Review Dashboard Display
+Version 23C — Admin Hub Link Manual Accounting Review Gate
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /manual-accounting-review
-- GET /manual-accounting-reviews
-- Manual Accounting Review dashboard
-- Accounting review metric cards
-- Accounting review table
-- Review type filter
-- Accounting action filter
-- Safety status filter
-- Amount expected display
-- Amount confirmed display
-- Payment method display
-- Manual transaction reference display
-- Manual receipt number display
-- Accounting note display
-- Safety labels
+- Manual Accounting Review Gate linked inside Admin Navigation Hub
+- Accounting Reviews metric
+- Payment Received Reviews metric
+- Manual Accounting Approved metric
+- Amount Confirmed metric
+- Auto Accounting Entry metric
+- Auto Receipt Count metric
+- Auto Revenue Count metric
+- Manual accounting review metrics inside admin metrics API
+- Manual accounting review safety locks inside admin summary
+- Linked Manual Accounting Review dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays manual accounting review records only
-- Dashboard does not create accounting entries automatically
-- Dashboard does not create financial ledger entries automatically
-- Dashboard does not verify payment automatically
-- Dashboard does not collect payment automatically
-- Dashboard does not generate receipts automatically
-- Dashboard does not create invoices automatically
-- Dashboard does not record revenue automatically
-- Dashboard does not move pipeline automatically
-- Dashboard does not update inventory automatically
-- Dashboard does not send WhatsApp
-- Dashboard does not read buyer messages
-- Dashboard does not scrape private messages
-- Dashboard does not harvest hidden data
+- Admin hub remains navigation and visibility only
+- Metrics API is read-only
+- Manual Accounting Review Gate remains accounting-review-only
 - Manual stock movement review is required before accounting review
-- Admin review and manual accounting approval are required
-- Manual accounting entry, payment verification, receipt, and financial ledger entry are required after review
+- Admin reviewed stock movement is required
+- Manual accounting review approval is required
+- Admin hub does not create accounting entries
+- Admin hub does not create financial ledger entries
+- Admin hub does not verify payment
+- Admin hub does not generate receipts
+- Admin hub does not create invoices
+- Admin hub does not record revenue
+- Admin hub does not move pipeline
+- Admin hub does not update inventory
+- Admin hub does not send WhatsApp
+- Admin hub does not read buyer messages
+- Admin hub does not scrape private messages
+- Admin hub does not harvest hidden data
+- Manual accounting entry, payment verification, receipt, and financial ledger entry remain required
 
 Next Phase:
-Version 23C — Admin Hub Link Manual Accounting Review Gate
+Version 24A — Manual Final Business Review Gate Foundation
