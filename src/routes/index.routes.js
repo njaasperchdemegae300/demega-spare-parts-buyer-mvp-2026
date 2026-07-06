@@ -45,6 +45,8 @@ function routeRequest(req, res, sendJson) {
         "/buyer-action-queue",
         "/hot-buyers",
         "/hot-buyer-command-center",
+        "/whatsapp-manual",
+        "/whatsapp-manual-links",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -97,6 +99,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/admin-navigation/dashboard-metrics") {
     return adminNavigationController.adminNavigationDashboardMetricsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && (url.pathname === "/whatsapp-manual" || url.pathname === "/whatsapp-manual-links")) {
+    return whatsappManualController.whatsappManualDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/whatsapp-manual/preview") {

@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const whatsappManualService = require("../services/whatsapp-manual.service");
+
+function whatsappManualDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "whatsapp-manual-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "WhatsApp manual dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function whatsappManualPreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -56,6 +72,7 @@ function whatsappManualSummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  whatsappManualDashboardController,
   whatsappManualPreviewController,
   createWhatsappManualLinkController,
   listWhatsappManualLinksController,

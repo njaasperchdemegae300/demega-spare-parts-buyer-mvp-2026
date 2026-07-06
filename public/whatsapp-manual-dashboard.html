@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega WhatsApp Manual Open Link Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1300px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 260px; }
+    a.manual-link { display: inline-block; padding: 8px 10px; background: #111827; color: white; text-decoration: none; border-radius: 8px; font-size: 13px; }
+    .warning { border-left: 5px solid #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega WhatsApp Manual Open Link Dashboard</h1>
+    <p>Manual Open Link display only. No auto-send. No auto-open. No price before stock and compatibility confirmation.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Manual Links</h2><strong id="totalManualLinks">0</strong></div>
+      <div class="card"><h2>Manual Open Only</h2><strong id="manualOpenOnly">0</strong></div>
+      <div class="card"><h2>Manual Review Required</h2><strong id="manualReviewRequired">0</strong></div>
+      <div class="card"><h2>Auto Send Count</h2><strong id="autoSendWhatsAppCount">0</strong></div>
+      <div class="card"><h2>Price Included Count</h2><strong id="priceIncludedCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">MANUAL ONLY</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual WhatsApp Safety Rule</h2>
+      <p class="muted">
+        This dashboard can show an Open WhatsApp Manually link, but it must not send messages, open browser automatically,
+        include price, or create quote automatically. You must review the buyer, verify stock, verify compatibility, then send manually.
+      </p>
+      <span class="badge safe">No auto-send</span>
+      <span class="badge safe">No auto-open</span>
+      <span class="badge safe">No auto-message</span>
+      <span class="badge safe">No price included</span>
+      <span class="badge safe">No auto-quote</span>
+    </section>
+
+    <section class="panel">
+      <h2>WhatsApp Manual Open Links</h2>
+      <p class="muted">Read-only list of safely prepared WhatsApp links.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, car, message..." />
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>WhatsApp Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Location</th>
+            <th>Message Preview</th>
+            <th>Manual Link</th>
+            <th>Safety</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="whatsappRows">
+          <tr><td colspan="10">Loading WhatsApp manual links...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allLinks = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function safeHref(value) {
+      const href = String(value || "");
+      return href.startsWith("https://wa.me/") ? href : "#";
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function getFilteredLinks() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+
+      return allLinks.filter(item => {
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.normalizedWhatsappPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.location,
+          item.source,
+          item.message
+        ].join(" ").toLowerCase();
+
+        return !search || haystack.includes(search);
+      });
+    }
+
+    function renderLinks() {
+      const tbody = document.getElementById("whatsappRows");
+      const links = getFilteredLinks();
+
+      if (!links.length) {
+        tbody.innerHTML = '<tr><td colspan="10">No matching WhatsApp manual links.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = links.map(item => {
+        const safety = [
+          item.manualOpenOnly ? badge("Manual open", "safe") : badge("Risk", "danger"),
+          item.manualReviewRequired ? badge("Manual review", "safe") : badge("Review risk", "danger"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.autoOpenBrowser ? badge("Auto-open risk", "danger") : badge("No auto-open", "safe"),
+          item.automaticBuyerMessage ? badge("Auto-message risk", "danger") : badge("No auto-message", "safe"),
+          item.sentToBuyer ? badge("Sent risk", "danger") : badge("Not sent", "safe"),
+          item.priceIncluded ? badge("Price risk", "danger") : badge("No price", "safe"),
+          item.quoteCreatedAutomatically ? badge("Auto-quote risk", "danger") : badge("No auto-quote", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.normalizedWhatsappPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""} ${item.engineCode || ""}`)}</td>
+            <td>${escapeHtml(item.location)}</td>
+            <td>${escapeHtml(item.message)}</td>
+            <td><a class="manual-link" href="${safeHref(item.whatsappUrl)}" target="_blank" rel="noopener noreferrer">Open WhatsApp Manually</a></td>
+            <td>${safety}</td>
+            <td>${formatDate(item.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadWhatsappManualDashboard() {
+      const summaryResponse = await fetch("/api/whatsapp-manual/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalManualLinks").textContent = summary.totalManualLinks || 0;
+      document.getElementById("manualOpenOnly").textContent = summary.manualOpenOnly || 0;
+      document.getElementById("manualReviewRequired").textContent = summary.manualReviewRequired || 0;
+      document.getElementById("autoSendWhatsAppCount").textContent = summary.autoSendWhatsAppCount || 0;
+      document.getElementById("priceIncludedCount").textContent = summary.priceIncludedCount || 0;
+
+      const listResponse = await fetch("/api/whatsapp-manual/links");
+      const listData = await listResponse.json();
+      allLinks = Array.isArray(listData.links) ? listData.links : [];
+
+      renderLinks();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderLinks);
+
+    loadWhatsappManualDashboard().catch(error => {
+      document.getElementById("whatsappRows").innerHTML =
+        `<tr><td colspan="10">WhatsApp manual dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

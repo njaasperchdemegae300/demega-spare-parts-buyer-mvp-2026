@@ -350,3 +350,38 @@ Connect the Hot Buyer Command Center into the polished Admin Navigation Hub and 
 
 ## Next Phase After Approval
 Version 12A — WhatsApp Manual Open Link Foundation
+
+# Version 12B — WhatsApp Manual Open Link Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display safe WhatsApp manual open links in a read-only dashboard.
+
+## Routes
+- GET /whatsapp-manual
+- GET /whatsapp-manual-links
+- GET /api/whatsapp-manual/links
+- GET /api/whatsapp-manual/summary
+
+## Features
+- WhatsApp manual link dashboard
+- Manual link metric cards
+- Manual WhatsApp open link display
+- Search filter
+- Safe message preview
+- Manual-open safety labels
+
+## Safety Rules
+- Manual open only
+- No WhatsApp auto-send
+- No automatic browser opening
+- No automatic buyer message
+- sentToBuyer remains false
+- No price included
+- No automatic quote creation
+- Manual review remains required
+
+## Next Phase After Approval
+Version 12C — Admin Hub Link WhatsApp Manual Open Dashboard
