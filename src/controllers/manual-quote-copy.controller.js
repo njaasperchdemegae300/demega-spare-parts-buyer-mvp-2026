@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const manualQuoteCopyService = require("../services/manual-quote-copy.service");
+
+function manualQuoteCopyDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "manual-quote-copy-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Manual Quote Copy dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function manualQuoteCopyPreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -61,6 +77,7 @@ function manualQuoteCopySummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  manualQuoteCopyDashboardController,
   manualQuoteCopyPreviewController,
   prepareManualQuoteCopyController,
   listManualQuoteCopyActionsController,

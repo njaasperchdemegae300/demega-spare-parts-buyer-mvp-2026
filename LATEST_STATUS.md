@@ -1,40 +1,33 @@
 # LATEST STATUS
 
 Current Phase:
-Version 17A — Manual Quote Copy Button Foundation
+Version 17B — Manual Quote Copy Button Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /api/manual-quote-copy/preview
-- GET /api/manual-quote-copies
-- GET /api/manual-quote-copy/summary
-- POST /api/manual-quote-copy/prepare
-- Manual quote copy preparation
-- Draft existence check
-- Final quote eligibility safety check
-- Draft-only safety check
-- Copy text preparation
-- Copy action audit log
-- Missing draft blocking
-- Unsafe send/browser/pipeline/sent request blocking
-- Safe manual quote copy metrics
+- GET /manual-quote-copy
+- GET /manual-quote-copies
+- Manual Quote Copy Button dashboard
+- Prepared copy text table
+- Manual select-text button
+- Copy action metric cards
+- Copy action filters
+- Copy safety labels
 
 Safety Confirmed:
-- Manual quote copy foundation prepares copy text only
-- Server does not access clipboard
-- Browser auto-copy is not used in this foundation
-- Copy text comes only from safe draft after final quote eligibility
-- Price may appear inside copy text after eligibility
-- Price is not sent to buyer
-- System does not send WhatsApp
-- System does not message buyer automatically
-- System does not open browser automatically
-- System does not move pipeline automatically
-- System does not mark quote as sent
+- Dashboard displays prepared copy text only
+- Manual select button only selects text for human admin copy
+- Dashboard does not access browser clipboard
+- Dashboard does not send WhatsApp
+- Dashboard does not message buyer automatically
+- Dashboard does not open browser automatically
+- Dashboard does not move pipeline automatically
+- Dashboard does not mark quote as sent
+- Price may appear inside copy text after eligibility, but price is not sent to buyer
 - sentToBuyer remains false
 - Manual review remains required
 
 Next Phase:
-Version 17B — Manual Quote Copy Button Dashboard Display
+Version 17C — Admin Hub Link Manual Quote Copy Button

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Manual Quote Copy Button Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1850px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    textarea { width: 420px; min-height: 180px; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-family: Arial, sans-serif; resize: vertical; }
+    button { padding: 8px 10px; border: 0; border-radius: 8px; background: #111827; color: white; cursor: pointer; margin-top: 8px; }
+    button:hover { opacity: 0.9; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Manual Quote Copy Button Dashboard</h1>
+    <p>Read-only prepared quote copy text. The button only selects text for manual admin copy; it does not send, auto-copy, or open WhatsApp.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Copy Actions</h2><strong id="totalManualQuoteCopyActions">0</strong></div>
+      <div class="card"><h2>Copy Prepared</h2><strong id="copyPreparedCount">0</strong></div>
+      <div class="card"><h2>Manual Copy Only</h2><strong id="manualCopyOnlyCount">0</strong></div>
+      <div class="card"><h2>Price In Copy Text</h2><strong id="priceIncludedInCopyTextCount">0</strong></div>
+      <div class="card"><h2>Price Sent To Buyer</h2><strong id="priceSentToBuyerCount">0</strong></div>
+      <div class="card"><h2>Clipboard Access</h2><strong id="serverClipboardAccessCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">MANUAL COPY ONLY</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Quote Copy Safety Rule</h2>
+      <p class="muted">
+        This dashboard displays prepared copy text from safe manual quote drafts only. The copy button only selects the text for human review.
+        It must not use browser clipboard automation, send WhatsApp, open WhatsApp, mark the quote as sent, or move pipeline automatically.
+      </p>
+      <span class="badge safe">Prepare copy text only</span>
+      <span class="badge safe">Server does not access clipboard</span>
+      <span class="badge safe">No browser auto-copy</span>
+      <span class="badge safe">No auto-send</span>
+      <span class="badge safe">No sent marking</span>
+      <span class="badge safe">Manual review required</span>
+    </section>
+
+    <section class="panel">
+      <h2>Manual Quote Copy Records</h2>
+      <p class="muted">Read-only list of prepared manual quote copy text. Admin must review and copy manually.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, amount, copy text..." />
+        <select id="copyFilter">
+          <option value="">All copy actions</option>
+          <option value="prepared">Prepared Only</option>
+          <option value="manual_only">Manual Copy Only</option>
+          <option value="sent_risk">Sent Risk</option>
+        </select>
+        <select id="priceFilter">
+          <option value="">All price status</option>
+          <option value="price_in_text">Price In Copy Text</option>
+          <option value="price_sent_risk">Price Sent Risk</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Quote Amount</th>
+            <th>Prepared Copy Text</th>
+            <th>Manual Select Button</th>
+            <th>Safety</th>
+            <th>Prepared By</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="copyRows">
+          <tr><td colspan="10">Loading manual quote copy actions...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allCopyActions = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function selectCopyText(elementId) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+      element.focus();
+      element.select();
+    }
+
+    function getFilteredCopyActions() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const copyFilter = document.getElementById("copyFilter").value;
+      const priceFilter = document.getElementById("priceFilter").value;
+
+      return allCopyActions.filter(item => {
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.formattedQuoteAmount,
+          item.copyText,
+          item.preparedBy,
+          item.note
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!copyFilter ||
+            (copyFilter === "prepared" && item.copyPrepared === true) ||
+            (copyFilter === "manual_only" && item.manualCopyOnly === true && item.sentToBuyer !== true) ||
+            (copyFilter === "sent_risk" && (item.sentToBuyer === true || item.sentByAdmin === true || item.priceSentToBuyer === true))) &&
+          (!priceFilter ||
+            (priceFilter === "price_in_text" && item.priceIncludedInCopyText === true) ||
+            (priceFilter === "price_sent_risk" && item.priceSentToBuyer === true));
+      });
+    }
+
+    function renderCopyActions() {
+      const tbody = document.getElementById("copyRows");
+      const copyActions = getFilteredCopyActions();
+
+      if (!copyActions.length) {
+        tbody.innerHTML = '<tr><td colspan="10">No matching manual quote copy actions.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = copyActions.map((item, index) => {
+        const textareaId = `manualCopyText_${index}`;
+
+        const safety = [
+          item.copyTextPreparedOnly ? badge("Copy text only", "safe") : badge("Copy mode risk", "danger"),
+          item.manualCopyOnly ? badge("Manual copy only", "safe") : badge("Manual risk", "danger"),
+          item.serverClipboardAccess ? badge("Server clipboard risk", "danger") : badge("No server clipboard", "safe"),
+          item.browserAutoCopy ? badge("Browser auto-copy risk", "danger") : badge("No browser auto-copy", "safe"),
+          item.priceIncludedInCopyText ? badge("Price in copy text", "safe") : badge("No price text"),
+          item.priceSentToBuyer ? badge("Price sent risk", "danger") : badge("Price not sent", "safe"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.automaticBuyerMessage ? badge("Auto-message risk", "danger") : badge("No auto-message", "safe"),
+          item.autoOpenBrowser ? badge("Auto-browser risk", "danger") : badge("No auto-browser", "safe"),
+          item.sentToBuyer ? badge("Sent risk", "danger") : badge("Not sent", "safe"),
+          item.pipelineMovedAutomatically ? badge("Auto-pipeline risk", "danger") : badge("No auto-pipeline", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""} ${item.engineCode || ""}`)}</td>
+            <td>${badge(item.formattedQuoteAmount || item.quoteAmount || "", "safe")}</td>
+            <td><textarea id="${textareaId}" readonly>${escapeHtml(item.copyText)}</textarea></td>
+            <td>
+              <button type="button" onclick="selectCopyText('${textareaId}')">Select Text For Manual Copy</button>
+              <p class="muted">Manual admin review required before sending.</p>
+            </td>
+            <td>${safety}</td>
+            <td>${escapeHtml(item.preparedBy)}</td>
+            <td>${formatDate(item.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadManualQuoteCopyDashboard() {
+      const summaryResponse = await fetch("/api/manual-quote-copy/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalManualQuoteCopyActions").textContent = summary.totalManualQuoteCopyActions || 0;
+      document.getElementById("copyPreparedCount").textContent = summary.copyPreparedCount || 0;
+      document.getElementById("manualCopyOnlyCount").textContent = summary.manualCopyOnlyCount || 0;
+      document.getElementById("priceIncludedInCopyTextCount").textContent = summary.priceIncludedInCopyTextCount || 0;
+      document.getElementById("priceSentToBuyerCount").textContent = summary.priceSentToBuyerCount || 0;
+      document.getElementById("serverClipboardAccessCount").textContent = summary.serverClipboardAccessCount || 0;
+
+      const listResponse = await fetch("/api/manual-quote-copies");
+      const listData = await listResponse.json();
+      allCopyActions = Array.isArray(listData.copyActions) ? listData.copyActions : [];
+
+      renderCopyActions();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderCopyActions);
+    document.getElementById("copyFilter").addEventListener("change", renderCopyActions);
+    document.getElementById("priceFilter").addEventListener("change", renderCopyActions);
+
+    loadManualQuoteCopyDashboard().catch(error => {
+      document.getElementById("copyRows").innerHTML =
+        `<tr><td colspan="10">Manual quote copy dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

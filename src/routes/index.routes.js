@@ -60,6 +60,8 @@ function routeRequest(req, res, sendJson) {
         "/quote-eligibility-gate",
         "/manual-quote-draft",
         "/manual-quote-drafts",
+        "/manual-quote-copy",
+        "/manual-quote-copies",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -152,6 +154,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-quote-draft" || url.pathname === "/manual-quote-drafts")) {
     return manualQuoteDraftController.manualQuoteDraftDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/manual-quote-copy" || url.pathname === "/manual-quote-copies")) {
+    return manualQuoteCopyController.manualQuoteCopyDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/manual-quote-copy/preview") {
