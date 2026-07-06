@@ -14,6 +14,7 @@ const actionQueueController = require("../controllers/action-queue.controller");
 const hotBuyerController = require("../controllers/hot-buyer.controller");
 const whatsappManualController = require("../controllers/whatsapp-manual.controller");
 const stockConfirmationController = require("../controllers/stock-confirmation.controller");
+const compatibilityConfirmationController = require("../controllers/compatibility-confirmation.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -58,6 +59,9 @@ function routeRequest(req, res, sendJson) {
         "/api/stock-confirmation/preview",
         "/api/stock-confirmations",
         "/api/stock-confirmation/summary",
+        "/api/compatibility-confirmation/preview",
+        "/api/compatibility-confirmations",
+        "/api/compatibility-confirmation/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -91,6 +95,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/action-queue/create",
         "POST /api/whatsapp-manual/open-link",
         "POST /api/stock-confirmation/confirm",
+        "POST /api/compatibility-confirmation/confirm",
         "GET /api/leads"
       ]
     });
@@ -114,6 +119,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/stock-confirmation" || url.pathname === "/stock-confirmation-gate")) {
     return stockConfirmationController.stockConfirmationDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/compatibility-confirmation/preview") {
+    return compatibilityConfirmationController.compatibilityConfirmationPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/compatibility-confirmations") {
+    return compatibilityConfirmationController.listCompatibilityConfirmationsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/compatibility-confirmation/summary") {
+    return compatibilityConfirmationController.compatibilityConfirmationSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/compatibility-confirmation/confirm") {
+    return compatibilityConfirmationController.createCompatibilityConfirmationController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/stock-confirmation/preview") {
