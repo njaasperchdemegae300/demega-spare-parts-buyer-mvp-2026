@@ -545,3 +545,45 @@ Create a safe final quote eligibility gate that checks whether a lead is eligibl
 
 ## Next Phase After Approval
 Version 15B — Safe Final Quote Eligibility Dashboard Display
+
+# Version 15C — Admin Hub Link Safe Final Quote Eligibility Gate
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect the Safe Final Quote Eligibility Gate into the polished Admin Navigation Hub and Live Business Snapshot.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /quote-eligibility
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/quote-eligibility/summary
+
+## Features
+- Safe Final Quote Eligibility Gate card in Admin Hub
+- Quote Eligibility Checks metric
+- Eligible For Manual Quote Draft metric
+- Final Quote Gate Passed metric
+- Blocked Quote Gate metric
+- Quote eligibility metrics inside admin metrics API
+- Quote eligibility safety locks inside admin summary
+
+## Safety Rules
+- Navigation and visibility only
+- Metrics API is read-only
+- Quote eligibility gate is check-only
+- Manual quote draft allowed only after stock and compatibility are both confirmed
+- No automatic quote creation
+- No price or quote amount included
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic browser opening
+- No automatic pipeline movement
+- sentToBuyer remains false
+- Manual review remains required
+
+## Next Phase After Approval
+Version 16A — Safe Manual Quote Draft Builder Foundation

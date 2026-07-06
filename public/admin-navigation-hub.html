@@ -29,7 +29,7 @@
 <body>
   <header>
     <h1>Demega Admin Navigation Hub</h1>
-    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, manual WhatsApp links, stock confirmation, and compatibility confirmation.</p>
+    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, manual WhatsApp links, stock confirmation, compatibility confirmation, and final quote eligibility.</p>
   </header>
 
   <main>
@@ -39,11 +39,13 @@
       <span class="badge">MANUAL REVIEW REQUIRED</span>
       <span class="badge">NO AUTO QUOTE</span>
       <span class="badge">NO AUTO PIPELINE MOVE</span>
+      <span class="badge">NO PRICE AT ELIGIBILITY GATE</span>
       <span class="badge">ACTION QUEUE IS MANUAL ONLY</span>
       <span class="badge">HOT BUYER RANKING IS READ ONLY</span>
       <span class="badge">WHATSAPP LINKS ARE MANUAL OPEN ONLY</span>
       <span class="badge">STOCK CONFIRMATION IS MANUAL ONLY</span>
       <span class="badge">COMPATIBILITY CONFIRMATION IS MANUAL ONLY</span>
+      <span class="badge">FINAL QUOTE ELIGIBILITY IS CHECK ONLY</span>
       <span class="badge warn">MANUAL QUOTE DRAFT ONLY AFTER STOCK + COMPATIBILITY CONFIRMATION</span>
       <ul>
         <li>This hub is navigation and visibility only.</li>
@@ -51,9 +53,9 @@
         <li>It does not open WhatsApp automatically.</li>
         <li>It does not message buyers automatically.</li>
         <li>It does not create quotes automatically.</li>
+        <li>It does not include price or quote amount.</li>
         <li>It does not move buyer pipeline stages automatically.</li>
-        <li>It does not contact hot buyers automatically.</li>
-        <li>Stock confirmation and compatibility confirmation must both pass before any manual quote draft.</li>
+        <li>Stock confirmation and compatibility confirmation must both pass before final manual quote draft eligibility.</li>
       </ul>
     </section>
 
@@ -71,8 +73,10 @@
         <div class="metric"><h2>Manual WhatsApp Links</h2><strong id="manualWhatsappLinks">0</strong></div>
         <div class="metric"><h2>Stock Confirmations</h2><strong id="stockConfirmations">0</strong></div>
         <div class="metric"><h2>Compatibility Confirmations</h2><strong id="compatibilityConfirmations">0</strong></div>
-        <div class="metric"><h2>Compatibility Confirmed</h2><strong id="compatibilityConfirmed">0</strong></div>
-        <div class="metric"><h2>Quote Gate Ready</h2><strong id="quoteGateReady">0</strong></div>
+        <div class="metric"><h2>Quote Eligibility Checks</h2><strong id="quoteEligibilityChecks">0</strong></div>
+        <div class="metric"><h2>Eligible For Manual Quote Draft</h2><strong id="eligibleForManualQuoteDraft">0</strong></div>
+        <div class="metric"><h2>Final Quote Gate Passed</h2><strong id="finalQuoteGatePassed">0</strong></div>
+        <div class="metric"><h2>Blocked Quote Gate</h2><strong id="blockedQuoteGate">0</strong></div>
         <div class="metric"><h2>Auto Quote Count</h2><strong id="autoQuoteCount">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
@@ -140,6 +144,12 @@
       </div>
 
       <div class="card">
+        <h2>Safe Final Quote Eligibility Gate</h2>
+        <p>View final manual quote eligibility checks. This gate only checks readiness and never creates quote automatically.</p>
+        <a href="/quote-eligibility">Open Quote Eligibility Gate</a>
+      </div>
+
+      <div class="card">
         <h2>System Health</h2>
         <p>Check whether the backend server foundation is alive and responding.</p>
         <a href="/api/health">Open Health API</a>
@@ -168,13 +178,16 @@
       document.getElementById("manualWhatsappLinks").textContent = safeNumber(metrics.whatsappManual && metrics.whatsappManual.totalManualLinks);
       document.getElementById("stockConfirmations").textContent = safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.totalStockConfirmations);
       document.getElementById("compatibilityConfirmations").textContent = safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.totalCompatibilityConfirmations);
-      document.getElementById("compatibilityConfirmed").textContent = safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.compatibilityConfirmed);
-      document.getElementById("quoteGateReady").textContent = safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.quoteGateReadyCount);
+      document.getElementById("quoteEligibilityChecks").textContent = safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.totalQuoteEligibilityChecks);
+      document.getElementById("eligibleForManualQuoteDraft").textContent = safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.eligibleForManualQuoteDraft);
+      document.getElementById("finalQuoteGatePassed").textContent = safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.finalQuoteGatePassed);
+      document.getElementById("blockedQuoteGate").textContent = safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.blockedQuoteGate);
 
       document.getElementById("autoQuoteCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoCreateQuoteCount) +
         safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.autoCreateQuoteCount) +
-        safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.autoCreateQuoteCount);
+        safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.autoCreateQuoteCount) +
+        safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.autoCreateQuoteCount);
 
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
@@ -183,7 +196,8 @@
         safeNumber(metrics.hotBuyers && metrics.hotBuyers.autoSendWhatsAppCount) +
         safeNumber(metrics.whatsappManual && metrics.whatsappManual.autoSendWhatsAppCount) +
         safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.autoSendWhatsAppCount) +
-        safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.autoSendWhatsAppCount);
+        safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.autoSendWhatsAppCount) +
+        safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {
