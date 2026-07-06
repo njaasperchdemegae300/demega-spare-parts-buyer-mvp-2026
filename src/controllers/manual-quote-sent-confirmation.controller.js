@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const sentConfirmationService = require("../services/manual-quote-sent-confirmation.service");
+
+function manualQuoteSentConfirmationDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "manual-quote-sent-confirmation-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Manual Quote Sent Confirmation dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function manualQuoteSentConfirmationPreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -66,6 +82,7 @@ function manualQuoteSentConfirmationSummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  manualQuoteSentConfirmationDashboardController,
   manualQuoteSentConfirmationPreviewController,
   confirmManualQuoteSentController,
   listManualQuoteSentConfirmationsController,

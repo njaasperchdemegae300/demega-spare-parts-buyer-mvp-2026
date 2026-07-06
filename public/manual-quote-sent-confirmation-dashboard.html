@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Manual Quote Sent Confirmation Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1900px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    pre { white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; max-width: 460px; max-height: 240px; overflow: auto; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Manual Quote Sent Confirmation Dashboard</h1>
+    <p>Read-only confirmation records for quotes manually sent by admin outside the system after review.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Sent Confirmations</h2><strong id="totalManualQuoteSentConfirmations">0</strong></div>
+      <div class="card"><h2>Admin Manual Sent</h2><strong id="adminManualSentConfirmedCount">0</strong></div>
+      <div class="card"><h2>Manual Review Completed</h2><strong id="manualReviewCompletedCount">0</strong></div>
+      <div class="card"><h2>WhatsApp Manual</h2><strong id="whatsappManualCount">0</strong></div>
+      <div class="card"><h2>System Sent Count</h2><strong id="systemSentToBuyerCount">0</strong></div>
+      <div class="card"><h2>Auto Send Count</h2><strong id="autoSendWhatsAppCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">CONFIRMATION ONLY</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Sent Confirmation Safety Rule</h2>
+      <p class="muted">
+        This dashboard displays confirmation records only. It proves the admin manually sent the copied quote outside the system after review.
+        The system must not send WhatsApp, message buyer, open browser, access clipboard, auto-copy, move pipeline, or mark sent by system.
+      </p>
+      <span class="badge safe">Confirmation record only</span>
+      <span class="badge safe">Prepared copy action required</span>
+      <span class="badge safe">Admin manual sent confirmation required</span>
+      <span class="badge safe">Manual review completed required</span>
+      <span class="badge safe">System does not send WhatsApp</span>
+      <span class="badge safe">No clipboard access</span>
+      <span class="badge safe">No auto-copy</span>
+      <span class="badge safe">No pipeline auto-move</span>
+    </section>
+
+    <section class="panel">
+      <h2>Manual Quote Sent Confirmation Records</h2>
+      <p class="muted">Read-only list of sent confirmations. These records do not send any buyer message by themselves.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, channel, note..." />
+        <select id="channelFilter">
+          <option value="">All manual channels</option>
+          <option value="whatsapp_manual">WhatsApp Manual</option>
+          <option value="phone_call_manual">Phone Call Manual</option>
+          <option value="sms_manual">SMS Manual</option>
+          <option value="email_manual">Email Manual</option>
+          <option value="in_person_manual">In Person Manual</option>
+        </select>
+        <select id="riskFilter">
+          <option value="">All safety status</option>
+          <option value="safe">Safe Manual Confirmations</option>
+          <option value="system_sent_risk">System Sent Risk</option>
+          <option value="auto_risk">Automation Risk</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Quote Amount</th>
+            <th>Manual Channel</th>
+            <th>Manual Confirmation</th>
+            <th>Copy Text Snapshot</th>
+            <th>Safety</th>
+            <th>Confirmed By</th>
+            <th>Sent At</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="confirmationRows">
+          <tr><td colspan="12">Loading manual sent confirmations...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allConfirmations = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function formatChannel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function getFilteredConfirmations() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const channelFilter = document.getElementById("channelFilter").value;
+      const riskFilter = document.getElementById("riskFilter").value;
+
+      return allConfirmations.filter(item => {
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.formattedQuoteAmount,
+          item.sentChannel,
+          item.copyTextSnapshot,
+          item.confirmedBy,
+          item.note
+        ].join(" ").toLowerCase();
+
+        const systemRisk = item.systemSentToBuyer === true ||
+          item.sentToBuyerBySystem === true ||
+          item.quoteMarkedSentBySystem === true ||
+          item.priceSentBySystem === true ||
+          item.quoteAmountSentBySystem === true;
+
+        const autoRisk = item.autoSendWhatsApp === true ||
+          item.automaticBuyerMessage === true ||
+          item.autoOpenBrowser === true ||
+          item.autoMovePipelineStage === true ||
+          item.pipelineMovedAutomatically === true ||
+          item.serverClipboardAccess === true ||
+          item.browserAutoCopy === true ||
+          item.copiedToClipboardByBrowser === true;
+
+        return (!search || haystack.includes(search)) &&
+          (!channelFilter || item.sentChannel === channelFilter) &&
+          (!riskFilter ||
+            (riskFilter === "safe" && systemRisk !== true && autoRisk !== true) ||
+            (riskFilter === "system_sent_risk" && systemRisk === true) ||
+            (riskFilter === "auto_risk" && autoRisk === true));
+      });
+    }
+
+    function renderConfirmations() {
+      const tbody = document.getElementById("confirmationRows");
+      const confirmations = getFilteredConfirmations();
+
+      if (!confirmations.length) {
+        tbody.innerHTML = '<tr><td colspan="12">No matching manual sent confirmations.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = confirmations.map(item => {
+        const manualConfirmation = [
+          item.manualQuoteSentConfirmationOnly ? badge("Confirmation only", "safe") : badge("Confirmation risk", "danger"),
+          item.adminManualSentConfirmed ? badge("Admin manual sent", "safe") : badge("Admin flag missing", "danger"),
+          item.manualReviewCompleted ? badge("Review completed", "safe") : badge("Review missing", "danger"),
+          item.buyerMessageManuallySentByAdmin ? badge("Manually sent by admin", "safe") : badge("Manual send missing", "danger")
+        ].join("<br>");
+
+        const safety = [
+          item.systemSentToBuyer ? badge("System sent risk", "danger") : badge("System did not send", "safe"),
+          item.sentToBuyerBySystem ? badge("System sent-to-buyer risk", "danger") : badge("No system sent-to-buyer", "safe"),
+          item.quoteMarkedSentBySystem ? badge("System marked sent risk", "danger") : badge("No system sent marking", "safe"),
+          item.priceSentBySystem ? badge("System price sent risk", "danger") : badge("Price not sent by system", "safe"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.automaticBuyerMessage ? badge("Auto-message risk", "danger") : badge("No auto-message", "safe"),
+          item.autoOpenBrowser ? badge("Auto-browser risk", "danger") : badge("No auto-browser", "safe"),
+          item.serverClipboardAccess ? badge("Server clipboard risk", "danger") : badge("No server clipboard", "safe"),
+          item.browserAutoCopy ? badge("Browser auto-copy risk", "danger") : badge("No browser auto-copy", "safe"),
+          item.pipelineMovedAutomatically ? badge("Auto-pipeline risk", "danger") : badge("No auto-pipeline", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""} ${item.engineCode || ""}`)}</td>
+            <td>${badge(item.formattedQuoteAmount || item.quoteAmount || "", "safe")}</td>
+            <td>${badge(formatChannel(item.sentChannel), "safe")}</td>
+            <td>${manualConfirmation}</td>
+            <td><pre>${escapeHtml(item.copyTextSnapshot)}</pre></td>
+            <td>${safety}</td>
+            <td>${escapeHtml(item.confirmedBy)}</td>
+            <td>${formatDate(item.sentAt)}</td>
+            <td>${formatDate(item.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadManualQuoteSentConfirmationDashboard() {
+      const summaryResponse = await fetch("/api/manual-quote-sent-confirmation/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalManualQuoteSentConfirmations").textContent = summary.totalManualQuoteSentConfirmations || 0;
+      document.getElementById("adminManualSentConfirmedCount").textContent = summary.adminManualSentConfirmedCount || 0;
+      document.getElementById("manualReviewCompletedCount").textContent = summary.manualReviewCompletedCount || 0;
+      document.getElementById("whatsappManualCount").textContent = summary.whatsappManualCount || 0;
+      document.getElementById("systemSentToBuyerCount").textContent = summary.systemSentToBuyerCount || 0;
+      document.getElementById("autoSendWhatsAppCount").textContent = summary.autoSendWhatsAppCount || 0;
+
+      const listResponse = await fetch("/api/manual-quote-sent-confirmations");
+      const listData = await listResponse.json();
+      allConfirmations = Array.isArray(listData.confirmations) ? listData.confirmations : [];
+
+      renderConfirmations();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderConfirmations);
+    document.getElementById("channelFilter").addEventListener("change", renderConfirmations);
+    document.getElementById("riskFilter").addEventListener("change", renderConfirmations);
+
+    loadManualQuoteSentConfirmationDashboard().catch(error => {
+      document.getElementById("confirmationRows").innerHTML =
+        `<tr><td colspan="12">Manual sent confirmation dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

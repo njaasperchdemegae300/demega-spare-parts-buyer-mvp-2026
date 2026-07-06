@@ -711,3 +711,42 @@ Connect the Manual Quote Copy Button into the polished Admin Navigation Hub and 
 
 ## Next Phase After Approval
 Version 18A — Manual Quote Sent Confirmation Gate Foundation
+
+# Version 18B — Manual Quote Sent Confirmation Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display manual quote sent confirmations in a read-only dashboard. The dashboard shows that admin manually sent the copied quote outside the system after review. It does not send, auto-copy, access clipboard, open browser, or move pipeline.
+
+## Routes
+- GET /manual-quote-sent-confirmation
+- GET /manual-quote-sent-confirmations
+- GET /api/manual-quote-sent-confirmations
+- GET /api/manual-quote-sent-confirmation/summary
+
+## Features
+- Manual Quote Sent Confirmation dashboard
+- Sent confirmation metric cards
+- Sent confirmation table
+- Manual channel filter
+- Safety status filter
+- Copy text snapshot display
+- Safety labels
+
+## Safety Rules
+- Read-only dashboard
+- Confirmation record only
+- Admin manual sent confirmation display only
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic browser opening
+- No server clipboard access
+- No browser auto-copy
+- No automatic pipeline movement
+- No quote marked as sent by system
+- Price may exist in manually sent copy text, but price is not sent by the system
+
+## Next Phase After Approval
+Version 18C — Admin Hub Link Manual Quote Sent Confirmation Gate

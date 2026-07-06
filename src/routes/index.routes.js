@@ -63,6 +63,8 @@ function routeRequest(req, res, sendJson) {
         "/manual-quote-drafts",
         "/manual-quote-copy",
         "/manual-quote-copies",
+        "/manual-quote-sent-confirmation",
+        "/manual-quote-sent-confirmations",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -163,6 +165,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-quote-copy" || url.pathname === "/manual-quote-copies")) {
     return manualQuoteCopyController.manualQuoteCopyDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/manual-quote-sent-confirmation" || url.pathname === "/manual-quote-sent-confirmations")) {
+    return manualQuoteSentConfirmationController.manualQuoteSentConfirmationDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/manual-quote-sent-confirmation/preview") {
