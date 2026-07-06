@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Manual Accounting Review Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 2600px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    pre { white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; max-width: 440px; max-height: 220px; overflow: auto; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .cash { background: #dcfce7; color: #166534; }
+    .transfer { background: #dbeafe; color: #1e40af; }
+    .pending { background: #fef3c7; color: #92400e; }
+    .neutral { background: #e5e7eb; color: #374151; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Manual Accounting Review Dashboard</h1>
+    <p>Read-only accounting review records. The system prepares accounting review only and does not create accounting entries.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Accounting Reviews</h2><strong id="totalManualAccountingReviews">0</strong></div>
+      <div class="card"><h2>Manual Review Only</h2><strong id="manualAccountingReviewOnlyCount">0</strong></div>
+      <div class="card"><h2>Accounting Entry Prepared</h2><strong id="accountingEntryPreparedOnlyCount">0</strong></div>
+      <div class="card"><h2>Payment Received Reviews</h2><strong id="paymentReceivedReviewCount">0</strong></div>
+      <div class="card"><h2>Payment Pending Reviews</h2><strong id="paymentPendingReviewCount">0</strong></div>
+      <div class="card"><h2>Cash Payment Reviews</h2><strong id="cashPaymentReviewCount">0</strong></div>
+      <div class="card"><h2>Transfer Payment Reviews</h2><strong id="transferPaymentReviewCount">0</strong></div>
+      <div class="card"><h2>Manual Accounting Approved</h2><strong id="approvedForManualAccountingEntryCount">0</strong></div>
+      <div class="card"><h2>Amount Confirmed</h2><strong id="amountConfirmedByAdminTotal">0</strong></div>
+      <div class="card"><h2>Auto Accounting Entry</h2><strong id="autoAccountingEntryCount">0</strong></div>
+      <div class="card"><h2>Auto Receipt Count</h2><strong id="autoReceiptCount">0</strong></div>
+      <div class="card"><h2>Auto Invoice Count</h2><strong id="autoInvoiceCount">0</strong></div>
+      <div class="card"><h2>Auto Revenue Count</h2><strong id="autoRevenueCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">ACCOUNTING REVIEW ONLY</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Accounting Review Safety Rule</h2>
+      <p class="muted">
+        This dashboard displays manual accounting review records only. It must not create accounting entries,
+        create financial ledger entries, verify payment, collect payment, generate receipts, create invoices,
+        record revenue, move pipeline, update inventory, send WhatsApp, read buyer messages, scrape private messages, or harvest hidden data.
+      </p>
+      <span class="badge safe">Manual accounting review only</span>
+      <span class="badge safe">Accounting entry prepared only</span>
+      <span class="badge safe">Manual stock movement review required</span>
+      <span class="badge safe">Admin reviewed stock movement required</span>
+      <span class="badge safe">Manual accounting approval required</span>
+      <span class="badge safe">No automatic accounting entry</span>
+      <span class="badge safe">No automatic financial ledger</span>
+      <span class="badge safe">No automatic payment verification</span>
+      <span class="badge safe">No automatic receipt</span>
+      <span class="badge safe">No automatic invoice</span>
+      <span class="badge safe">No automatic revenue recording</span>
+    </section>
+
+    <section class="panel">
+      <h2>Manual Accounting Review Records</h2>
+      <p class="muted">Read-only list of accounting reviews recorded by admin after manual stock movement review.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, payment, reference, note..." />
+        <select id="reviewTypeFilter">
+          <option value="">All review types</option>
+          <option value="payment_received_review">Payment Received</option>
+          <option value="payment_pending_review">Payment Pending</option>
+          <option value="deposit_received_review">Deposit Received</option>
+          <option value="cash_payment_review">Cash Payment</option>
+          <option value="transfer_payment_review">Transfer Payment</option>
+          <option value="no_payment_review">No Payment</option>
+          <option value="refund_review">Refund Review</option>
+          <option value="accounting_note_review">Accounting Note</option>
+        </select>
+        <select id="actionFilter">
+          <option value="">All accounting actions</option>
+          <option value="record_manual_cash_sale">Manual Cash Sale</option>
+          <option value="record_manual_transfer_sale">Manual Transfer Sale</option>
+          <option value="record_manual_deposit">Manual Deposit</option>
+          <option value="record_manual_payment_pending">Manual Payment Pending</option>
+          <option value="record_manual_no_payment">Manual No Payment</option>
+          <option value="manual_refund_review">Manual Refund Review</option>
+          <option value="no_accounting_action_required">No Accounting Action</option>
+        </select>
+        <select id="riskFilter">
+          <option value="">All safety status</option>
+          <option value="safe">Safe Manual Reviews</option>
+          <option value="accounting_risk">Accounting Automation Risk</option>
+          <option value="payment_risk">Payment Automation Risk</option>
+          <option value="receipt_risk">Receipt Automation Risk</option>
+          <option value="invoice_risk">Invoice Automation Risk</option>
+          <option value="revenue_risk">Revenue Automation Risk</option>
+          <option value="scrape_risk">Scraping Risk</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Deal Outcome</th>
+            <th>Stock Movement</th>
+            <th>Review Type</th>
+            <th>Accounting Action</th>
+            <th>Review Status</th>
+            <th>Amount Expected</th>
+            <th>Amount Confirmed</th>
+            <th>Payment Method</th>
+            <th>Manual Reference</th>
+            <th>Manual Receipt</th>
+            <th>Accounting Note</th>
+            <th>Safety</th>
+            <th>Reviewed By</th>
+            <th>Reviewed At</th>
+          </tr>
+        </thead>
+        <tbody id="accountingRows">
+          <tr><td colspan="18">Loading manual accounting reviews...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allReviews = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function formatLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function formatMoney(value) {
+      const number = Number(value || 0);
+      return Number.isFinite(number) ? number.toLocaleString() : "0";
+    }
+
+    function reviewClass(value) {
+      if (value === "cash_payment_review" || value === "payment_received_review") return "cash";
+      if (value === "transfer_payment_review") return "transfer";
+      if (value === "payment_pending_review") return "pending";
+      return "neutral";
+    }
+
+    function getFilteredReviews() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const reviewTypeFilter = document.getElementById("reviewTypeFilter").value;
+      const actionFilter = document.getElementById("actionFilter").value;
+      const riskFilter = document.getElementById("riskFilter").value;
+
+      return allReviews.filter(item => {
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.dealOutcomeType,
+          item.stockMovementType,
+          item.reviewType,
+          item.accountingAction,
+          item.reviewStatus,
+          item.paymentMethodReviewed,
+          item.transactionReferenceManual,
+          item.receiptNumberManual,
+          item.accountingNote,
+          item.reviewedBy
+        ].join(" ").toLowerCase();
+
+        const accountingRisk = item.accountingEntryCreatedBySystem === true ||
+          item.autoCreateAccountingEntry === true ||
+          item.createAccountingEntryAutomatically === true ||
+          item.financialLedgerEntryCreatedBySystem === true ||
+          item.autoCreateFinancialLedgerEntry === true;
+
+        const paymentRisk = item.paymentVerifiedBySystem === true ||
+          item.autoVerifyPayment === true ||
+          item.verifyPaymentAutomatically === true ||
+          item.collectPaymentAutomatically === true;
+
+        const receiptRisk = item.receiptGeneratedBySystem === true ||
+          item.autoGenerateReceipt === true ||
+          item.generateReceiptAutomatically === true ||
+          item.receiptSentAutomatically === true ||
+          item.autoSendReceipt === true;
+
+        const invoiceRisk = item.invoiceCreatedBySystem === true ||
+          item.autoCreateInvoice === true;
+
+        const revenueRisk = item.revenueRecordedBySystem === true ||
+          item.autoUpdateRevenue === true;
+
+        const scrapeRisk = item.autoReadWhatsApp === true ||
+          item.readBuyerMessagesAutomatically === true ||
+          item.scrapeWhatsappMessages === true ||
+          item.privateMessageScraping === true ||
+          item.hiddenDataHarvesting === true;
+
+        return (!search || haystack.includes(search)) &&
+          (!reviewTypeFilter || item.reviewType === reviewTypeFilter) &&
+          (!actionFilter || item.accountingAction === actionFilter) &&
+          (!riskFilter ||
+            (riskFilter === "safe" && accountingRisk !== true && paymentRisk !== true && receiptRisk !== true && invoiceRisk !== true && revenueRisk !== true && scrapeRisk !== true) ||
+            (riskFilter === "accounting_risk" && accountingRisk === true) ||
+            (riskFilter === "payment_risk" && paymentRisk === true) ||
+            (riskFilter === "receipt_risk" && receiptRisk === true) ||
+            (riskFilter === "invoice_risk" && invoiceRisk === true) ||
+            (riskFilter === "revenue_risk" && revenueRisk === true) ||
+            (riskFilter === "scrape_risk" && scrapeRisk === true));
+      });
+    }
+
+    function renderReviews() {
+      const tbody = document.getElementById("accountingRows");
+      const reviews = getFilteredReviews();
+
+      if (!reviews.length) {
+        tbody.innerHTML = '<tr><td colspan="18">No matching manual accounting reviews.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = reviews.map(item => {
+        const safety = [
+          item.manualAccountingReviewOnly ? badge("Manual accounting review only", "safe") : badge("Review risk", "danger"),
+          item.accountingEntryPreparedOnly ? badge("Accounting entry prepared", "safe") : badge("Accounting entry risk", "danger"),
+          item.adminReviewedStockMovement ? badge("Admin reviewed stock movement", "safe") : badge("Stock review missing", "danger"),
+          item.manualAccountingReviewApproved ? badge("Manual accounting approval", "safe") : badge("Approval missing", "danger"),
+          item.accountingEntryCreatedBySystem ? badge("Accounting entry risk", "danger") : badge("No system accounting entry", "safe"),
+          item.financialLedgerEntryCreatedBySystem ? badge("Financial ledger risk", "danger") : badge("No financial ledger automation", "safe"),
+          item.paymentVerifiedBySystem ? badge("Payment verification risk", "danger") : badge("No system payment verification", "safe"),
+          item.receiptGeneratedBySystem ? badge("Receipt automation risk", "danger") : badge("No receipt automation", "safe"),
+          item.invoiceCreatedBySystem ? badge("Invoice automation risk", "danger") : badge("No invoice automation", "safe"),
+          item.revenueRecordedBySystem ? badge("Revenue automation risk", "danger") : badge("No revenue automation", "safe"),
+          item.autoMovePipelineStage ? badge("Pipeline automation risk", "danger") : badge("No pipeline automation", "safe"),
+          item.autoUpdateInventory ? badge("Inventory automation risk", "danger") : badge("No inventory automation", "safe"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.autoReadWhatsApp ? badge("Message read risk", "danger") : badge("No message reading", "safe"),
+          item.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe"),
+          item.manualAccountingEntryRequired ? badge("Manual accounting entry required", "safe") : badge("Accounting review risk", "danger"),
+          item.manualPaymentVerificationRequired ? badge("Manual payment verification required", "safe") : badge("Payment review risk", "danger"),
+          item.manualReceiptRequired ? badge("Manual receipt required", "safe") : badge("Receipt review risk", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""} ${item.engineCode || ""}`)}</td>
+            <td>${badge(formatLabel(item.dealOutcomeType), "safe")}</td>
+            <td>${badge(formatLabel(item.stockMovementType), "safe")}</td>
+            <td>${badge(formatLabel(item.reviewType), reviewClass(item.reviewType))}</td>
+            <td>${badge(formatLabel(item.accountingAction), "safe")}</td>
+            <td>${badge(formatLabel(item.reviewStatus), "safe")}</td>
+            <td>${badge(formatMoney(item.amountExpected), "safe")}</td>
+            <td>${badge(formatMoney(item.amountConfirmedByAdmin), "safe")}</td>
+            <td>${badge(formatLabel(item.paymentMethodReviewed), "safe")}</td>
+            <td>${escapeHtml(item.transactionReferenceManual)}</td>
+            <td>${escapeHtml(item.receiptNumberManual)}</td>
+            <td><pre>${escapeHtml(item.accountingNote)}</pre></td>
+            <td>${safety}</td>
+            <td>${escapeHtml(item.reviewedBy)}</td>
+            <td>${formatDate(item.reviewedAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadManualAccountingReviewDashboard() {
+      const summaryResponse = await fetch("/api/manual-accounting-review/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalManualAccountingReviews").textContent = summary.totalManualAccountingReviews || 0;
+      document.getElementById("manualAccountingReviewOnlyCount").textContent = summary.manualAccountingReviewOnlyCount || 0;
+      document.getElementById("accountingEntryPreparedOnlyCount").textContent = summary.accountingEntryPreparedOnlyCount || 0;
+      document.getElementById("paymentReceivedReviewCount").textContent = summary.paymentReceivedReviewCount || 0;
+      document.getElementById("paymentPendingReviewCount").textContent = summary.paymentPendingReviewCount || 0;
+      document.getElementById("cashPaymentReviewCount").textContent = summary.cashPaymentReviewCount || 0;
+      document.getElementById("transferPaymentReviewCount").textContent = summary.transferPaymentReviewCount || 0;
+      document.getElementById("approvedForManualAccountingEntryCount").textContent = summary.approvedForManualAccountingEntryCount || 0;
+      document.getElementById("amountConfirmedByAdminTotal").textContent = formatMoney(summary.amountConfirmedByAdminTotal || 0);
+      document.getElementById("autoAccountingEntryCount").textContent = summary.autoAccountingEntryCount || 0;
+      document.getElementById("autoReceiptCount").textContent = summary.autoReceiptCount || 0;
+      document.getElementById("autoInvoiceCount").textContent = summary.autoInvoiceCount || 0;
+      document.getElementById("autoRevenueCount").textContent = summary.autoRevenueCount || 0;
+
+      const listResponse = await fetch("/api/manual-accounting-reviews");
+      const listData = await listResponse.json();
+      allReviews = Array.isArray(listData.accountingReviews) ? listData.accountingReviews : [];
+
+      renderReviews();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderReviews);
+    document.getElementById("reviewTypeFilter").addEventListener("change", renderReviews);
+    document.getElementById("actionFilter").addEventListener("change", renderReviews);
+    document.getElementById("riskFilter").addEventListener("change", renderReviews);
+
+    loadManualAccountingReviewDashboard().catch(error => {
+      document.getElementById("accountingRows").innerHTML =
+        `<tr><td colspan="18">Manual accounting review dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

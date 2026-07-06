@@ -78,6 +78,8 @@ function routeRequest(req, res, sendJson) {
         "/manual-deal-outcomes",
         "/manual-stock-movement-review",
         "/manual-stock-movement-reviews",
+        "/manual-accounting-review",
+        "/manual-accounting-reviews",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -218,6 +220,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-stock-movement-review" || url.pathname === "/manual-stock-movement-reviews")) {
     return manualStockMovementReviewController.manualStockMovementReviewDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/manual-accounting-review" || url.pathname === "/manual-accounting-reviews")) {
+    return manualAccountingReviewController.manualAccountingReviewDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/manual-accounting-review/preview") {
