@@ -12,6 +12,7 @@ const followUpController = require("../controllers/followup.controller");
 const adminNavigationController = require("../controllers/admin-navigation.controller");
 const actionQueueController = require("../controllers/action-queue.controller");
 const hotBuyerController = require("../controllers/hot-buyer.controller");
+const whatsappManualController = require("../controllers/whatsapp-manual.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -46,6 +47,9 @@ function routeRequest(req, res, sendJson) {
         "/hot-buyer-command-center",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
+        "/api/whatsapp-manual/preview",
+        "/api/whatsapp-manual/links",
+        "/api/whatsapp-manual/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -77,6 +81,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/pipeline/move",
         "POST /api/followups/create",
         "POST /api/action-queue/create",
+        "POST /api/whatsapp-manual/open-link",
         "GET /api/leads"
       ]
     });
@@ -92,6 +97,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/admin-navigation/dashboard-metrics") {
     return adminNavigationController.adminNavigationDashboardMetricsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/whatsapp-manual/preview") {
+    return whatsappManualController.whatsappManualPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/whatsapp-manual/links") {
+    return whatsappManualController.listWhatsappManualLinksController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/whatsapp-manual/summary") {
+    return whatsappManualController.whatsappManualSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/whatsapp-manual/open-link") {
+    return whatsappManualController.createWhatsappManualLinkController(req, res, sendJson);
   }
 
   if (method === "GET" && (url.pathname === "/hot-buyers" || url.pathname === "/hot-buyer-command-center")) {

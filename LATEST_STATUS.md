@@ -1,30 +1,35 @@
 # LATEST STATUS
 
 Current Phase:
-Version 11C — Admin Hub Link Hot Buyer Command Center
+Version 12A — WhatsApp Manual Open Link Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Hot Buyer Command Center linked inside Admin Navigation Hub
-- Hot Buyer Candidates metric
-- Hot Buyers metric
-- Urgent Hot Buyers metric
-- Hot buyer metrics inside admin metrics API
-- Hot buyer safety locks inside admin summary
-- Linked Hot Buyer Command Center dashboard reachable
+- GET /api/whatsapp-manual/preview
+- GET /api/whatsapp-manual/links
+- GET /api/whatsapp-manual/summary
+- POST /api/whatsapp-manual/open-link
+- Manual WhatsApp open-link preparation
+- Nigerian phone normalization
+- Safe prefilled message
+- Auto-send blocking
+- Auto-open blocking
+- Price/quote-before-confirmation blocking
+- Manual-link history
+- Safe manual-link metrics
 
 Safety Confirmed:
-- Admin hub remains navigation and visibility only
-- Metrics API is read-only
-- Hot buyer ranking is read-only
-- Admin hub does not send WhatsApp
-- Admin hub does not message buyer automatically
-- Admin hub does not create quote automatically
-- Admin hub does not move pipeline stage automatically
-- Admin hub does not contact hot buyers automatically
-- Manual review remains required
+- WhatsApp link is manual-open only
+- System does not send WhatsApp
+- System does not open browser automatically
+- System does not message buyer automatically
+- sentToBuyer remains false
+- Price is not included
+- Quote is not created automatically
+- Quote remains blocked before stock confirmation
+- Quote remains blocked before compatibility confirmation
 
 Next Phase:
-Version 12A — WhatsApp Manual Open Link Foundation
+Version 12B — WhatsApp Manual Open Link Dashboard Display
