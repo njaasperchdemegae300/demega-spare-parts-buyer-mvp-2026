@@ -881,3 +881,49 @@ Display buyer reply follow-up action plans in a read-only dashboard. The dashboa
 
 ## Next Phase After Approval
 Version 20C — Admin Hub Link Buyer Reply Follow-Up Action Gate
+
+# Version 21A — Manual Deal Outcome Gate Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create a safe manual deal outcome gate after buyer reply follow-up action planning. The system records the outcome only after admin manually completes the action outside the system. It does not close sale, move pipeline, send WhatsApp, auto-reply, handle payment, change stock, read messages, scrape messages, or harvest hidden data automatically.
+
+## Routes
+- GET /api/manual-deal-outcome/preview
+- GET /api/manual-deal-outcomes
+- GET /api/manual-deal-outcome/summary
+- POST /api/manual-deal-outcome/record
+
+## Features
+- Manual deal outcome recording
+- Follow-up action requirement
+- Admin completed manual action requirement
+- Manual outcome approval requirement
+- Outcome type validation
+- Payment status validation
+- Delivery status validation
+- Missing follow-up action blocking
+- Unsafe auto-close/pipeline/send/payment/stock/read/scrape request blocking
+- Safe manual deal outcome metrics
+
+## Safety Rules
+- Manual outcome record only
+- Follow-up action is required
+- Admin completed manual action is required
+- Manual outcome approval is required
+- No automatic sale closing
+- No automatic pipeline movement
+- No WhatsApp auto-send
+- No auto-reply
+- No automatic browser opening
+- No automatic payment handling
+- No automatic stock change
+- No buyer message reading
+- No private message scraping
+- No hidden data harvesting
+- Manual review required before accounting, pipeline, or stock update
+
+## Next Phase After Approval
+Version 21B — Manual Deal Outcome Dashboard Display

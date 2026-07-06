@@ -21,6 +21,7 @@ const manualQuoteCopyController = require("../controllers/manual-quote-copy.cont
 const manualQuoteSentConfirmationController = require("../controllers/manual-quote-sent-confirmation.controller");
 const buyerReplyController = require("../controllers/buyer-reply.controller");
 const buyerReplyFollowupActionController = require("../controllers/buyer-reply-followup-action.controller");
+const manualDealOutcomeController = require("../controllers/manual-deal-outcome.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -100,6 +101,9 @@ function routeRequest(req, res, sendJson) {
         "/api/buyer-reply-followup/preview",
         "/api/buyer-reply-followups",
         "/api/buyer-reply-followup/summary",
+        "/api/manual-deal-outcome/preview",
+        "/api/manual-deal-outcomes",
+        "/api/manual-deal-outcome/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -140,6 +144,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/manual-quote-sent-confirmation/confirm",
         "POST /api/buyer-reply/record",
         "POST /api/buyer-reply-followup/plan",
+        "POST /api/manual-deal-outcome/record",
         "GET /api/leads"
       ]
     });
@@ -191,6 +196,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/buyer-reply-followup" || url.pathname === "/buyer-reply-followups")) {
     return buyerReplyFollowupActionController.buyerReplyFollowupActionDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-deal-outcome/preview") {
+    return manualDealOutcomeController.manualDealOutcomePreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-deal-outcomes") {
+    return manualDealOutcomeController.listManualDealOutcomesController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-deal-outcome/summary") {
+    return manualDealOutcomeController.manualDealOutcomeSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/manual-deal-outcome/record") {
+    return manualDealOutcomeController.recordManualDealOutcomeController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/buyer-reply-followup/preview") {
