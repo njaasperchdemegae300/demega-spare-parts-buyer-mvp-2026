@@ -37,7 +37,8 @@
     "version:10b": "node tools/version10b-buyer-action-queue-dashboard-smoke-test.js",
     "version:10c": "node tools/version10c-admin-hub-link-action-queue-smoke-test.js",
     "version:11a": "node tools/version11a-hot-buyer-command-center-smoke-test.js",
-    "version:11b": "node tools/version11b-hot-buyer-dashboard-smoke-test.js"
+    "version:11b": "node tools/version11b-hot-buyer-dashboard-smoke-test.js",
+    "version:11c": "node tools/version11c-admin-hub-link-hot-buyers-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

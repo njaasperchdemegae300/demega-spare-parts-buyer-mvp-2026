@@ -312,3 +312,41 @@ Create a read-only Hot Buyer Command Center API that ranks serious buyer opportu
 
 ## Next Phase After Approval
 Version 11B — Hot Buyer Command Center Dashboard Display
+
+# Version 11C — Admin Hub Link Hot Buyer Command Center
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect the Hot Buyer Command Center into the polished Admin Navigation Hub and Live Business Snapshot.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /hot-buyers
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/hot-buyers/summary
+
+## Features
+- Hot Buyer Command Center card in Admin Hub
+- Hot Buyer Candidates metric
+- Hot Buyers metric
+- Urgent Hot Buyers metric
+- Hot buyer metrics inside admin metrics API
+- Hot buyer safety locks inside admin summary
+
+## Safety Rules
+- Navigation and visibility only
+- Metrics API is read-only
+- Hot buyer ranking is read-only
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic quote creation
+- No automatic pipeline movement
+- No automatic buyer contact
+- Manual review remains required
+
+## Next Phase After Approval
+Version 12A — WhatsApp Manual Open Link Foundation

@@ -6,6 +6,7 @@ const quoteDraftService = require("../services/quote-draft.service");
 const buyerPipelineService = require("../services/buyer-pipeline.service");
 const followUpService = require("../services/followup.service");
 const actionQueueService = require("../services/action-queue.service");
+const hotBuyerService = require("../services/hot-buyer.service");
 
 const modules = [
   {
@@ -37,6 +38,11 @@ const modules = [
     name: "Buyer Action Queue",
     path: "/action-queue",
     purpose: "Manual buyer action tracking for calls, verification, quote preparation, delivery, closing, and blocking."
+  },
+  {
+    name: "Hot Buyer Command Center",
+    path: "/hot-buyers",
+    purpose: "Read-only serious-buyer ranking using lead, action, follow-up, and pipeline signals."
   }
 ];
 
@@ -67,11 +73,13 @@ function getSafety() {
     navigationOnly: true,
     visibilityOnly: true,
     metricsReadOnly: true,
+    hotBuyerRankingReadOnly: true,
     autoSendWhatsApp: false,
     automaticBuyerMessage: false,
     autoCreateQuote: false,
     autoMovePipelineStage: false,
     autoCompleteBuyerAction: false,
+    autoContactHotBuyer: false,
     manualReviewRequired: true,
     quoteBeforeStockConfirmation: false,
     quoteBeforeCompatibilityConfirmation: false
@@ -94,6 +102,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const pipeline = safeRead(() => buyerPipelineService.getPipelineSummary(), {});
   const followUps = safeRead(() => followUpService.getFollowUpSummary(), {});
   const actionQueue = safeRead(() => actionQueueService.getActionQueueSummary(), {});
+  const hotBuyers = safeRead(() => hotBuyerService.getHotBuyerSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -108,7 +117,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       quotes,
       pipeline,
       followUps,
-      actionQueue
+      actionQueue,
+      hotBuyers
     },
     safety: getSafety()
   });
