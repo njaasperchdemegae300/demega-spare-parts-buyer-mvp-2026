@@ -47,7 +47,8 @@
     "version:13c": "node tools/version13c-admin-hub-link-stock-confirmation-smoke-test.js",
     "version:14a": "node tools/version14a-compatibility-confirmation-gate-smoke-test.js",
     "version:14b": "node tools/version14b-compatibility-confirmation-dashboard-smoke-test.js",
-    "version:14c": "node tools/version14c-admin-hub-link-compatibility-confirmation-smoke-test.js"
+    "version:14c": "node tools/version14c-admin-hub-link-compatibility-confirmation-smoke-test.js",
+    "version:15a": "node tools/version15a-safe-final-quote-eligibility-gate-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

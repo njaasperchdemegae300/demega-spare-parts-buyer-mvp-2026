@@ -502,3 +502,46 @@ Display manual compatibility confirmations in a read-only dashboard while allowi
 
 ## Next Phase After Approval
 Version 14C — Admin Hub Link Compatibility Confirmation Gate
+
+# Version 15A — Safe Final Quote Eligibility Gate Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create a safe final quote eligibility gate that checks whether a lead is eligible for manual quote draft only after stock and compatibility are both confirmed.
+
+## Routes
+- GET /api/quote-eligibility/preview
+- GET /api/quote-eligibilities
+- GET /api/quote-eligibility/summary
+- POST /api/quote-eligibility/check
+
+## Features
+- Final quote eligibility check
+- Stock confirmation linkage
+- Compatibility confirmation linkage
+- Gate blocking before both confirmations
+- Manual quote draft eligibility after both confirmations
+- Price/quote payload blocking
+- Automatic quote creation blocking
+- WhatsApp auto-send blocking
+- Automatic buyer message blocking
+- Automatic browser opening blocking
+- Automatic pipeline movement blocking
+- Safe quote eligibility metrics
+
+## Safety Rules
+- Eligibility-check only
+- Manual quote draft allowed only after stock and compatibility are both confirmed
+- No automatic quote creation
+- No price or quote amount included
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic browser opening
+- No automatic pipeline movement
+- sentToBuyer remains false
+- Manual review remains required
+
+## Next Phase After Approval
+Version 15B — Safe Final Quote Eligibility Dashboard Display

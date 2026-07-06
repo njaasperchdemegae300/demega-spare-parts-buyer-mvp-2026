@@ -15,6 +15,7 @@ const hotBuyerController = require("../controllers/hot-buyer.controller");
 const whatsappManualController = require("../controllers/whatsapp-manual.controller");
 const stockConfirmationController = require("../controllers/stock-confirmation.controller");
 const compatibilityConfirmationController = require("../controllers/compatibility-confirmation.controller");
+const quoteEligibilityController = require("../controllers/quote-eligibility.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -64,6 +65,9 @@ function routeRequest(req, res, sendJson) {
         "/api/compatibility-confirmation/preview",
         "/api/compatibility-confirmations",
         "/api/compatibility-confirmation/summary",
+        "/api/quote-eligibility/preview",
+        "/api/quote-eligibilities",
+        "/api/quote-eligibility/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -98,6 +102,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/whatsapp-manual/open-link",
         "POST /api/stock-confirmation/confirm",
         "POST /api/compatibility-confirmation/confirm",
+        "POST /api/quote-eligibility/check",
         "GET /api/leads"
       ]
     });
@@ -125,6 +130,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/compatibility-confirmation" || url.pathname === "/compatibility-confirmation-gate")) {
     return compatibilityConfirmationController.compatibilityConfirmationDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/quote-eligibility/preview") {
+    return quoteEligibilityController.quoteEligibilityPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/quote-eligibilities") {
+    return quoteEligibilityController.listQuoteEligibilitiesController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/quote-eligibility/summary") {
+    return quoteEligibilityController.quoteEligibilitySummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/quote-eligibility/check") {
+    return quoteEligibilityController.createQuoteEligibilityCheckController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/compatibility-confirmation/preview") {
