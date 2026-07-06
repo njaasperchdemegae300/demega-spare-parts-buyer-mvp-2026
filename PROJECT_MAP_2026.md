@@ -423,3 +423,44 @@ Create a manual stock confirmation gate that records whether a requested part is
 
 ## Next Phase After Approval
 Version 13B — Stock Confirmation Gate Dashboard Display
+
+# Version 13C — Admin Hub Link Stock Confirmation Gate
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect the Stock Confirmation Gate into the polished Admin Navigation Hub and Live Business Snapshot.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /stock-confirmation
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/stock-confirmation/summary
+
+## Features
+- Stock Confirmation Gate card in Admin Hub
+- Stock Confirmations metric
+- Confirmed In Stock metric
+- Quote Allowed At Stock Gate metric
+- Stock confirmation metrics inside admin metrics API
+- Stock confirmation safety locks inside admin summary
+
+## Safety Rules
+- Navigation and visibility only
+- Metrics API is read-only
+- Stock confirmation is manual-only
+- Quote remains blocked at stock confirmation stage
+- Compatibility confirmation is still required before quote
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic quote creation
+- No automatic pipeline movement
+- sentToBuyer remains false
+- Price is not included
+- Manual review remains required
+
+## Next Phase After Approval
+Version 14A — Compatibility Confirmation Gate Foundation

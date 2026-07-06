@@ -29,7 +29,7 @@
 <body>
   <header>
     <h1>Demega Admin Navigation Hub</h1>
-    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, and manual WhatsApp links.</p>
+    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, manual WhatsApp links, and stock confirmation.</p>
   </header>
 
   <main>
@@ -42,6 +42,7 @@
       <span class="badge">ACTION QUEUE IS MANUAL ONLY</span>
       <span class="badge">HOT BUYER RANKING IS READ ONLY</span>
       <span class="badge">WHATSAPP LINKS ARE MANUAL OPEN ONLY</span>
+      <span class="badge">STOCK CONFIRMATION IS MANUAL ONLY</span>
       <span class="badge warn">QUOTE ONLY AFTER STOCK + COMPATIBILITY CONFIRMATION</span>
       <ul>
         <li>This hub is navigation and visibility only.</li>
@@ -51,6 +52,7 @@
         <li>It does not create quotes automatically.</li>
         <li>It does not move buyer pipeline stages automatically.</li>
         <li>It does not contact hot buyers automatically.</li>
+        <li>Stock confirmation alone does not allow quote creation.</li>
       </ul>
     </section>
 
@@ -64,11 +66,11 @@
         <div class="metric"><h2>Pipeline Events</h2><strong id="pipelineEvents">0</strong></div>
         <div class="metric"><h2>Follow-Up Reminders</h2><strong id="followUps">0</strong></div>
         <div class="metric"><h2>Buyer Actions</h2><strong id="buyerActions">0</strong></div>
-        <div class="metric"><h2>Urgent Actions</h2><strong id="urgentActions">0</strong></div>
-        <div class="metric"><h2>Hot Buyer Candidates</h2><strong id="hotBuyerCandidates">0</strong></div>
         <div class="metric"><h2>Hot Buyers</h2><strong id="hotBuyers">0</strong></div>
         <div class="metric"><h2>Manual WhatsApp Links</h2><strong id="manualWhatsappLinks">0</strong></div>
-        <div class="metric"><h2>Manual Review Links</h2><strong id="manualReviewLinks">0</strong></div>
+        <div class="metric"><h2>Stock Confirmations</h2><strong id="stockConfirmations">0</strong></div>
+        <div class="metric"><h2>Confirmed In Stock</h2><strong id="confirmedInStock">0</strong></div>
+        <div class="metric"><h2>Quote Allowed At Stock Gate</h2><strong id="quoteAllowedAtStockGate">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -123,6 +125,12 @@
       </div>
 
       <div class="card">
+        <h2>Stock Confirmation Gate</h2>
+        <p>View manual stock confirmations. Quote remains blocked until compatibility confirmation is completed.</p>
+        <a href="/stock-confirmation">Open Stock Confirmation Gate</a>
+      </div>
+
+      <div class="card">
         <h2>System Health</h2>
         <p>Check whether the backend server foundation is alive and responding.</p>
         <a href="/api/health">Open Health API</a>
@@ -147,18 +155,19 @@
       document.getElementById("pipelineEvents").textContent = safeNumber(metrics.pipeline && metrics.pipeline.totalPipelineEvents);
       document.getElementById("followUps").textContent = safeNumber(metrics.followUps && metrics.followUps.totalFollowUps);
       document.getElementById("buyerActions").textContent = safeNumber(metrics.actionQueue && metrics.actionQueue.totalActions);
-      document.getElementById("urgentActions").textContent = safeNumber(metrics.actionQueue && metrics.actionQueue.urgent);
-      document.getElementById("hotBuyerCandidates").textContent = safeNumber(metrics.hotBuyers && metrics.hotBuyers.totalHotBuyerCandidates);
       document.getElementById("hotBuyers").textContent = safeNumber(metrics.hotBuyers && metrics.hotBuyers.hotBuyers);
       document.getElementById("manualWhatsappLinks").textContent = safeNumber(metrics.whatsappManual && metrics.whatsappManual.totalManualLinks);
-      document.getElementById("manualReviewLinks").textContent = safeNumber(metrics.whatsappManual && metrics.whatsappManual.manualReviewRequired);
+      document.getElementById("stockConfirmations").textContent = safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.totalStockConfirmations);
+      document.getElementById("confirmedInStock").textContent = safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.confirmedInStock);
+      document.getElementById("quoteAllowedAtStockGate").textContent = safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.quoteAllowedCount);
 
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
         safeNumber(metrics.followUps && metrics.followUps.autoSendWhatsAppCount) +
         safeNumber(metrics.actionQueue && metrics.actionQueue.autoSendWhatsAppCount) +
         safeNumber(metrics.hotBuyers && metrics.hotBuyers.autoSendWhatsAppCount) +
-        safeNumber(metrics.whatsappManual && metrics.whatsappManual.autoSendWhatsAppCount);
+        safeNumber(metrics.whatsappManual && metrics.whatsappManual.autoSendWhatsAppCount) +
+        safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {

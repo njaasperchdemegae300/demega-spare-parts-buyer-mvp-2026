@@ -8,6 +8,7 @@ const followUpService = require("../services/followup.service");
 const actionQueueService = require("../services/action-queue.service");
 const hotBuyerService = require("../services/hot-buyer.service");
 const whatsappManualService = require("../services/whatsapp-manual.service");
+const stockConfirmationService = require("../services/stock-confirmation.service");
 
 const modules = [
   {
@@ -49,6 +50,11 @@ const modules = [
     name: "WhatsApp Manual Open Dashboard",
     path: "/whatsapp-manual",
     purpose: "Manual WhatsApp open-link visibility with no auto-send, no auto-open, no price, and no auto-quote."
+  },
+  {
+    name: "Stock Confirmation Gate",
+    path: "/stock-confirmation",
+    purpose: "Manual stock confirmation visibility while quote remains blocked until compatibility confirmation."
   }
 ];
 
@@ -81,6 +87,9 @@ function getSafety() {
     metricsReadOnly: true,
     hotBuyerRankingReadOnly: true,
     whatsappManualOpenOnly: true,
+    stockConfirmationManualOnly: true,
+    quoteAllowedAtStockGate: false,
+    compatibilityRequiredBeforeQuote: true,
     autoSendWhatsApp: false,
     autoOpenBrowser: false,
     automaticBuyerMessage: false,
@@ -114,6 +123,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const actionQueue = safeRead(() => actionQueueService.getActionQueueSummary(), {});
   const hotBuyers = safeRead(() => hotBuyerService.getHotBuyerSummary(), {});
   const whatsappManual = safeRead(() => whatsappManualService.getManualWhatsAppSummary(), {});
+  const stockConfirmation = safeRead(() => stockConfirmationService.getStockConfirmationSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -130,7 +140,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       followUps,
       actionQueue,
       hotBuyers,
-      whatsappManual
+      whatsappManual,
+      stockConfirmation
     },
     safety: getSafety()
   });
