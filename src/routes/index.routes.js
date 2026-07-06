@@ -22,6 +22,7 @@ const manualQuoteSentConfirmationController = require("../controllers/manual-quo
 const buyerReplyController = require("../controllers/buyer-reply.controller");
 const buyerReplyFollowupActionController = require("../controllers/buyer-reply-followup-action.controller");
 const manualDealOutcomeController = require("../controllers/manual-deal-outcome.controller");
+const manualStockMovementReviewController = require("../controllers/manual-stock-movement-review.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -106,6 +107,9 @@ function routeRequest(req, res, sendJson) {
         "/api/manual-deal-outcome/preview",
         "/api/manual-deal-outcomes",
         "/api/manual-deal-outcome/summary",
+        "/api/manual-stock-movement-review/preview",
+        "/api/manual-stock-movement-reviews",
+        "/api/manual-stock-movement-review/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -147,6 +151,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/buyer-reply/record",
         "POST /api/buyer-reply-followup/plan",
         "POST /api/manual-deal-outcome/record",
+        "POST /api/manual-stock-movement-review/record",
         "GET /api/leads"
       ]
     });
@@ -202,6 +207,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-deal-outcome" || url.pathname === "/manual-deal-outcomes")) {
     return manualDealOutcomeController.manualDealOutcomeDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-stock-movement-review/preview") {
+    return manualStockMovementReviewController.manualStockMovementReviewPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-stock-movement-reviews") {
+    return manualStockMovementReviewController.listManualStockMovementReviewsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-stock-movement-review/summary") {
+    return manualStockMovementReviewController.manualStockMovementReviewSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/manual-stock-movement-review/record") {
+    return manualStockMovementReviewController.recordManualStockMovementReviewController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/manual-deal-outcome/preview") {
