@@ -19,6 +19,7 @@ const quoteEligibilityController = require("../controllers/quote-eligibility.con
 const manualQuoteDraftController = require("../controllers/manual-quote-draft.controller");
 const manualQuoteCopyController = require("../controllers/manual-quote-copy.controller");
 const manualQuoteSentConfirmationController = require("../controllers/manual-quote-sent-confirmation.controller");
+const buyerReplyController = require("../controllers/buyer-reply.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -88,6 +89,9 @@ function routeRequest(req, res, sendJson) {
         "/api/manual-quote-sent-confirmation/preview",
         "/api/manual-quote-sent-confirmations",
         "/api/manual-quote-sent-confirmation/summary",
+        "/api/buyer-reply/preview",
+        "/api/buyer-replies",
+        "/api/buyer-reply/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -126,6 +130,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/manual-quote-draft/build",
         "POST /api/manual-quote-copy/prepare",
         "POST /api/manual-quote-sent-confirmation/confirm",
+        "POST /api/buyer-reply/record",
         "GET /api/leads"
       ]
     });
@@ -169,6 +174,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-quote-sent-confirmation" || url.pathname === "/manual-quote-sent-confirmations")) {
     return manualQuoteSentConfirmationController.manualQuoteSentConfirmationDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/buyer-reply/preview") {
+    return buyerReplyController.buyerReplyPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/buyer-replies") {
+    return buyerReplyController.listBuyerRepliesController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/buyer-reply/summary") {
+    return buyerReplyController.buyerReplySummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/buyer-reply/record") {
+    return buyerReplyController.recordBuyerReplyController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/manual-quote-sent-confirmation/preview") {

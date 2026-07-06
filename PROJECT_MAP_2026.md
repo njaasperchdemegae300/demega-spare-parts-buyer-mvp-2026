@@ -750,3 +750,44 @@ Display manual quote sent confirmations in a read-only dashboard. The dashboard 
 
 ## Next Phase After Approval
 Version 18C — Admin Hub Link Manual Quote Sent Confirmation Gate
+
+# Version 19A — Buyer Reply Tracking Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create safe buyer reply tracking after manual quote sent confirmation. This records replies manually observed by admin outside the system. It does not read WhatsApp, scrape messages, harvest hidden data, auto-reply, auto-send, open browser, or move pipeline automatically.
+
+## Routes
+- GET /api/buyer-reply/preview
+- GET /api/buyer-replies
+- GET /api/buyer-reply/summary
+- POST /api/buyer-reply/record
+
+## Features
+- Manual buyer reply recording
+- Manual sent confirmation requirement
+- Admin observed reply requirement
+- Reply channel validation
+- Reply type validation
+- Buyer temperature after reply
+- Missing sent confirmation blocking
+- Unsafe auto-read/scrape/reply/send/browser/pipeline request blocking
+- Safe buyer reply metrics
+
+## Safety Rules
+- Manual-entry only
+- Manual sent confirmation is required
+- Admin manually observes reply outside system
+- No WhatsApp reading
+- No private message scraping
+- No hidden data harvesting
+- No auto-reply
+- No WhatsApp auto-send
+- No automatic browser opening
+- No automatic pipeline movement
+- Manual review required before next action
+
+## Next Phase After Approval
+Version 19B — Buyer Reply Tracking Dashboard Display
