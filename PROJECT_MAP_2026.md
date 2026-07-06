@@ -626,3 +626,46 @@ Display safe manual quote drafts in a read-only dashboard. Price is visible only
 
 ## Next Phase After Approval
 Version 16C — Admin Hub Link Safe Manual Quote Draft Builder
+
+# Version 17A — Manual Quote Copy Button Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create the safe backend foundation for manual quote copy. It prepares copy text from a safe manual quote draft only after final quote eligibility has passed. It does not send WhatsApp, does not access clipboard, does not auto-copy, and does not mark any quote as sent.
+
+## Routes
+- GET /api/manual-quote-copy/preview
+- GET /api/manual-quote-copies
+- GET /api/manual-quote-copy/summary
+- POST /api/manual-quote-copy/prepare
+
+## Features
+- Manual quote copy preparation
+- Draft existence check
+- Final quote eligibility safety check
+- Draft-only safety check
+- Copy text preparation
+- Copy action audit log
+- Missing draft blocking
+- Unsafe send/browser/pipeline/sent request blocking
+- Safe manual quote copy metrics
+
+## Safety Rules
+- Prepare copy text only
+- Server does not access clipboard
+- Browser auto-copy is not used in this foundation
+- Copy text comes only from safe draft after final quote eligibility
+- Price may appear inside copy text after eligibility
+- Price is not sent to buyer
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic browser opening
+- No automatic pipeline movement
+- No quote marked as sent
+- sentToBuyer remains false
+- Manual review remains required
+
+## Next Phase After Approval
+Version 17B — Manual Quote Copy Button Dashboard Display

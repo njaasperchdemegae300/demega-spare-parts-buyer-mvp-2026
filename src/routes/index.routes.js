@@ -17,6 +17,7 @@ const stockConfirmationController = require("../controllers/stock-confirmation.c
 const compatibilityConfirmationController = require("../controllers/compatibility-confirmation.controller");
 const quoteEligibilityController = require("../controllers/quote-eligibility.controller");
 const manualQuoteDraftController = require("../controllers/manual-quote-draft.controller");
+const manualQuoteCopyController = require("../controllers/manual-quote-copy.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -76,6 +77,9 @@ function routeRequest(req, res, sendJson) {
         "/api/manual-quote-draft/preview",
         "/api/manual-quote-drafts",
         "/api/manual-quote-draft/summary",
+        "/api/manual-quote-copy/preview",
+        "/api/manual-quote-copies",
+        "/api/manual-quote-copy/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -112,6 +116,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/compatibility-confirmation/confirm",
         "POST /api/quote-eligibility/check",
         "POST /api/manual-quote-draft/build",
+        "POST /api/manual-quote-copy/prepare",
         "GET /api/leads"
       ]
     });
@@ -147,6 +152,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-quote-draft" || url.pathname === "/manual-quote-drafts")) {
     return manualQuoteDraftController.manualQuoteDraftDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-quote-copy/preview") {
+    return manualQuoteCopyController.manualQuoteCopyPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-quote-copies") {
+    return manualQuoteCopyController.listManualQuoteCopyActionsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-quote-copy/summary") {
+    return manualQuoteCopyController.manualQuoteCopySummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/manual-quote-copy/prepare") {
+    return manualQuoteCopyController.prepareManualQuoteCopyController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/manual-quote-draft/preview") {
