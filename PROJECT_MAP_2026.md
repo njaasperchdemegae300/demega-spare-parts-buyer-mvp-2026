@@ -587,3 +587,42 @@ Connect the Safe Final Quote Eligibility Gate into the polished Admin Navigation
 
 ## Next Phase After Approval
 Version 16A — Safe Manual Quote Draft Builder Foundation
+
+# Version 16B — Safe Manual Quote Draft Builder Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display safe manual quote drafts in a read-only dashboard. Price is visible only inside draft after eligibility, and nothing is sent to the buyer automatically.
+
+## Routes
+- GET /manual-quote-draft
+- GET /manual-quote-drafts
+- GET /api/manual-quote-drafts
+- GET /api/manual-quote-draft/summary
+
+## Features
+- Safe Manual Quote Draft Builder dashboard
+- Manual quote draft metric cards
+- Manual quote draft table
+- Draft-only filter
+- Eligibility filter
+- Draft message display
+- Safety labels
+
+## Safety Rules
+- Read-only dashboard
+- Draft-only
+- Requires final quote eligibility
+- Price may appear inside draft only after eligibility
+- Price is not sent to buyer
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic browser opening
+- No automatic pipeline movement
+- sentToBuyer remains false
+- Manual review remains required
+
+## Next Phase After Approval
+Version 16C — Admin Hub Link Safe Manual Quote Draft Builder

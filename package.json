@@ -51,7 +51,8 @@
     "version:15a": "node tools/version15a-safe-final-quote-eligibility-gate-smoke-test.js",
     "version:15b": "node tools/version15b-safe-final-quote-eligibility-dashboard-smoke-test.js",
     "version:15c": "node tools/version15c-admin-hub-link-quote-eligibility-smoke-test.js",
-    "version:16a": "node tools/version16a-safe-manual-quote-draft-builder-smoke-test.js"
+    "version:16a": "node tools/version16a-safe-manual-quote-draft-builder-smoke-test.js",
+    "version:16b": "node tools/version16b-safe-manual-quote-draft-dashboard-smoke-test.js"
   },
   "keywords": [
     "spare-parts",
