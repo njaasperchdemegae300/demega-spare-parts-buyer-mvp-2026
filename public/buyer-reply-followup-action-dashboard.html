@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Buyer Reply Follow-Up Action Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 2100px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    pre { white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; max-width: 420px; max-height: 200px; overflow: auto; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .urgent { background: #fee2e2; color: #991b1b; }
+    .high { background: #ffedd5; color: #9a3412; }
+    .medium { background: #fef3c7; color: #92400e; }
+    .low { background: #e5e7eb; color: #374151; }
+    .hot { background: #fee2e2; color: #991b1b; }
+    .warm { background: #fef3c7; color: #92400e; }
+    .cold { background: #e5e7eb; color: #374151; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Buyer Reply Follow-Up Action Dashboard</h1>
+    <p>Read-only follow-up action plans prepared after buyer reply tracking. Manual action only. The system does not execute actions.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Follow-Up Actions</h2><strong id="totalBuyerReplyFollowupActions">0</strong></div>
+      <div class="card"><h2>Manual Action Only</h2><strong id="manualActionOnlyCount">0</strong></div>
+      <div class="card"><h2>Action Prepared Only</h2><strong id="actionPreparedOnlyCount">0</strong></div>
+      <div class="card"><h2>Urgent Actions</h2><strong id="urgentActionCount">0</strong></div>
+      <div class="card"><h2>High Actions</h2><strong id="highActionCount">0</strong></div>
+      <div class="card"><h2>Hot Buyer Actions</h2><strong id="hotBuyerActionCount">0</strong></div>
+      <div class="card"><h2>System Executed Count</h2><strong id="actionExecutedBySystemCount">0</strong></div>
+      <div class="card"><h2>Auto Send Count</h2><strong id="autoSendWhatsAppCount">0</strong></div>
+      <div class="card"><h2>Auto Pipeline Count</h2><strong id="autoPipelineMoveCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">MANUAL ACTION ONLY</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Buyer Reply Follow-Up Action Safety Rule</h2>
+      <p class="muted">
+        This dashboard displays manual next-action plans only. It must not execute the action, send WhatsApp, auto-reply,
+        open browser, move pipeline, close sale, read buyer messages, scrape private messages, or harvest hidden data.
+      </p>
+      <span class="badge safe">Manual action only</span>
+      <span class="badge safe">Action prepared only</span>
+      <span class="badge safe">Buyer reply required</span>
+      <span class="badge safe">Admin review required</span>
+      <span class="badge safe">Manual approval required</span>
+      <span class="badge safe">System does not execute action</span>
+      <span class="badge safe">No WhatsApp auto-send</span>
+      <span class="badge safe">No auto-reply</span>
+      <span class="badge safe">No pipeline auto-move</span>
+      <span class="badge safe">No automatic closing</span>
+    </section>
+
+    <section class="panel">
+      <h2>Buyer Reply Follow-Up Action Records</h2>
+      <p class="muted">Read-only list of manual follow-up action plans after buyer replies.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, action, instruction..." />
+        <select id="priorityFilter">
+          <option value="">All priorities</option>
+          <option value="urgent">Urgent</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <select id="actionFilter">
+          <option value="">All action types</option>
+          <option value="confirm_pickup_manual">Confirm Pickup</option>
+          <option value="confirm_delivery_manual">Confirm Delivery</option>
+          <option value="call_buyer_manual">Call Buyer</option>
+          <option value="answer_question_manual">Answer Question</option>
+          <option value="send_more_photos_manual">Send More Photos</option>
+          <option value="negotiate_price_manual">Negotiate Price</option>
+          <option value="request_payment_confirmation_manual">Request Payment Confirmation</option>
+          <option value="reserve_stock_manual">Reserve Stock</option>
+          <option value="close_won_manual_review">Close Won Manual Review</option>
+          <option value="close_lost_manual_review">Close Lost Manual Review</option>
+          <option value="schedule_followup_manual">Schedule Follow-Up</option>
+        </select>
+        <select id="riskFilter">
+          <option value="">All safety status</option>
+          <option value="safe">Safe Manual Actions</option>
+          <option value="execute_risk">System Execution Risk</option>
+          <option value="auto_send_risk">Auto Send Risk</option>
+          <option value="pipeline_risk">Pipeline Risk</option>
+          <option value="scrape_risk">Scraping Risk</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Quote Amount</th>
+            <th>Reply Type</th>
+            <th>Temperature</th>
+            <th>Action Type</th>
+            <th>Priority</th>
+            <th>Due Window</th>
+            <th>Instruction</th>
+            <th>Safety</th>
+            <th>Assigned To</th>
+            <th>Created By</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="followupRows">
+          <tr><td colspan="15">Loading buyer reply follow-up actions...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allFollowupActions = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function formatLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function getFilteredActions() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const priorityFilter = document.getElementById("priorityFilter").value;
+      const actionFilter = document.getElementById("actionFilter").value;
+      const riskFilter = document.getElementById("riskFilter").value;
+
+      return allFollowupActions.filter(item => {
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.formattedQuoteAmount,
+          item.replyType,
+          item.buyerTemperatureAfterReply,
+          item.actionType,
+          item.priority,
+          item.dueWindow,
+          item.actionInstruction,
+          item.assignedTo,
+          item.createdBy
+        ].join(" ").toLowerCase();
+
+        const executeRisk = item.actionExecutedBySystem === true ||
+          item.actionCompletedBySystem === true ||
+          item.autoCompleteBuyerAction === true;
+
+        const autoSendRisk = item.autoSendWhatsApp === true ||
+          item.sendWhatsApp === true ||
+          item.autoReplyToBuyer === true ||
+          item.automaticBuyerMessage === true;
+
+        const pipelineRisk = item.autoMovePipelineStage === true ||
+          item.pipelineMovedAutomatically === true ||
+          item.autoCreatePipelineEvent === true ||
+          item.markSaleWonAutomatically === true ||
+          item.markSaleLostAutomatically === true ||
+          item.markLeadClosedAutomatically === true ||
+          item.closeBuyerAutomatically === true;
+
+        const scrapeRisk = item.autoReadWhatsApp === true ||
+          item.readBuyerMessagesAutomatically === true ||
+          item.scrapeWhatsappMessages === true ||
+          item.privateMessageScraping === true ||
+          item.hiddenDataHarvesting === true;
+
+        return (!search || haystack.includes(search)) &&
+          (!priorityFilter || item.priority === priorityFilter) &&
+          (!actionFilter || item.actionType === actionFilter) &&
+          (!riskFilter ||
+            (riskFilter === "safe" && executeRisk !== true && autoSendRisk !== true && pipelineRisk !== true && scrapeRisk !== true) ||
+            (riskFilter === "execute_risk" && executeRisk === true) ||
+            (riskFilter === "auto_send_risk" && autoSendRisk === true) ||
+            (riskFilter === "pipeline_risk" && pipelineRisk === true) ||
+            (riskFilter === "scrape_risk" && scrapeRisk === true));
+      });
+    }
+
+    function renderFollowupActions() {
+      const tbody = document.getElementById("followupRows");
+      const actions = getFilteredActions();
+
+      if (!actions.length) {
+        tbody.innerHTML = '<tr><td colspan="15">No matching buyer reply follow-up actions.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = actions.map(item => {
+        const priority = item.priority || "";
+        const temp = item.buyerTemperatureAfterReply || "";
+        const tempClass = temp === "hot" ? "hot" : temp === "warm" ? "warm" : "cold";
+
+        const safety = [
+          item.manualActionOnly ? badge("Manual action only", "safe") : badge("Manual action risk", "danger"),
+          item.actionPreparedOnly ? badge("Action prepared only", "safe") : badge("Action execution risk", "danger"),
+          item.adminReviewedBuyerReply ? badge("Admin reviewed reply", "safe") : badge("Admin review missing", "danger"),
+          item.manualActionApproved ? badge("Manual action approved", "safe") : badge("Manual approval missing", "danger"),
+          item.actionExecutedBySystem ? badge("System executed risk", "danger") : badge("System did not execute", "safe"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.autoReplyToBuyer ? badge("Auto-reply risk", "danger") : badge("No auto-reply", "safe"),
+          item.autoOpenBrowser ? badge("Auto-browser risk", "danger") : badge("No auto-browser", "safe"),
+          item.pipelineMovedAutomatically ? badge("Auto-pipeline risk", "danger") : badge("No auto-pipeline", "safe"),
+          item.markSaleWonAutomatically ? badge("Auto-close won risk", "danger") : badge("No auto close", "safe"),
+          item.autoReadWhatsApp ? badge("Auto-read risk", "danger") : badge("No auto-read", "safe"),
+          item.scrapeWhatsappMessages ? badge("Scrape risk", "danger") : badge("No scraping", "safe"),
+          item.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe"),
+          item.manualReviewRequiredBeforeExecution ? badge("Review before execution", "safe") : badge("Review risk", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""} ${item.engineCode || ""}`)}</td>
+            <td>${badge(item.formattedQuoteAmount || item.quoteAmount || "", "safe")}</td>
+            <td>${badge(formatLabel(item.replyType), "safe")}</td>
+            <td>${badge(formatLabel(temp), tempClass)}</td>
+            <td>${badge(formatLabel(item.actionType), "safe")}</td>
+            <td>${badge(formatLabel(priority), priority)}</td>
+            <td>${badge(formatLabel(item.dueWindow), "safe")}</td>
+            <td><pre>${escapeHtml(item.actionInstruction)}</pre></td>
+            <td>${safety}</td>
+            <td>${escapeHtml(item.assignedTo)}</td>
+            <td>${escapeHtml(item.createdBy)}</td>
+            <td>${formatDate(item.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadFollowupActionDashboard() {
+      const summaryResponse = await fetch("/api/buyer-reply-followup/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalBuyerReplyFollowupActions").textContent = summary.totalBuyerReplyFollowupActions || 0;
+      document.getElementById("manualActionOnlyCount").textContent = summary.manualActionOnlyCount || 0;
+      document.getElementById("actionPreparedOnlyCount").textContent = summary.actionPreparedOnlyCount || 0;
+      document.getElementById("urgentActionCount").textContent = summary.urgentActionCount || 0;
+      document.getElementById("highActionCount").textContent = summary.highActionCount || 0;
+      document.getElementById("hotBuyerActionCount").textContent = summary.hotBuyerActionCount || 0;
+      document.getElementById("actionExecutedBySystemCount").textContent = summary.actionExecutedBySystemCount || 0;
+      document.getElementById("autoSendWhatsAppCount").textContent = summary.autoSendWhatsAppCount || 0;
+      document.getElementById("autoPipelineMoveCount").textContent = summary.autoPipelineMoveCount || 0;
+
+      const listResponse = await fetch("/api/buyer-reply-followups");
+      const listData = await listResponse.json();
+      allFollowupActions = Array.isArray(listData.followupActions) ? listData.followupActions : [];
+
+      renderFollowupActions();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderFollowupActions);
+    document.getElementById("priorityFilter").addEventListener("change", renderFollowupActions);
+    document.getElementById("actionFilter").addEventListener("change", renderFollowupActions);
+    document.getElementById("riskFilter").addEventListener("change", renderFollowupActions);
+
+    loadFollowupActionDashboard().catch(error => {
+      document.getElementById("followupRows").innerHTML =
+        `<tr><td colspan="15">Buyer reply follow-up action dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

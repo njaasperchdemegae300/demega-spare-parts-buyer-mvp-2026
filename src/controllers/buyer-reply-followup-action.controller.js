@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const followupActionService = require("../services/buyer-reply-followup-action.service");
+
+function buyerReplyFollowupActionDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "buyer-reply-followup-action-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Buyer Reply Follow-Up Action dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function buyerReplyFollowupActionPreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -74,6 +90,7 @@ function buyerReplyFollowupActionSummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  buyerReplyFollowupActionDashboardController,
   buyerReplyFollowupActionPreviewController,
   planBuyerReplyFollowupActionController,
   listBuyerReplyFollowupActionsController,

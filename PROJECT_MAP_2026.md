@@ -836,3 +836,48 @@ Connect Buyer Reply Tracking into the polished Admin Navigation Hub and Live Bus
 
 ## Next Phase After Approval
 Version 20A — Buyer Reply Follow-Up Action Gate Foundation
+
+# Version 20B — Buyer Reply Follow-Up Action Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display buyer reply follow-up action plans in a read-only dashboard. The dashboard shows manual next-action plans only. It does not execute actions, send WhatsApp, auto-reply, open browser, move pipeline, close sale, read buyer messages, scrape private messages, or harvest hidden data.
+
+## Routes
+- GET /buyer-reply-followup
+- GET /buyer-reply-followups
+- GET /api/buyer-reply-followups
+- GET /api/buyer-reply-followup/summary
+
+## Features
+- Buyer Reply Follow-Up Action dashboard
+- Follow-up action metric cards
+- Follow-up action table
+- Priority filter
+- Action type filter
+- Safety status filter
+- Manual action instruction display
+- Safety labels
+
+## Safety Rules
+- Read-only dashboard
+- Manual action only
+- Action prepared only
+- Buyer reply required
+- Admin review required
+- Manual action approval required
+- No system action execution
+- No WhatsApp auto-send
+- No auto-reply
+- No automatic browser opening
+- No automatic pipeline movement
+- No automatic closing
+- No buyer message reading
+- No private message scraping
+- No hidden data harvesting
+- Manual review required before execution
+
+## Next Phase After Approval
+Version 20C — Admin Hub Link Buyer Reply Follow-Up Action Gate

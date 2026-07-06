@@ -69,6 +69,8 @@ function routeRequest(req, res, sendJson) {
         "/manual-quote-sent-confirmations",
         "/buyer-reply",
         "/buyer-replies",
+        "/buyer-reply-followup",
+        "/buyer-reply-followups",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -185,6 +187,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/buyer-reply" || url.pathname === "/buyer-replies")) {
     return buyerReplyController.buyerReplyDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/buyer-reply-followup" || url.pathname === "/buyer-reply-followups")) {
+    return buyerReplyFollowupActionController.buyerReplyFollowupActionDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/buyer-reply-followup/preview") {

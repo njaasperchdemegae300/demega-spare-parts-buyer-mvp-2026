@@ -1,42 +1,37 @@
 # LATEST STATUS
 
 Current Phase:
-Version 20A — Buyer Reply Follow-Up Action Gate Foundation
+Version 20B — Buyer Reply Follow-Up Action Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /api/buyer-reply-followup/preview
-- GET /api/buyer-reply-followups
-- GET /api/buyer-reply-followup/summary
-- POST /api/buyer-reply-followup/plan
-- Manual follow-up action planning
-- Buyer reply requirement
-- Admin reviewed buyer reply requirement
-- Manual action approval requirement
-- Follow-up action type validation
-- Priority validation
-- Due window validation
-- Missing buyer reply blocking
-- Unsafe auto-send/reply/browser/pipeline/read/scrape request blocking
-- Safe follow-up action metrics
+- GET /buyer-reply-followup
+- GET /buyer-reply-followups
+- Buyer Reply Follow-Up Action dashboard
+- Follow-up action metric cards
+- Follow-up action table
+- Priority filter
+- Action type filter
+- Safety status filter
+- Manual action instruction display
+- Safety labels
 
 Safety Confirmed:
-- Buyer Reply Follow-Up Action Gate prepares manual action only
+- Dashboard displays buyer reply follow-up action plans only
+- Dashboard does not execute actions
+- Dashboard does not send WhatsApp
+- Dashboard does not auto-reply to buyer
+- Dashboard does not open browser automatically
+- Dashboard does not move pipeline automatically
+- Dashboard does not close sale automatically
+- Dashboard does not read buyer messages
+- Dashboard does not scrape private messages
+- Dashboard does not harvest hidden data
 - Buyer reply record is required before follow-up action planning
-- Admin reviewed buyer reply is required
-- Manual action approval is required
-- System does not execute the action
-- System does not send WhatsApp
-- System does not auto-reply to buyer
-- System does not open browser automatically
-- System does not move pipeline automatically
-- System does not close sale automatically
-- System does not read buyer messages
-- System does not scrape private messages
-- System does not harvest hidden data
-- Manual review is required before action execution
+- Admin review and manual action approval are required
+- Manual review is required before execution
 
 Next Phase:
-Version 20B — Buyer Reply Follow-Up Action Dashboard Display
+Version 20C — Admin Hub Link Buyer Reply Follow-Up Action Gate
