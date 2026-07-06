@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Buyer Reply Tracking Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1900px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    pre { white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; max-width: 420px; max-height: 200px; overflow: auto; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .hot { background: #fee2e2; color: #991b1b; }
+    .warm { background: #fef3c7; color: #92400e; }
+    .cold { background: #e5e7eb; color: #374151; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Buyer Reply Tracking Dashboard</h1>
+    <p>Read-only buyer reply records manually observed by admin after a manual quote was sent outside the system.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Buyer Replies</h2><strong id="totalBuyerReplies">0</strong></div>
+      <div class="card"><h2>Manual Entry Only</h2><strong id="manualEntryOnlyCount">0</strong></div>
+      <div class="card"><h2>Admin Observed</h2><strong id="adminObservedReplyCount">0</strong></div>
+      <div class="card"><h2>Hot Replies</h2><strong id="hotReplyCount">0</strong></div>
+      <div class="card"><h2>Warm Replies</h2><strong id="warmReplyCount">0</strong></div>
+      <div class="card"><h2>Cold Replies</h2><strong id="coldReplyCount">0</strong></div>
+      <div class="card"><h2>System Read Count</h2><strong id="replyReadBySystemCount">0</strong></div>
+      <div class="card"><h2>Scraping Count</h2><strong id="scrapingCount">0</strong></div>
+      <div class="card"><h2>Auto Reply Count</h2><strong id="autoReplyToBuyerCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">MANUAL ENTRY ONLY</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Buyer Reply Tracking Safety Rule</h2>
+      <p class="muted">
+        This dashboard displays replies manually observed by admin. It must not read WhatsApp, scrape private messages,
+        harvest hidden data, auto-reply, auto-send WhatsApp, open browser, or move pipeline automatically.
+      </p>
+      <span class="badge safe">Manual-entry only</span>
+      <span class="badge safe">Manual sent confirmation required</span>
+      <span class="badge safe">Admin observed reply required</span>
+      <span class="badge safe">System does not read WhatsApp</span>
+      <span class="badge safe">No private message scraping</span>
+      <span class="badge safe">No hidden data harvesting</span>
+      <span class="badge safe">No auto-reply</span>
+      <span class="badge safe">No auto-send</span>
+      <span class="badge safe">Manual review required</span>
+    </section>
+
+    <section class="panel">
+      <h2>Buyer Reply Records</h2>
+      <p class="muted">Read-only list of replies typed in by admin after manually observing buyer response outside the system.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, reply, next action..." />
+        <select id="temperatureFilter">
+          <option value="">All temperatures</option>
+          <option value="hot">Hot</option>
+          <option value="warm">Warm</option>
+          <option value="cold">Cold</option>
+        </select>
+        <select id="replyTypeFilter">
+          <option value="">All reply types</option>
+          <option value="interested">Interested</option>
+          <option value="negotiating">Negotiating</option>
+          <option value="accepted_price">Accepted Price</option>
+          <option value="rejected_price">Rejected Price</option>
+          <option value="requested_discount">Requested Discount</option>
+          <option value="asked_question">Asked Question</option>
+          <option value="requested_delivery">Requested Delivery</option>
+          <option value="needs_more_photos">Needs More Photos</option>
+          <option value="not_ready">Not Ready</option>
+          <option value="wrong_part">Wrong Part</option>
+          <option value="closed_lost">Closed Lost</option>
+          <option value="closed_won">Closed Won</option>
+        </select>
+        <select id="riskFilter">
+          <option value="">All safety status</option>
+          <option value="safe">Safe Manual Replies</option>
+          <option value="read_risk">System Read Risk</option>
+          <option value="scrape_risk">Scraping Risk</option>
+          <option value="auto_reply_risk">Auto Reply Risk</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Quote Amount</th>
+            <th>Reply Channel</th>
+            <th>Reply Type</th>
+            <th>Temperature</th>
+            <th>Reply Text</th>
+            <th>Next Action</th>
+            <th>Safety</th>
+            <th>Observed By</th>
+            <th>Observed At</th>
+          </tr>
+        </thead>
+        <tbody id="replyRows">
+          <tr><td colspan="13">Loading buyer replies...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allReplies = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function formatLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function getFilteredReplies() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const temperatureFilter = document.getElementById("temperatureFilter").value;
+      const replyTypeFilter = document.getElementById("replyTypeFilter").value;
+      const riskFilter = document.getElementById("riskFilter").value;
+
+      return allReplies.filter(item => {
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.formattedQuoteAmount,
+          item.replyChannel,
+          item.replyType,
+          item.replyText,
+          item.nextAction,
+          item.observedBy
+        ].join(" ").toLowerCase();
+
+        const readRisk = item.replyReadBySystem === true ||
+          item.autoReadWhatsApp === true ||
+          item.readBuyerMessagesAutomatically === true;
+
+        const scrapeRisk = item.scrapeWhatsappMessages === true ||
+          item.privateMessageScraping === true ||
+          item.hiddenDataHarvesting === true;
+
+        const autoReplyRisk = item.autoReplyToBuyer === true ||
+          item.automaticBuyerMessage === true ||
+          item.autoSendWhatsApp === true ||
+          item.autoOpenBrowser === true ||
+          item.autoMovePipelineStage === true ||
+          item.pipelineMovedAutomatically === true;
+
+        return (!search || haystack.includes(search)) &&
+          (!temperatureFilter || item.buyerTemperatureAfterReply === temperatureFilter) &&
+          (!replyTypeFilter || item.replyType === replyTypeFilter) &&
+          (!riskFilter ||
+            (riskFilter === "safe" && readRisk !== true && scrapeRisk !== true && autoReplyRisk !== true) ||
+            (riskFilter === "read_risk" && readRisk === true) ||
+            (riskFilter === "scrape_risk" && scrapeRisk === true) ||
+            (riskFilter === "auto_reply_risk" && autoReplyRisk === true));
+      });
+    }
+
+    function renderReplies() {
+      const tbody = document.getElementById("replyRows");
+      const replies = getFilteredReplies();
+
+      if (!replies.length) {
+        tbody.innerHTML = '<tr><td colspan="13">No matching buyer replies.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = replies.map(item => {
+        const temp = item.buyerTemperatureAfterReply || "";
+        const tempClass = temp === "hot" ? "hot" : temp === "warm" ? "warm" : "cold";
+
+        const safety = [
+          item.manualEntryOnly ? badge("Manual entry only", "safe") : badge("Manual entry risk", "danger"),
+          item.adminObservedReply ? badge("Admin observed", "safe") : badge("Observed flag missing", "danger"),
+          item.replyReadBySystem ? badge("System read risk", "danger") : badge("System did not read", "safe"),
+          item.autoReadWhatsApp ? badge("Auto-read risk", "danger") : badge("No auto-read", "safe"),
+          item.scrapeWhatsappMessages ? badge("Scrape risk", "danger") : badge("No scraping", "safe"),
+          item.privateMessageScraping ? badge("Private scraping risk", "danger") : badge("No private scraping", "safe"),
+          item.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe"),
+          item.autoReplyToBuyer ? badge("Auto-reply risk", "danger") : badge("No auto-reply", "safe"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.autoOpenBrowser ? badge("Auto-browser risk", "danger") : badge("No auto-browser", "safe"),
+          item.pipelineMovedAutomatically ? badge("Auto-pipeline risk", "danger") : badge("No auto-pipeline", "safe"),
+          item.manualReviewRequiredForNextStep ? badge("Manual review next", "safe") : badge("Review risk", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""} ${item.engineCode || ""}`)}</td>
+            <td>${badge(item.formattedQuoteAmount || item.quoteAmount || "", "safe")}</td>
+            <td>${badge(formatLabel(item.replyChannel), "safe")}</td>
+            <td>${badge(formatLabel(item.replyType), "safe")}</td>
+            <td>${badge(formatLabel(temp), tempClass)}</td>
+            <td><pre>${escapeHtml(item.replyText)}</pre></td>
+            <td><pre>${escapeHtml(item.nextAction)}</pre></td>
+            <td>${safety}</td>
+            <td>${escapeHtml(item.observedBy)}</td>
+            <td>${formatDate(item.observedAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadBuyerReplyDashboard() {
+      const summaryResponse = await fetch("/api/buyer-reply/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalBuyerReplies").textContent = summary.totalBuyerReplies || 0;
+      document.getElementById("manualEntryOnlyCount").textContent = summary.manualEntryOnlyCount || 0;
+      document.getElementById("adminObservedReplyCount").textContent = summary.adminObservedReplyCount || 0;
+      document.getElementById("hotReplyCount").textContent = summary.hotReplyCount || 0;
+      document.getElementById("warmReplyCount").textContent = summary.warmReplyCount || 0;
+      document.getElementById("coldReplyCount").textContent = summary.coldReplyCount || 0;
+      document.getElementById("replyReadBySystemCount").textContent = summary.replyReadBySystemCount || 0;
+      document.getElementById("scrapingCount").textContent = summary.scrapingCount || 0;
+      document.getElementById("autoReplyToBuyerCount").textContent = summary.autoReplyToBuyerCount || 0;
+
+      const listResponse = await fetch("/api/buyer-replies");
+      const listData = await listResponse.json();
+      allReplies = Array.isArray(listData.replies) ? listData.replies : [];
+
+      renderReplies();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderReplies);
+    document.getElementById("temperatureFilter").addEventListener("change", renderReplies);
+    document.getElementById("replyTypeFilter").addEventListener("change", renderReplies);
+    document.getElementById("riskFilter").addEventListener("change", renderReplies);
+
+    loadBuyerReplyDashboard().catch(error => {
+      document.getElementById("replyRows").innerHTML =
+        `<tr><td colspan="13">Buyer reply dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

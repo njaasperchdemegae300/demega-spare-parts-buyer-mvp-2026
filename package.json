@@ -60,7 +60,8 @@
     "version:18a": "node tools/version18a-manual-quote-sent-confirmation-gate-smoke-test.js",
     "version:18b": "node tools/version18b-manual-quote-sent-confirmation-dashboard-smoke-test.js",
     "version:18c": "node tools/version18c-admin-hub-link-manual-sent-confirmation-smoke-test.js",
-    "version:19a": "node tools/version19a-buyer-reply-tracking-foundation-smoke-test.js"
+    "version:19a": "node tools/version19a-buyer-reply-tracking-foundation-smoke-test.js",
+    "version:19b": "node tools/version19b-buyer-reply-tracking-dashboard-smoke-test.js"
   },
   "keywords": [
     "spare-parts",
