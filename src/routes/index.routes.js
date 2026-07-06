@@ -54,6 +54,8 @@ function routeRequest(req, res, sendJson) {
         "/stock-confirmation-gate",
         "/compatibility-confirmation",
         "/compatibility-confirmation-gate",
+        "/quote-eligibility",
+        "/quote-eligibility-gate",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -130,6 +132,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/compatibility-confirmation" || url.pathname === "/compatibility-confirmation-gate")) {
     return compatibilityConfirmationController.compatibilityConfirmationDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/quote-eligibility" || url.pathname === "/quote-eligibility-gate")) {
+    return quoteEligibilityController.quoteEligibilityDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/quote-eligibility/preview") {

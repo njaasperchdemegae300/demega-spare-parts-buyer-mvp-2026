@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const quoteEligibilityService = require("../services/quote-eligibility.service");
+
+function quoteEligibilityDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "quote-eligibility-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Safe Final Quote Eligibility dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function quoteEligibilityPreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -57,6 +73,7 @@ function quoteEligibilitySummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  quoteEligibilityDashboardController,
   quoteEligibilityPreviewController,
   createQuoteEligibilityCheckController,
   listQuoteEligibilitiesController,
