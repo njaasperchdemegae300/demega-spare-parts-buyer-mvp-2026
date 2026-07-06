@@ -1025,3 +1025,54 @@ Display manual stock movement review records in a read-only dashboard. The dashb
 
 ## Next Phase After Approval
 Version 22C — Admin Hub Link Manual Stock Movement Review Gate
+
+# Version 23A — Manual Accounting Review Gate Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create a safe manual accounting review gate after manual stock movement review. The system records accounting review only. It does not create accounting entries, verify payment, generate receipts, create invoices, record revenue, move pipeline, update inventory, send WhatsApp, read messages, scrape messages, or harvest hidden data automatically.
+
+## Routes
+- GET /api/manual-accounting-review/preview
+- GET /api/manual-accounting-reviews
+- GET /api/manual-accounting-review/summary
+- POST /api/manual-accounting-review/record
+
+## Features
+- Manual accounting review recording
+- Manual stock movement review requirement
+- Admin reviewed stock movement requirement
+- Manual accounting review approval requirement
+- Review type validation
+- Accounting action validation
+- Review status validation
+- Missing stock movement review blocking
+- Unsafe auto-accounting/payment/receipt/invoice/revenue/pipeline/inventory/send/read/scrape request blocking
+- Safe manual accounting review metrics
+
+## Safety Rules
+- Manual accounting review only
+- Accounting entry prepared only
+- Manual stock movement review is required
+- Admin reviewed stock movement is required
+- Manual accounting review approval is required
+- No automatic accounting entry
+- No automatic financial ledger entry
+- No automatic payment verification
+- No automatic payment collection
+- No automatic receipt generation
+- No automatic invoice creation
+- No automatic revenue recording
+- No automatic pipeline movement
+- No automatic inventory update
+- No WhatsApp auto-send
+- No buyer message reading
+- No private message scraping
+- No hidden data harvesting
+- Manual accounting entry required after review
+- Manual receipt and financial ledger entry required after review
+
+## Next Phase After Approval
+Version 23B — Manual Accounting Review Dashboard Display

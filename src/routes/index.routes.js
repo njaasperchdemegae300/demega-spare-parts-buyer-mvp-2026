@@ -23,6 +23,7 @@ const buyerReplyController = require("../controllers/buyer-reply.controller");
 const buyerReplyFollowupActionController = require("../controllers/buyer-reply-followup-action.controller");
 const manualDealOutcomeController = require("../controllers/manual-deal-outcome.controller");
 const manualStockMovementReviewController = require("../controllers/manual-stock-movement-review.controller");
+const manualAccountingReviewController = require("../controllers/manual-accounting-review.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -112,6 +113,9 @@ function routeRequest(req, res, sendJson) {
         "/api/manual-stock-movement-review/preview",
         "/api/manual-stock-movement-reviews",
         "/api/manual-stock-movement-review/summary",
+        "/api/manual-accounting-review/preview",
+        "/api/manual-accounting-reviews",
+        "/api/manual-accounting-review/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -154,6 +158,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/buyer-reply-followup/plan",
         "POST /api/manual-deal-outcome/record",
         "POST /api/manual-stock-movement-review/record",
+        "POST /api/manual-accounting-review/record",
         "GET /api/leads"
       ]
     });
@@ -213,6 +218,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-stock-movement-review" || url.pathname === "/manual-stock-movement-reviews")) {
     return manualStockMovementReviewController.manualStockMovementReviewDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-accounting-review/preview") {
+    return manualAccountingReviewController.manualAccountingReviewPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-accounting-reviews") {
+    return manualAccountingReviewController.listManualAccountingReviewsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-accounting-review/summary") {
+    return manualAccountingReviewController.manualAccountingReviewSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/manual-accounting-review/record") {
+    return manualAccountingReviewController.recordManualAccountingReviewController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/manual-stock-movement-review/preview") {
