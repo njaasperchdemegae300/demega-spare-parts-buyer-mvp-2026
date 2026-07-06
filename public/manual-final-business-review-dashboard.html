@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Manual Final Business Review Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 2800px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    pre { white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; max-width: 460px; max-height: 220px; overflow: auto; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .completed { background: #dcfce7; color: #166534; }
+    .pending { background: #fef3c7; color: #92400e; }
+    .closed { background: #e5e7eb; color: #374151; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Manual Final Business Review Dashboard</h1>
+    <p>Read-only final business review records. The system prepares final review only and does not close sales or move pipeline.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Final Reviews</h2><strong id="totalManualFinalBusinessReviews">0</strong></div>
+      <div class="card"><h2>Manual Review Only</h2><strong id="manualFinalBusinessReviewOnlyCount">0</strong></div>
+      <div class="card"><h2>Final Record Prepared</h2><strong id="finalBusinessRecordPreparedOnlyCount">0</strong></div>
+      <div class="card"><h2>Completed Reviews</h2><strong id="finalSaleCompletedReviewCount">0</strong></div>
+      <div class="card"><h2>Pending Reviews</h2><strong id="finalSalePendingReviewCount">0</strong></div>
+      <div class="card"><h2>Follow-Up Needed</h2><strong id="finalFollowupNeededReviewCount">0</strong></div>
+      <div class="card"><h2>Manual Business Approved</h2><strong id="approvedForManualBusinessRecordsCount">0</strong></div>
+      <div class="card"><h2>Amount Confirmed</h2><strong id="amountConfirmedByAdminTotal">0</strong></div>
+      <div class="card"><h2>System Final Records</h2><strong id="finalBusinessRecordCreatedBySystemCount">0</strong></div>
+      <div class="card"><h2>Auto Close Count</h2><strong id="autoCloseSaleCount">0</strong></div>
+      <div class="card"><h2>Auto Pipeline Count</h2><strong id="autoPipelineMoveCount">0</strong></div>
+      <div class="card"><h2>Auto Accounting Count</h2><strong id="autoAccountingEntryCount">0</strong></div>
+      <div class="card"><h2>Auto Revenue Count</h2><strong id="autoRevenueCount">0</strong></div>
+      <div class="card"><h2>Auto Inventory Count</h2><strong id="autoInventoryUpdateCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">FINAL REVIEW ONLY</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Final Business Review Safety Rule</h2>
+      <p class="muted">
+        This dashboard displays manual final business review records only. It must not create final business records,
+        close sales, move pipeline, create accounting entries, generate receipts, create invoices, record revenue,
+        update inventory, send WhatsApp, read buyer messages, scrape private messages, or harvest hidden data.
+      </p>
+      <span class="badge safe">Manual final business review only</span>
+      <span class="badge safe">Final business record prepared only</span>
+      <span class="badge safe">Manual accounting review required</span>
+      <span class="badge safe">Admin reviewed accounting required</span>
+      <span class="badge safe">Manual final business approval required</span>
+      <span class="badge safe">No automatic final business record</span>
+      <span class="badge safe">No automatic sale closing</span>
+      <span class="badge safe">No automatic pipeline movement</span>
+      <span class="badge safe">No automatic accounting entry</span>
+      <span class="badge safe">No automatic revenue recording</span>
+      <span class="badge safe">No automatic inventory update</span>
+    </section>
+
+    <section class="panel">
+      <h2>Manual Final Business Review Records</h2>
+      <p class="muted">Read-only list of final business reviews recorded by admin after manual accounting review.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, final action, note..." />
+        <select id="finalReviewTypeFilter">
+          <option value="">All final review types</option>
+          <option value="final_sale_completed_review">Final Sale Completed</option>
+          <option value="final_sale_pending_review">Final Sale Pending</option>
+          <option value="final_followup_needed_review">Final Follow-Up Needed</option>
+          <option value="final_cancelled_review">Final Cancelled</option>
+          <option value="final_refund_required_review">Final Refund Required</option>
+          <option value="final_accounting_pending_review">Final Accounting Pending</option>
+          <option value="final_stock_pending_review">Final Stock Pending</option>
+          <option value="final_no_action_review">Final No Action</option>
+        </select>
+        <select id="finalStatusFilter">
+          <option value="">All final statuses</option>
+          <option value="approved_for_manual_business_records">Approved For Manual Business Records</option>
+          <option value="needs_manager_review">Needs Manager Review</option>
+          <option value="blocked_incomplete_accounting">Blocked Incomplete Accounting</option>
+          <option value="blocked_incomplete_stock_review">Blocked Incomplete Stock Review</option>
+          <option value="final_followup_required">Final Follow-Up Required</option>
+          <option value="no_final_business_update_required">No Final Business Update Required</option>
+        </select>
+        <select id="riskFilter">
+          <option value="">All safety status</option>
+          <option value="safe">Safe Manual Reviews</option>
+          <option value="final_record_risk">Final Record Automation Risk</option>
+          <option value="close_risk">Sale Close Risk</option>
+          <option value="pipeline_risk">Pipeline Risk</option>
+          <option value="accounting_risk">Accounting Risk</option>
+          <option value="revenue_risk">Revenue Risk</option>
+          <option value="inventory_risk">Inventory Risk</option>
+          <option value="scrape_risk">Scraping Risk</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Deal Outcome</th>
+            <th>Accounting Review</th>
+            <th>Final Review Type</th>
+            <th>Final Business Action</th>
+            <th>Final Status</th>
+            <th>Temperature</th>
+            <th>Amount Confirmed</th>
+            <th>Payment Method</th>
+            <th>Final Review Note</th>
+            <th>Safety</th>
+            <th>Reviewed By</th>
+            <th>Reviewed At</th>
+          </tr>
+        </thead>
+        <tbody id="finalBusinessRows">
+          <tr><td colspan="16">Loading manual final business reviews...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allReviews = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function formatLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function formatMoney(value) {
+      const number = Number(value || 0);
+      return Number.isFinite(number) ? number.toLocaleString() : "0";
+    }
+
+    function temperatureClass(value) {
+      if (value === "completed_manual") return "completed";
+      if (value === "pending_manual") return "pending";
+      return "closed";
+    }
+
+    function getFilteredReviews() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const finalReviewTypeFilter = document.getElementById("finalReviewTypeFilter").value;
+      const finalStatusFilter = document.getElementById("finalStatusFilter").value;
+      const riskFilter = document.getElementById("riskFilter").value;
+
+      return allReviews.filter(item => {
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.dealOutcomeType,
+          item.accountingReviewType,
+          item.finalReviewType,
+          item.finalBusinessAction,
+          item.finalReviewStatus,
+          item.finalBusinessTemperature,
+          item.paymentMethodReviewed,
+          item.finalReviewNote,
+          item.reviewedBy
+        ].join(" ").toLowerCase();
+
+        const finalRecordRisk = item.finalBusinessRecordCreatedBySystem === true ||
+          item.autoCreateFinalBusinessRecord === true;
+
+        const closeRisk = item.saleClosedBySystem === true ||
+          item.autoCloseSale === true ||
+          item.closeSaleAutomatically === true ||
+          item.markSaleWonAutomatically === true ||
+          item.markLeadClosedAutomatically === true;
+
+        const pipelineRisk = item.autoMovePipelineStage === true ||
+          item.pipelineMovedAutomatically === true;
+
+        const accountingRisk = item.accountingEntryCreatedBySystem === true ||
+          item.autoCreateAccountingEntry === true ||
+          item.financialLedgerEntryCreatedBySystem === true ||
+          item.autoCreateFinancialLedgerEntry === true;
+
+        const revenueRisk = item.revenueRecordedBySystem === true ||
+          item.autoUpdateRevenue === true ||
+          item.receiptGeneratedBySystem === true ||
+          item.autoGenerateReceipt === true ||
+          item.invoiceCreatedBySystem === true ||
+          item.autoCreateInvoice === true;
+
+        const inventoryRisk = item.inventoryChangedBySystem === true ||
+          item.autoUpdateInventory === true ||
+          item.stockReducedBySystem === true ||
+          item.autoReduceStock === true ||
+          item.autoCreateStockLedgerEntry === true;
+
+        const scrapeRisk = item.autoReadWhatsApp === true ||
+          item.readBuyerMessagesAutomatically === true ||
+          item.scrapeWhatsappMessages === true ||
+          item.privateMessageScraping === true ||
+          item.hiddenDataHarvesting === true;
+
+        return (!search || haystack.includes(search)) &&
+          (!finalReviewTypeFilter || item.finalReviewType === finalReviewTypeFilter) &&
+          (!finalStatusFilter || item.finalReviewStatus === finalStatusFilter) &&
+          (!riskFilter ||
+            (riskFilter === "safe" && finalRecordRisk !== true && closeRisk !== true && pipelineRisk !== true && accountingRisk !== true && revenueRisk !== true && inventoryRisk !== true && scrapeRisk !== true) ||
+            (riskFilter === "final_record_risk" && finalRecordRisk === true) ||
+            (riskFilter === "close_risk" && closeRisk === true) ||
+            (riskFilter === "pipeline_risk" && pipelineRisk === true) ||
+            (riskFilter === "accounting_risk" && accountingRisk === true) ||
+            (riskFilter === "revenue_risk" && revenueRisk === true) ||
+            (riskFilter === "inventory_risk" && inventoryRisk === true) ||
+            (riskFilter === "scrape_risk" && scrapeRisk === true));
+      });
+    }
+
+    function renderReviews() {
+      const tbody = document.getElementById("finalBusinessRows");
+      const reviews = getFilteredReviews();
+
+      if (!reviews.length) {
+        tbody.innerHTML = '<tr><td colspan="16">No matching manual final business reviews.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = reviews.map(item => {
+        const safety = [
+          item.manualFinalBusinessReviewOnly ? badge("Manual final review only", "safe") : badge("Final review risk", "danger"),
+          item.finalBusinessRecordPreparedOnly ? badge("Final record prepared", "safe") : badge("Final record risk", "danger"),
+          item.adminReviewedAccounting ? badge("Admin reviewed accounting", "safe") : badge("Accounting review missing", "danger"),
+          item.manualFinalBusinessReviewApproved ? badge("Manual final approval", "safe") : badge("Final approval missing", "danger"),
+          item.finalBusinessRecordCreatedBySystem ? badge("System final record risk", "danger") : badge("No system final record", "safe"),
+          item.saleClosedBySystem ? badge("Sale close risk", "danger") : badge("No system sale close", "safe"),
+          item.autoCloseSale ? badge("Auto close risk", "danger") : badge("No auto close", "safe"),
+          item.autoMovePipelineStage ? badge("Pipeline automation risk", "danger") : badge("No pipeline automation", "safe"),
+          item.autoCreateAccountingEntry ? badge("Accounting automation risk", "danger") : badge("No accounting automation", "safe"),
+          item.autoGenerateReceipt ? badge("Receipt automation risk", "danger") : badge("No receipt automation", "safe"),
+          item.autoUpdateRevenue ? badge("Revenue automation risk", "danger") : badge("No revenue automation", "safe"),
+          item.autoUpdateInventory ? badge("Inventory automation risk", "danger") : badge("No inventory automation", "safe"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.autoReadWhatsApp ? badge("Message read risk", "danger") : badge("No message reading", "safe"),
+          item.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe"),
+          item.manualFinalBusinessRecordRequired ? badge("Manual final record required", "safe") : badge("Final record review risk", "danger"),
+          item.manualManagerReviewRequired ? badge("Manual manager review required", "safe") : badge("Manager review risk", "danger"),
+          item.manualReviewRequiredBeforeFinalClose ? badge("Review before final close", "safe") : badge("Final close review risk", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""} ${item.engineCode || ""}`)}</td>
+            <td>${badge(formatLabel(item.dealOutcomeType), "safe")}</td>
+            <td>${badge(formatLabel(item.accountingReviewType), "safe")}</td>
+            <td>${badge(formatLabel(item.finalReviewType), temperatureClass(item.finalBusinessTemperature))}</td>
+            <td>${badge(formatLabel(item.finalBusinessAction), "safe")}</td>
+            <td>${badge(formatLabel(item.finalReviewStatus), "safe")}</td>
+            <td>${badge(formatLabel(item.finalBusinessTemperature), temperatureClass(item.finalBusinessTemperature))}</td>
+            <td>${badge(formatMoney(item.amountConfirmedByAdmin), "safe")}</td>
+            <td>${badge(formatLabel(item.paymentMethodReviewed), "safe")}</td>
+            <td><pre>${escapeHtml(item.finalReviewNote)}</pre></td>
+            <td>${safety}</td>
+            <td>${escapeHtml(item.reviewedBy)}</td>
+            <td>${formatDate(item.reviewedAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadManualFinalBusinessReviewDashboard() {
+      const summaryResponse = await fetch("/api/manual-final-business-review/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalManualFinalBusinessReviews").textContent = summary.totalManualFinalBusinessReviews || 0;
+      document.getElementById("manualFinalBusinessReviewOnlyCount").textContent = summary.manualFinalBusinessReviewOnlyCount || 0;
+      document.getElementById("finalBusinessRecordPreparedOnlyCount").textContent = summary.finalBusinessRecordPreparedOnlyCount || 0;
+      document.getElementById("finalSaleCompletedReviewCount").textContent = summary.finalSaleCompletedReviewCount || 0;
+      document.getElementById("finalSalePendingReviewCount").textContent = summary.finalSalePendingReviewCount || 0;
+      document.getElementById("finalFollowupNeededReviewCount").textContent = summary.finalFollowupNeededReviewCount || 0;
+      document.getElementById("approvedForManualBusinessRecordsCount").textContent = summary.approvedForManualBusinessRecordsCount || 0;
+      document.getElementById("amountConfirmedByAdminTotal").textContent = formatMoney(summary.amountConfirmedByAdminTotal || 0);
+      document.getElementById("finalBusinessRecordCreatedBySystemCount").textContent = summary.finalBusinessRecordCreatedBySystemCount || 0;
+      document.getElementById("autoCloseSaleCount").textContent = summary.autoCloseSaleCount || 0;
+      document.getElementById("autoPipelineMoveCount").textContent = summary.autoPipelineMoveCount || 0;
+      document.getElementById("autoAccountingEntryCount").textContent = summary.autoAccountingEntryCount || 0;
+      document.getElementById("autoRevenueCount").textContent = summary.autoRevenueCount || 0;
+      document.getElementById("autoInventoryUpdateCount").textContent = summary.autoInventoryUpdateCount || 0;
+
+      const listResponse = await fetch("/api/manual-final-business-reviews");
+      const listData = await listResponse.json();
+      allReviews = Array.isArray(listData.finalBusinessReviews) ? listData.finalBusinessReviews : [];
+
+      renderReviews();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderReviews);
+    document.getElementById("finalReviewTypeFilter").addEventListener("change", renderReviews);
+    document.getElementById("finalStatusFilter").addEventListener("change", renderReviews);
+    document.getElementById("riskFilter").addEventListener("change", renderReviews);
+
+    loadManualFinalBusinessReviewDashboard().catch(error => {
+      document.getElementById("finalBusinessRows").innerHTML =
+        `<tr><td colspan="16">Manual final business review dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const manualFinalBusinessReviewService = require("../services/manual-final-business-review.service");
+
+function manualFinalBusinessReviewDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "manual-final-business-review-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Manual Final Business Review dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function manualFinalBusinessReviewPreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -72,6 +88,7 @@ function manualFinalBusinessReviewSummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  manualFinalBusinessReviewDashboardController,
   manualFinalBusinessReviewPreviewController,
   recordManualFinalBusinessReviewController,
   listManualFinalBusinessReviewsController,
