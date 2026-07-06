@@ -19,6 +19,7 @@ const buyerReplyFollowupActionService = require("../services/buyer-reply-followu
 const manualDealOutcomeService = require("../services/manual-deal-outcome.service");
 const manualStockMovementReviewService = require("../services/manual-stock-movement-review.service");
 const manualAccountingReviewService = require("../services/manual-accounting-review.service");
+const manualFinalBusinessReviewService = require("../services/manual-final-business-review.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -40,7 +41,8 @@ const modules = [
 ,
   { name: "Manual Deal Outcome Gate", path: "/manual-deal-outcome", purpose: "Manual deal outcome visibility. Outcome record only; system does not close sale, move pipeline, send, auto-reply, handle payment, change stock, read messages, scrape, or harvest data." },
   { name: "Manual Stock Movement Review Gate", path: "/manual-stock-movement-review", purpose: "Manual stock movement review visibility. Review-only; system does not update inventory, reduce stock, reserve stock, release stock, create stock ledger, handle payment, send, read messages, scrape, or harvest data." },
-  { name: "Manual Accounting Review Gate", path: "/manual-accounting-review", purpose: "Manual accounting review visibility. Review-only; system does not create accounting entries, financial ledger, verify payment, generate receipts, create invoices, record revenue, move pipeline, update inventory, send, read messages, scrape, or harvest data." }];
+  { name: "Manual Accounting Review Gate", path: "/manual-accounting-review", purpose: "Manual accounting review visibility. Review-only; system does not create accounting entries, financial ledger, verify payment, generate receipts, create invoices, record revenue, move pipeline, update inventory, send, read messages, scrape, or harvest data." },
+  { name: "Manual Final Business Review Gate", path: "/manual-final-business-review", purpose: "Manual final business review visibility. Review-only; system does not create final business records, close sales, move pipeline, create accounting entries, record revenue, update inventory, send, read messages, scrape, or harvest data." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -83,34 +85,7 @@ function getSafety() {
     manualDealOutcomeGateOnly: true,
     manualStockMovementReviewGateOnly: true,
     manualAccountingReviewGateOnly: true,
-    manualAccountingReviewOnly: true,
-    accountingEntryPreparedOnly: true,
-    requiresManualStockMovementReview: true,
-    requiresAdminReviewedStockMovement: true,
-    requiresManualAccountingReviewApproval: true,
-    systemDoesNotCreateAccountingEntry: true,
-    systemDoesNotCreateFinancialLedger: true,
-    systemDoesNotVerifyPayment: true,
-    systemDoesNotCollectPayment: true,
-    systemDoesNotGenerateReceipt: true,
-    systemDoesNotSendReceipt: true,
-    systemDoesNotCreateInvoice: true,
-    systemDoesNotRecordRevenue: true,
-    manualAccountingEntryRequired: true,
-    manualPaymentVerificationRequired: true,
-    manualReceiptRequired: true,
-    manualInvoiceRequiredIfNeeded: true,
-    manualFinancialLedgerEntryRequired: true,
-    manualReviewRequiredBeforeAccountingEntry: true,
-    autoCreateAccountingEntry: false,
-    createAccountingEntryAutomatically: false,
-    autoCreateFinancialLedgerEntry: false,
-    autoVerifyPayment: false,
-    verifyPaymentAutomatically: false,
-    autoGenerateReceipt: false,
-    autoSendReceipt: false,
-    autoCreateInvoice: false,
-    autoUpdateRevenue: false,
+    manualFinalBusinessReviewGateOnly: true,
 
     manualEntryOnly: true,
     manualActionOnly: true,
@@ -119,6 +94,10 @@ function getSafety() {
     manualOutcomeRecordOnly: true,
     manualStockMovementReviewOnly: true,
     stockUpdatePreparedOnly: true,
+    manualAccountingReviewOnly: true,
+    accountingEntryPreparedOnly: true,
+    manualFinalBusinessReviewOnly: true,
+    finalBusinessRecordPreparedOnly: true,
 
     requiresPreparedCopyAction: true,
     requiresManualAdminConfirmation: true,
@@ -133,6 +112,12 @@ function getSafety() {
     requiresManualDealOutcome: true,
     requiresAdminReviewedDealOutcome: true,
     requiresManualStockMovementReviewApproval: true,
+    requiresManualStockMovementReview: true,
+    requiresAdminReviewedStockMovement: true,
+    requiresManualAccountingReviewApproval: true,
+    requiresManualAccountingReview: true,
+    requiresAdminReviewedAccounting: true,
+    requiresManualFinalBusinessReviewApproval: true,
     adminObservedReplyRequired: true,
 
     preparesCopyTextOnly: true,
@@ -158,6 +143,15 @@ function getSafety() {
     systemDoesNotReserveStock: true,
     systemDoesNotReleaseStock: true,
     systemDoesNotCreateStockLedger: true,
+    systemDoesNotCreateAccountingEntry: true,
+    systemDoesNotCreateFinancialLedger: true,
+    systemDoesNotVerifyPayment: true,
+    systemDoesNotCollectPayment: true,
+    systemDoesNotGenerateReceipt: true,
+    systemDoesNotSendReceipt: true,
+    systemDoesNotCreateInvoice: true,
+    systemDoesNotRecordRevenue: true,
+    systemDoesNotCreateFinalBusinessRecord: true,
 
     serverDoesNotAccessClipboard: true,
     browserAutoCopy: false,
@@ -198,6 +192,7 @@ function getSafety() {
 
     autoCloseSale: false,
     closeSaleAutomatically: false,
+    saleClosedBySystem: false,
     markSaleWonAutomatically: false,
     markSaleLostAutomatically: false,
     markLeadClosedAutomatically: false,
@@ -222,6 +217,25 @@ function getSafety() {
     autoCreateInventoryEvent: false,
     autoCreateStockLedgerEntry: false,
 
+    autoCreateAccountingEntry: false,
+    createAccountingEntryAutomatically: false,
+    accountingEntryCreatedBySystem: false,
+    autoCreateFinancialLedgerEntry: false,
+    financialLedgerEntryCreatedBySystem: false,
+    autoVerifyPayment: false,
+    paymentVerifiedBySystem: false,
+    autoGenerateReceipt: false,
+    receiptGeneratedBySystem: false,
+    autoSendReceipt: false,
+    receiptSentAutomatically: false,
+    autoCreateInvoice: false,
+    invoiceCreatedBySystem: false,
+    autoUpdateRevenue: false,
+    revenueRecordedBySystem: false,
+
+    autoCreateFinalBusinessRecord: false,
+    finalBusinessRecordCreatedBySystem: false,
+
     manualReviewRequired: true,
     manualReviewRequiredForNextStep: true,
     manualReviewRequiredBeforeExecution: true,
@@ -230,7 +244,19 @@ function getSafety() {
     manualReviewRequiredForStockUpdate: true,
     manualReviewRequiredBeforeInventoryChange: true,
     manualInventoryUpdateRequired: true,
-    manualLedgerEntryRequired: true
+    manualLedgerEntryRequired: true,
+    manualAccountingEntryRequired: true,
+    manualPaymentVerificationRequired: true,
+    manualReceiptRequired: true,
+    manualInvoiceRequiredIfNeeded: true,
+    manualFinancialLedgerEntryRequired: true,
+    manualReviewRequiredBeforeAccountingEntry: true,
+    manualFinalBusinessRecordRequired: true,
+    manualManagerReviewRequired: true,
+    manualPipelineUpdateRequired: true,
+    manualAccountingVerificationRequired: true,
+    manualInventoryVerificationRequired: true,
+    manualReviewRequiredBeforeFinalClose: true
   };
 }
 
@@ -263,6 +289,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const manualDealOutcome = safeRead(() => manualDealOutcomeService.getManualDealOutcomeSummary(), {});
   const manualStockMovementReview = safeRead(() => manualStockMovementReviewService.getManualStockMovementReviewSummary(), {});
   const manualAccountingReview = safeRead(() => manualAccountingReviewService.getManualAccountingReviewSummary(), {});
+  const manualFinalBusinessReview = safeRead(() => manualFinalBusinessReviewService.getManualFinalBusinessReviewSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -290,7 +317,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       buyerReplyFollowupAction,
       manualDealOutcome,
       manualStockMovementReview,
-      manualAccountingReview
+      manualAccountingReview,
+      manualFinalBusinessReview
     },
     safety: getSafety()
   });

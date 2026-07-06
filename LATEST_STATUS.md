@@ -1,42 +1,43 @@
 # LATEST STATUS
 
 Current Phase:
-Version 24B — Manual Final Business Review Dashboard Display
+Version 24C — Admin Hub Link Manual Final Business Review Gate
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /manual-final-business-review
-- GET /manual-final-business-reviews
-- Manual Final Business Review dashboard
-- Final business review metric cards
-- Final business review table
-- Final review type filter
-- Final review status filter
-- Safety status filter
-- Final business action display
-- Final temperature display
-- Amount confirmed display
-- Final review note display
-- Safety labels
+- Manual Final Business Review Gate linked inside Admin Navigation Hub
+- Final Business Reviews metric
+- Final Completed Reviews metric
+- Manual Final Approved metric
+- Final Amount Confirmed metric
+- System Final Records metric
+- Auto Final Close metric
+- Auto Final Pipeline metric
+- Manual final business review metrics inside admin metrics API
+- Manual final business review safety locks inside admin summary
+- Linked Manual Final Business Review dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays manual final business review records only
-- Dashboard does not create final business records automatically
-- Dashboard does not close sales automatically
-- Dashboard does not move pipeline automatically
-- Dashboard does not create accounting entries automatically
-- Dashboard does not generate receipts automatically
-- Dashboard does not record revenue automatically
-- Dashboard does not update inventory automatically
-- Dashboard does not send WhatsApp
-- Dashboard does not read buyer messages
-- Dashboard does not scrape private messages
-- Dashboard does not harvest hidden data
+- Admin hub remains navigation and visibility only
+- Metrics API is read-only
+- Manual Final Business Review Gate remains final-review-only
 - Manual accounting review is required before final business review
-- Admin review and manual final business approval are required
-- Manual final business record and manager review are required after review
+- Admin reviewed accounting is required
+- Manual final business review approval is required
+- Admin hub does not create final business records
+- Admin hub does not close sales
+- Admin hub does not move pipeline
+- Admin hub does not create accounting entries
+- Admin hub does not generate receipts
+- Admin hub does not record revenue
+- Admin hub does not update inventory
+- Admin hub does not send WhatsApp
+- Admin hub does not read buyer messages
+- Admin hub does not scrape private messages
+- Admin hub does not harvest hidden data
+- Manual final business record, manager review, and final close review remain required
 
 Next Phase:
-Version 24C — Admin Hub Link Manual Final Business Review Gate
+Version 25A — Project Source-of-Truth Handover System Foundation

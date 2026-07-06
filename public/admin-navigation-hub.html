@@ -58,6 +58,10 @@
       <span class="badge">NO AUTOMATIC ACCOUNTING ENTRY</span>
       <span class="badge">NO AUTOMATIC RECEIPT</span>
       <span class="badge">NO AUTOMATIC REVENUE RECORDING</span>
+      <span class="badge">MANUAL FINAL BUSINESS REVIEW IS REVIEW ONLY</span>
+      <span class="badge">NO AUTOMATIC FINAL BUSINESS RECORD</span>
+      <span class="badge">NO AUTOMATIC SALE CLOSING</span>
+      <span class="badge">NO AUTOMATIC PIPELINE MOVEMENT</span>
       <span class="badge">NO AUTOMATIC CLOSING</span>
       <span class="badge warn">ADMIN MUST MANUALLY OBSERVE BUYER REPLY OUTSIDE THE SYSTEM</span>
       <ul>
@@ -85,6 +89,10 @@
         <li>It does not verify payment automatically.</li>
         <li>It does not generate receipts automatically.</li>
         <li>It does not record revenue automatically.</li>
+        <li>Manual final business review only displays admin-reviewed final business decisions.</li>
+        <li>It does not create final business records automatically.</li>
+        <li>It does not close sales automatically.</li>
+        <li>It does not move pipeline automatically.</li>
       </ul>
     </section>
 
@@ -136,6 +144,13 @@
         <div class="metric"><h2>Auto Accounting Entry</h2><strong id="autoAccountingEntry">0</strong></div>
         <div class="metric"><h2>Auto Receipt Count</h2><strong id="autoReceiptCount">0</strong></div>
         <div class="metric"><h2>Auto Revenue Count</h2><strong id="autoRevenueCount">0</strong></div>
+        <div class="metric"><h2>Final Business Reviews</h2><strong id="manualFinalBusinessReviews">0</strong></div>
+        <div class="metric"><h2>Final Completed Reviews</h2><strong id="finalCompletedReviews">0</strong></div>
+        <div class="metric"><h2>Manual Final Approved</h2><strong id="manualFinalApproved">0</strong></div>
+        <div class="metric"><h2>Final Amount Confirmed</h2><strong id="manualFinalAmountConfirmed">0</strong></div>
+        <div class="metric"><h2>System Final Records</h2><strong id="systemFinalRecords">0</strong></div>
+        <div class="metric"><h2>Auto Final Close</h2><strong id="autoFinalClose">0</strong></div>
+        <div class="metric"><h2>Auto Final Pipeline</h2><strong id="autoFinalPipeline">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -160,6 +175,7 @@
       <div class="card"><h2>Manual Deal Outcome Gate</h2><p>View admin-recorded deal outcomes after manual action completion. No automatic sale closing, pipeline movement, payment handling, stock change, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-deal-outcome">Open Manual Deal Outcome Gate</a></div>
       <div class="card"><h2>Manual Stock Movement Review Gate</h2><p>View manual stock movement reviews after deal outcomes. No automatic inventory update, stock reduction, stock reservation, stock release, stock ledger, payment handling, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-stock-movement-review">Open Stock Movement Review Gate</a></div>
       <div class="card"><h2>Manual Accounting Review Gate</h2><p>View manual accounting reviews after stock movement reviews. No automatic accounting entry, financial ledger, payment verification, receipt, invoice, revenue recording, pipeline movement, inventory update, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-accounting-review">Open Accounting Review Gate</a></div>
+      <div class="card"><h2>Manual Final Business Review Gate</h2><p>View manual final business reviews after accounting reviews. No automatic final business record, sale closing, pipeline movement, accounting entry, revenue recording, inventory update, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-final-business-review">Open Final Business Review Gate</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -219,6 +235,13 @@
       document.getElementById("autoAccountingEntry").textContent = safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.autoAccountingEntryCount);
       document.getElementById("autoReceiptCount").textContent = safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.autoReceiptCount);
       document.getElementById("autoRevenueCount").textContent = safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.autoRevenueCount);
+      document.getElementById("manualFinalBusinessReviews").textContent = safeNumber(metrics.manualFinalBusinessReview && metrics.manualFinalBusinessReview.totalManualFinalBusinessReviews);
+      document.getElementById("finalCompletedReviews").textContent = safeNumber(metrics.manualFinalBusinessReview && metrics.manualFinalBusinessReview.finalSaleCompletedReviewCount);
+      document.getElementById("manualFinalApproved").textContent = safeNumber(metrics.manualFinalBusinessReview && metrics.manualFinalBusinessReview.approvedForManualBusinessRecordsCount);
+      document.getElementById("manualFinalAmountConfirmed").textContent = safeNumber(metrics.manualFinalBusinessReview && metrics.manualFinalBusinessReview.amountConfirmedByAdminTotal).toLocaleString();
+      document.getElementById("systemFinalRecords").textContent = safeNumber(metrics.manualFinalBusinessReview && metrics.manualFinalBusinessReview.finalBusinessRecordCreatedBySystemCount);
+      document.getElementById("autoFinalClose").textContent = safeNumber(metrics.manualFinalBusinessReview && metrics.manualFinalBusinessReview.autoCloseSaleCount);
+      document.getElementById("autoFinalPipeline").textContent = safeNumber(metrics.manualFinalBusinessReview && metrics.manualFinalBusinessReview.autoPipelineMoveCount);
 
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
@@ -236,7 +259,8 @@
         safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.autoSendWhatsAppCount) +
         safeNumber(metrics.manualDealOutcome && metrics.manualDealOutcome.autoSendWhatsAppCount) +
         safeNumber(metrics.manualStockMovementReview && metrics.manualStockMovementReview.autoSendWhatsAppCount) +
-        safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.autoSendWhatsAppCount);
+        safeNumber(metrics.manualAccountingReview && metrics.manualAccountingReview.autoSendWhatsAppCount) +
+        safeNumber(metrics.manualFinalBusinessReview && metrics.manualFinalBusinessReview.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {
