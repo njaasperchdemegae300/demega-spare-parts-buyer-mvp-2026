@@ -976,3 +976,52 @@ Connect Manual Deal Outcome Gate into the polished Admin Navigation Hub and Live
 
 ## Next Phase After Approval
 Version 22A — Manual Stock Movement Review Gate Foundation
+
+# Version 22B — Manual Stock Movement Review Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display manual stock movement review records in a read-only dashboard. The dashboard shows stock movement reviews only. It does not update inventory, reduce stock, reserve stock, release stock, create stock ledger, handle payment, send WhatsApp, read buyer messages, scrape private messages, or harvest hidden data.
+
+## Routes
+- GET /manual-stock-movement-review
+- GET /manual-stock-movement-reviews
+- GET /api/manual-stock-movement-reviews
+- GET /api/manual-stock-movement-review/summary
+
+## Features
+- Manual Stock Movement Review dashboard
+- Stock movement review metric cards
+- Stock movement review table
+- Movement type filter
+- Review status filter
+- Safety status filter
+- Shelf / supplier display
+- Quantity review display
+- Review note display
+- Safety labels
+
+## Safety Rules
+- Read-only dashboard
+- Manual stock movement review only
+- Stock update prepared only
+- Manual deal outcome required
+- Admin reviewed deal outcome required
+- Manual stock movement review approval required
+- No automatic inventory update
+- No automatic stock reduction
+- No automatic stock reservation
+- No automatic stock release
+- No automatic stock ledger entry
+- No automatic payment handling
+- No WhatsApp auto-send
+- No buyer message reading
+- No private message scraping
+- No hidden data harvesting
+- Manual inventory update required after review
+- Manual ledger entry required after review
+
+## Next Phase After Approval
+Version 22C — Admin Hub Link Manual Stock Movement Review Gate

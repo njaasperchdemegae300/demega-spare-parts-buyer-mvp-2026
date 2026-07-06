@@ -1,43 +1,40 @@
 # LATEST STATUS
 
 Current Phase:
-Version 22A — Manual Stock Movement Review Gate Foundation
+Version 22B — Manual Stock Movement Review Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /api/manual-stock-movement-review/preview
-- GET /api/manual-stock-movement-reviews
-- GET /api/manual-stock-movement-review/summary
-- POST /api/manual-stock-movement-review/record
-- Manual stock movement review recording
-- Manual deal outcome requirement
-- Admin reviewed deal outcome requirement
-- Manual stock movement review approval requirement
-- Movement type validation
-- Movement reason validation
-- Review status validation
-- Missing deal outcome blocking
-- Unsafe auto-inventory/stock/ledger/payment/send/read/scrape request blocking
-- Safe manual stock movement review metrics
+- GET /manual-stock-movement-review
+- GET /manual-stock-movement-reviews
+- Manual Stock Movement Review dashboard
+- Stock movement review metric cards
+- Stock movement review table
+- Movement type filter
+- Review status filter
+- Safety status filter
+- Shelf / supplier display
+- Quantity review display
+- Review note display
+- Safety labels
 
 Safety Confirmed:
-- Manual Stock Movement Review Gate records review only
-- Manual deal outcome is required first
-- Admin reviewed deal outcome is required
-- Manual stock movement review approval is required
-- System does not update inventory automatically
-- System does not reduce stock automatically
-- System does not reserve stock automatically
-- System does not release stock automatically
-- System does not create stock ledger automatically
-- System does not handle payment
-- System does not send WhatsApp
-- System does not read buyer messages
-- System does not scrape private messages
-- System does not harvest hidden data
+- Dashboard displays manual stock movement review records only
+- Dashboard does not update inventory automatically
+- Dashboard does not reduce stock automatically
+- Dashboard does not reserve stock automatically
+- Dashboard does not release stock automatically
+- Dashboard does not create stock ledger automatically
+- Dashboard does not handle payment
+- Dashboard does not send WhatsApp
+- Dashboard does not read buyer messages
+- Dashboard does not scrape private messages
+- Dashboard does not harvest hidden data
+- Manual deal outcome is required before stock movement review
+- Admin review and manual stock movement approval are required
 - Manual inventory update and manual ledger entry are required after review
 
 Next Phase:
-Version 22B — Manual Stock Movement Review Dashboard Display
+Version 22C — Admin Hub Link Manual Stock Movement Review Gate

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Manual Stock Movement Review Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 2400px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    pre { white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; max-width: 420px; max-height: 200px; overflow: auto; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .deduct { background: #fee2e2; color: #991b1b; }
+    .reserve { background: #fef3c7; color: #92400e; }
+    .release { background: #dbeafe; color: #1e40af; }
+    .neutral { background: #e5e7eb; color: #374151; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Manual Stock Movement Review Dashboard</h1>
+    <p>Read-only stock movement review records. The system prepares review only and does not change inventory.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Stock Reviews</h2><strong id="totalManualStockMovementReviews">0</strong></div>
+      <div class="card"><h2>Manual Review Only</h2><strong id="manualStockMovementReviewOnlyCount">0</strong></div>
+      <div class="card"><h2>Stock Update Prepared</h2><strong id="stockUpdatePreparedOnlyCount">0</strong></div>
+      <div class="card"><h2>Deduction Reviews</h2><strong id="stockDeductionReviewCount">0</strong></div>
+      <div class="card"><h2>Reservation Reviews</h2><strong id="stockReservationReviewCount">0</strong></div>
+      <div class="card"><h2>Release Reviews</h2><strong id="stockReleaseReviewCount">0</strong></div>
+      <div class="card"><h2>Manual Count Required</h2><strong id="manualCountRequiredCount">0</strong></div>
+      <div class="card"><h2>Approved For Manual Update</h2><strong id="approvedForManualStockUpdateCount">0</strong></div>
+      <div class="card"><h2>Inventory Changed By System</h2><strong id="inventoryChangedBySystemCount">0</strong></div>
+      <div class="card"><h2>Auto Update Count</h2><strong id="autoUpdateInventoryCount">0</strong></div>
+      <div class="card"><h2>Auto Reduce Count</h2><strong id="autoReduceStockCount">0</strong></div>
+      <div class="card"><h2>Auto Ledger Count</h2><strong id="autoLedgerCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">REVIEW ONLY</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Stock Movement Review Safety Rule</h2>
+      <p class="muted">
+        This dashboard displays manual stock movement review records only. It must not update inventory, reduce stock,
+        reserve stock, release stock, create stock ledger, handle payment, send WhatsApp, read buyer messages, scrape private messages, or harvest hidden data.
+      </p>
+      <span class="badge safe">Manual stock movement review only</span>
+      <span class="badge safe">Stock update prepared only</span>
+      <span class="badge safe">Manual deal outcome required</span>
+      <span class="badge safe">Admin reviewed deal outcome required</span>
+      <span class="badge safe">Manual stock movement approval required</span>
+      <span class="badge safe">System does not update inventory</span>
+      <span class="badge safe">No automatic stock reduction</span>
+      <span class="badge safe">No automatic stock reservation</span>
+      <span class="badge safe">No automatic stock release</span>
+      <span class="badge safe">No automatic stock ledger</span>
+      <span class="badge safe">Manual inventory update required</span>
+    </section>
+
+    <section class="panel">
+      <h2>Manual Stock Movement Review Records</h2>
+      <p class="muted">Read-only list of stock movement reviews recorded by admin after manual deal outcome review.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, shelf, note..." />
+        <select id="movementFilter">
+          <option value="">All movement types</option>
+          <option value="stock_deduction_review">Stock Deduction Review</option>
+          <option value="stock_reservation_review">Stock Reservation Review</option>
+          <option value="stock_release_review">Stock Release Review</option>
+          <option value="stock_count_check_review">Stock Count Check Review</option>
+          <option value="no_stock_change_review">No Stock Change Review</option>
+          <option value="stock_return_review">Stock Return Review</option>
+          <option value="damaged_stock_review">Damaged Stock Review</option>
+        </select>
+        <select id="statusFilter">
+          <option value="">All review statuses</option>
+          <option value="approved_for_manual_stock_update">Approved For Manual Stock Update</option>
+          <option value="needs_manager_review">Needs Manager Review</option>
+          <option value="blocked_no_stock_change">Blocked No Stock Change</option>
+          <option value="no_stock_change_required">No Stock Change Required</option>
+          <option value="manual_count_required">Manual Count Required</option>
+        </select>
+        <select id="riskFilter">
+          <option value="">All safety status</option>
+          <option value="safe">Safe Manual Reviews</option>
+          <option value="inventory_risk">Inventory Update Risk</option>
+          <option value="stock_reduce_risk">Stock Reduce Risk</option>
+          <option value="stock_reserve_risk">Stock Reserve Risk</option>
+          <option value="ledger_risk">Ledger Risk</option>
+          <option value="scrape_risk">Scraping Risk</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Deal Outcome</th>
+            <th>Payment</th>
+            <th>Delivery</th>
+            <th>Movement Type</th>
+            <th>Movement Reason</th>
+            <th>Review Status</th>
+            <th>Quantity</th>
+            <th>Shelf / Supplier</th>
+            <th>Review Note</th>
+            <th>Safety</th>
+            <th>Reviewed By</th>
+            <th>Reviewed At</th>
+          </tr>
+        </thead>
+        <tbody id="stockMovementRows">
+          <tr><td colspan="16">Loading manual stock movement reviews...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allReviews = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function formatLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function movementClass(value) {
+      if (value === "stock_deduction_review") return "deduct";
+      if (value === "stock_reservation_review") return "reserve";
+      if (value === "stock_release_review") return "release";
+      return "neutral";
+    }
+
+    function getFilteredReviews() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const movementFilter = document.getElementById("movementFilter").value;
+      const statusFilter = document.getElementById("statusFilter").value;
+      const riskFilter = document.getElementById("riskFilter").value;
+
+      return allReviews.filter(item => {
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.dealOutcomeType,
+          item.paymentStatus,
+          item.deliveryStatus,
+          item.movementType,
+          item.movementReason,
+          item.reviewStatus,
+          item.shelfOrSupplier,
+          item.inventoryItemId,
+          item.reviewNote,
+          item.reviewedBy
+        ].join(" ").toLowerCase();
+
+        const inventoryRisk = item.inventoryChangedBySystem === true ||
+          item.stockQuantityChangedBySystem === true ||
+          item.autoUpdateInventory === true ||
+          item.updateInventoryAutomatically === true ||
+          item.autoChangeStockQuantity === true ||
+          item.changeStockAutomatically === true;
+
+        const stockReduceRisk = item.stockReducedBySystem === true ||
+          item.autoReduceStock === true ||
+          item.reduceStockAutomatically === true;
+
+        const stockReserveRisk = item.stockReservedBySystem === true ||
+          item.autoReserveStock === true ||
+          item.reserveStockAutomatically === true ||
+          item.stockReleasedBySystem === true ||
+          item.autoReleaseStock === true ||
+          item.releaseStockAutomatically === true;
+
+        const ledgerRisk = item.autoCreateInventoryEvent === true ||
+          item.autoCreateStockLedgerEntry === true;
+
+        const scrapeRisk = item.autoReadWhatsApp === true ||
+          item.readBuyerMessagesAutomatically === true ||
+          item.scrapeWhatsappMessages === true ||
+          item.privateMessageScraping === true ||
+          item.hiddenDataHarvesting === true;
+
+        return (!search || haystack.includes(search)) &&
+          (!movementFilter || item.movementType === movementFilter) &&
+          (!statusFilter || item.reviewStatus === statusFilter) &&
+          (!riskFilter ||
+            (riskFilter === "safe" && inventoryRisk !== true && stockReduceRisk !== true && stockReserveRisk !== true && ledgerRisk !== true && scrapeRisk !== true) ||
+            (riskFilter === "inventory_risk" && inventoryRisk === true) ||
+            (riskFilter === "stock_reduce_risk" && stockReduceRisk === true) ||
+            (riskFilter === "stock_reserve_risk" && stockReserveRisk === true) ||
+            (riskFilter === "ledger_risk" && ledgerRisk === true) ||
+            (riskFilter === "scrape_risk" && scrapeRisk === true));
+      });
+    }
+
+    function renderReviews() {
+      const tbody = document.getElementById("stockMovementRows");
+      const reviews = getFilteredReviews();
+
+      if (!reviews.length) {
+        tbody.innerHTML = '<tr><td colspan="16">No matching manual stock movement reviews.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = reviews.map(item => {
+        const safety = [
+          item.manualStockMovementReviewOnly ? badge("Manual review only", "safe") : badge("Review risk", "danger"),
+          item.stockUpdatePreparedOnly ? badge("Stock update prepared", "safe") : badge("Stock update risk", "danger"),
+          item.adminReviewedDealOutcome ? badge("Admin reviewed outcome", "safe") : badge("Deal review missing", "danger"),
+          item.manualStockMovementReviewApproved ? badge("Manual approval present", "safe") : badge("Approval missing", "danger"),
+          item.inventoryChangedBySystem ? badge("Inventory changed risk", "danger") : badge("Inventory not changed", "safe"),
+          item.stockReducedBySystem ? badge("Stock reduced risk", "danger") : badge("No system reduction", "safe"),
+          item.stockReservedBySystem ? badge("Stock reserved risk", "danger") : badge("No system reservation", "safe"),
+          item.stockReleasedBySystem ? badge("Stock released risk", "danger") : badge("No system release", "safe"),
+          item.autoUpdateInventory ? badge("Auto update risk", "danger") : badge("No auto update", "safe"),
+          item.autoCreateStockLedgerEntry ? badge("Auto ledger risk", "danger") : badge("No auto ledger", "safe"),
+          item.collectPaymentAutomatically ? badge("Payment automation risk", "danger") : badge("No payment automation", "safe"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.autoReadWhatsApp ? badge("Message read risk", "danger") : badge("No message reading", "safe"),
+          item.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe"),
+          item.manualInventoryUpdateRequired ? badge("Manual inventory update required", "safe") : badge("Inventory review risk", "danger"),
+          item.manualLedgerEntryRequired ? badge("Manual ledger entry required", "safe") : badge("Ledger review risk", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""} ${item.engineCode || ""}`)}</td>
+            <td>${badge(formatLabel(item.dealOutcomeType), "safe")}</td>
+            <td>${badge(formatLabel(item.paymentStatus), "safe")}</td>
+            <td>${badge(formatLabel(item.deliveryStatus), "safe")}</td>
+            <td>${badge(formatLabel(item.movementType), movementClass(item.movementType))}</td>
+            <td>${badge(formatLabel(item.movementReason), "safe")}</td>
+            <td>${badge(formatLabel(item.reviewStatus), "safe")}</td>
+            <td>${badge(item.quantityToReview || 0, "safe")}</td>
+            <td>${escapeHtml(item.shelfOrSupplier)}</td>
+            <td><pre>${escapeHtml(item.reviewNote)}</pre></td>
+            <td>${safety}</td>
+            <td>${escapeHtml(item.reviewedBy)}</td>
+            <td>${formatDate(item.reviewedAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadManualStockMovementReviewDashboard() {
+      const summaryResponse = await fetch("/api/manual-stock-movement-review/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalManualStockMovementReviews").textContent = summary.totalManualStockMovementReviews || 0;
+      document.getElementById("manualStockMovementReviewOnlyCount").textContent = summary.manualStockMovementReviewOnlyCount || 0;
+      document.getElementById("stockUpdatePreparedOnlyCount").textContent = summary.stockUpdatePreparedOnlyCount || 0;
+      document.getElementById("stockDeductionReviewCount").textContent = summary.stockDeductionReviewCount || 0;
+      document.getElementById("stockReservationReviewCount").textContent = summary.stockReservationReviewCount || 0;
+      document.getElementById("stockReleaseReviewCount").textContent = summary.stockReleaseReviewCount || 0;
+      document.getElementById("manualCountRequiredCount").textContent = summary.manualCountRequiredCount || 0;
+      document.getElementById("approvedForManualStockUpdateCount").textContent = summary.approvedForManualStockUpdateCount || 0;
+      document.getElementById("inventoryChangedBySystemCount").textContent = summary.inventoryChangedBySystemCount || 0;
+      document.getElementById("autoUpdateInventoryCount").textContent = summary.autoUpdateInventoryCount || 0;
+      document.getElementById("autoReduceStockCount").textContent = summary.autoReduceStockCount || 0;
+      document.getElementById("autoLedgerCount").textContent = summary.autoLedgerCount || 0;
+
+      const listResponse = await fetch("/api/manual-stock-movement-reviews");
+      const listData = await listResponse.json();
+      allReviews = Array.isArray(listData.stockMovementReviews) ? listData.stockMovementReviews : [];
+
+      renderReviews();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderReviews);
+    document.getElementById("movementFilter").addEventListener("change", renderReviews);
+    document.getElementById("statusFilter").addEventListener("change", renderReviews);
+    document.getElementById("riskFilter").addEventListener("change", renderReviews);
+
+    loadManualStockMovementReviewDashboard().catch(error => {
+      document.getElementById("stockMovementRows").innerHTML =
+        `<tr><td colspan="16">Manual stock movement review dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>
