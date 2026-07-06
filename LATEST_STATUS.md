@@ -1,43 +1,40 @@
 # LATEST STATUS
 
 Current Phase:
-Version 21A — Manual Deal Outcome Gate Foundation
+Version 21B — Manual Deal Outcome Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /api/manual-deal-outcome/preview
-- GET /api/manual-deal-outcomes
-- GET /api/manual-deal-outcome/summary
-- POST /api/manual-deal-outcome/record
-- Manual deal outcome recording
-- Follow-up action requirement
-- Admin completed manual action requirement
-- Manual outcome approval requirement
-- Outcome type validation
-- Payment status validation
-- Delivery status validation
-- Missing follow-up action blocking
-- Unsafe auto-close/pipeline/send/payment/stock/read/scrape request blocking
-- Safe manual deal outcome metrics
+- GET /manual-deal-outcome
+- GET /manual-deal-outcomes
+- Manual Deal Outcome dashboard
+- Deal outcome metric cards
+- Deal outcome table
+- Outcome type filter
+- Outcome temperature filter
+- Safety status filter
+- Payment and delivery display
+- Amount received display
+- Outcome note display
+- Safety labels
 
 Safety Confirmed:
-- Manual Deal Outcome Gate records outcome only
-- Follow-up action record is required first
-- Admin completed manual action is required
-- Manual outcome approval is required
-- System does not close sale automatically
-- System does not move pipeline automatically
-- System does not send WhatsApp
-- System does not auto-reply to buyer
-- System does not open browser automatically
-- System does not handle payment
-- System does not change stock
-- System does not read buyer messages
-- System does not scrape private messages
-- System does not harvest hidden data
+- Dashboard displays manual deal outcome records only
+- Dashboard does not close sales
+- Dashboard does not move pipeline automatically
+- Dashboard does not send WhatsApp
+- Dashboard does not auto-reply to buyer
+- Dashboard does not open browser automatically
+- Dashboard does not handle payment
+- Dashboard does not change stock
+- Dashboard does not read buyer messages
+- Dashboard does not scrape private messages
+- Dashboard does not harvest hidden data
+- Follow-up action record is required before outcome recording
+- Admin completion and manual outcome approval are required
 - Manual review is required before accounting, pipeline, or stock update
 
 Next Phase:
-Version 21B — Manual Deal Outcome Dashboard Display
+Version 21C — Admin Hub Link Manual Deal Outcome Gate

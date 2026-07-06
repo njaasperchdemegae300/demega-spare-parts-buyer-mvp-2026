@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Manual Deal Outcome Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 2300px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    pre { white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; max-width: 420px; max-height: 200px; overflow: auto; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .won { background: #dcfce7; color: #166534; }
+    .followup { background: #fef3c7; color: #92400e; }
+    .lost { background: #fee2e2; color: #991b1b; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Manual Deal Outcome Dashboard</h1>
+    <p>Read-only deal outcome records after admin manually completes action outside the system. The system records only.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Deal Outcomes</h2><strong id="totalManualDealOutcomes">0</strong></div>
+      <div class="card"><h2>Manual Outcome Only</h2><strong id="manualDealOutcomeOnlyCount">0</strong></div>
+      <div class="card"><h2>Deal Won Manual</h2><strong id="dealWonManualCount">0</strong></div>
+      <div class="card"><h2>Deal Lost Manual</h2><strong id="dealLostManualCount">0</strong></div>
+      <div class="card"><h2>Pickup Confirmed</h2><strong id="pickupConfirmedManualCount">0</strong></div>
+      <div class="card"><h2>Payment Pending</h2><strong id="paymentPendingManualCount">0</strong></div>
+      <div class="card"><h2>Amount Received</h2><strong id="amountActuallyReceivedTotal">0</strong></div>
+      <div class="card"><h2>System Closed Count</h2><strong id="systemClosedSaleCount">0</strong></div>
+      <div class="card"><h2>Auto Pipeline Count</h2><strong id="autoPipelineMoveCount">0</strong></div>
+      <div class="card"><h2>Auto Payment Count</h2><strong id="autoPaymentCount">0</strong></div>
+      <div class="card"><h2>Auto Stock Count</h2><strong id="autoStockChangeCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">OUTCOME RECORD ONLY</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Deal Outcome Safety Rule</h2>
+      <p class="muted">
+        This dashboard displays manual deal outcome records only. It must not close sale, move pipeline, send WhatsApp,
+        auto-reply, open browser, handle payment, change stock, read buyer messages, scrape private messages, or harvest hidden data.
+      </p>
+      <span class="badge safe">Manual outcome record only</span>
+      <span class="badge safe">Follow-up action required</span>
+      <span class="badge safe">Admin completed manual action required</span>
+      <span class="badge safe">Manual outcome approval required</span>
+      <span class="badge safe">No automatic sale closing</span>
+      <span class="badge safe">No pipeline auto-move</span>
+      <span class="badge safe">No payment automation</span>
+      <span class="badge safe">No stock automation</span>
+      <span class="badge safe">Manual review before accounting</span>
+      <span class="badge safe">Manual review before stock update</span>
+    </section>
+
+    <section class="panel">
+      <h2>Manual Deal Outcome Records</h2>
+      <p class="muted">Read-only list of deal outcomes recorded by admin after manual work outside the system.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, outcome, note..." />
+        <select id="outcomeFilter">
+          <option value="">All outcomes</option>
+          <option value="deal_won_manual">Deal Won</option>
+          <option value="deal_lost_manual">Deal Lost</option>
+          <option value="pickup_confirmed_manual">Pickup Confirmed</option>
+          <option value="delivery_arranged_manual">Delivery Arranged</option>
+          <option value="stock_reserved_manual">Stock Reserved</option>
+          <option value="payment_pending_manual">Payment Pending</option>
+          <option value="buyer_requested_later_manual">Buyer Requested Later</option>
+          <option value="no_response_manual">No Response</option>
+          <option value="wrong_part_manual">Wrong Part</option>
+          <option value="price_rejected_manual">Price Rejected</option>
+          <option value="needs_more_followup_manual">Needs More Follow-Up</option>
+        </select>
+        <select id="temperatureFilter">
+          <option value="">All outcome temperatures</option>
+          <option value="won_or_hot">Won or Hot</option>
+          <option value="followup_needed">Follow-Up Needed</option>
+          <option value="lost_or_cold">Lost or Cold</option>
+        </select>
+        <select id="riskFilter">
+          <option value="">All safety status</option>
+          <option value="safe">Safe Manual Outcomes</option>
+          <option value="close_risk">Auto Close Risk</option>
+          <option value="pipeline_risk">Pipeline Risk</option>
+          <option value="payment_risk">Payment Risk</option>
+          <option value="stock_risk">Stock Risk</option>
+          <option value="scrape_risk">Scraping Risk</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Quote Amount</th>
+            <th>Outcome</th>
+            <th>Temperature</th>
+            <th>Payment</th>
+            <th>Delivery</th>
+            <th>Amount Received</th>
+            <th>Previous Action</th>
+            <th>Outcome Note</th>
+            <th>Safety</th>
+            <th>Recorded By</th>
+            <th>Recorded At</th>
+          </tr>
+        </thead>
+        <tbody id="outcomeRows">
+          <tr><td colspan="15">Loading manual deal outcomes...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allOutcomes = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function formatLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function formatMoney(value) {
+      const number = Number(value || 0);
+      return Number.isFinite(number) ? number.toLocaleString() : "0";
+    }
+
+    function getFilteredOutcomes() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const outcomeFilter = document.getElementById("outcomeFilter").value;
+      const temperatureFilter = document.getElementById("temperatureFilter").value;
+      const riskFilter = document.getElementById("riskFilter").value;
+
+      return allOutcomes.filter(item => {
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.formattedQuoteAmount,
+          item.outcomeType,
+          item.paymentStatus,
+          item.deliveryStatus,
+          item.previousActionType,
+          item.outcomeNote,
+          item.recordedBy
+        ].join(" ").toLowerCase();
+
+        const closeRisk = item.systemClosedSale === true ||
+          item.autoCloseSale === true ||
+          item.closeSaleAutomatically === true ||
+          item.markSaleWonAutomatically === true ||
+          item.markSaleLostAutomatically === true ||
+          item.markLeadClosedAutomatically === true ||
+          item.closeBuyerAutomatically === true;
+
+        const pipelineRisk = item.autoMovePipelineStage === true ||
+          item.pipelineMovedAutomatically === true ||
+          item.autoCreatePipelineEvent === true;
+
+        const paymentRisk = item.collectPaymentAutomatically === true ||
+          item.verifyPaymentAutomatically === true ||
+          item.autoGenerateReceipt === true;
+
+        const stockRisk = item.autoReserveStock === true ||
+          item.autoReduceStock === true;
+
+        const scrapeRisk = item.autoReadWhatsApp === true ||
+          item.readBuyerMessagesAutomatically === true ||
+          item.scrapeWhatsappMessages === true ||
+          item.privateMessageScraping === true ||
+          item.hiddenDataHarvesting === true;
+
+        return (!search || haystack.includes(search)) &&
+          (!outcomeFilter || item.outcomeType === outcomeFilter) &&
+          (!temperatureFilter || item.outcomeTemperature === temperatureFilter) &&
+          (!riskFilter ||
+            (riskFilter === "safe" && closeRisk !== true && pipelineRisk !== true && paymentRisk !== true && stockRisk !== true && scrapeRisk !== true) ||
+            (riskFilter === "close_risk" && closeRisk === true) ||
+            (riskFilter === "pipeline_risk" && pipelineRisk === true) ||
+            (riskFilter === "payment_risk" && paymentRisk === true) ||
+            (riskFilter === "stock_risk" && stockRisk === true) ||
+            (riskFilter === "scrape_risk" && scrapeRisk === true));
+      });
+    }
+
+    function renderOutcomes() {
+      const tbody = document.getElementById("outcomeRows");
+      const outcomes = getFilteredOutcomes();
+
+      if (!outcomes.length) {
+        tbody.innerHTML = '<tr><td colspan="15">No matching manual deal outcomes.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = outcomes.map(item => {
+        const temp = item.outcomeTemperature || "";
+        const tempClass = temp === "won_or_hot" ? "won" : temp === "followup_needed" ? "followup" : "lost";
+
+        const safety = [
+          item.manualDealOutcomeOnly ? badge("Manual outcome only", "safe") : badge("Outcome risk", "danger"),
+          item.manualOutcomeRecordOnly ? badge("Record only", "safe") : badge("Record risk", "danger"),
+          item.adminCompletedManualAction ? badge("Admin completed manually", "safe") : badge("Manual completion missing", "danger"),
+          item.manualOutcomeApproved ? badge("Manual approval present", "safe") : badge("Manual approval missing", "danger"),
+          item.systemClosedSale ? badge("System close risk", "danger") : badge("No system close", "safe"),
+          item.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline automation", "safe"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.autoReplyToBuyer ? badge("Auto-reply risk", "danger") : badge("No auto-reply", "safe"),
+          item.collectPaymentAutomatically ? badge("Payment automation risk", "danger") : badge("No payment automation", "safe"),
+          item.autoReserveStock ? badge("Stock automation risk", "danger") : badge("No stock automation", "safe"),
+          item.autoReadWhatsApp ? badge("Message read risk", "danger") : badge("No message reading", "safe"),
+          item.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe"),
+          item.manualReviewRequiredForAccounting ? badge("Review for accounting", "safe") : badge("Accounting review risk", "danger"),
+          item.manualReviewRequiredForStockUpdate ? badge("Review for stock", "safe") : badge("Stock review risk", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""} ${item.engineCode || ""}`)}</td>
+            <td>${badge(item.formattedQuoteAmount || item.quoteAmount || "", "safe")}</td>
+            <td>${badge(formatLabel(item.outcomeType), "safe")}</td>
+            <td>${badge(formatLabel(temp), tempClass)}</td>
+            <td>${badge(formatLabel(item.paymentStatus), "safe")}</td>
+            <td>${badge(formatLabel(item.deliveryStatus), "safe")}</td>
+            <td>${badge(formatMoney(item.amountActuallyReceived), "safe")}</td>
+            <td>${badge(formatLabel(item.previousActionType), "safe")}</td>
+            <td><pre>${escapeHtml(item.outcomeNote)}</pre></td>
+            <td>${safety}</td>
+            <td>${escapeHtml(item.recordedBy)}</td>
+            <td>${formatDate(item.recordedAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadManualDealOutcomeDashboard() {
+      const summaryResponse = await fetch("/api/manual-deal-outcome/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalManualDealOutcomes").textContent = summary.totalManualDealOutcomes || 0;
+      document.getElementById("manualDealOutcomeOnlyCount").textContent = summary.manualDealOutcomeOnlyCount || 0;
+      document.getElementById("dealWonManualCount").textContent = summary.dealWonManualCount || 0;
+      document.getElementById("dealLostManualCount").textContent = summary.dealLostManualCount || 0;
+      document.getElementById("pickupConfirmedManualCount").textContent = summary.pickupConfirmedManualCount || 0;
+      document.getElementById("paymentPendingManualCount").textContent = summary.paymentPendingManualCount || 0;
+      document.getElementById("amountActuallyReceivedTotal").textContent = formatMoney(summary.amountActuallyReceivedTotal || 0);
+      document.getElementById("systemClosedSaleCount").textContent = summary.systemClosedSaleCount || 0;
+      document.getElementById("autoPipelineMoveCount").textContent = summary.autoPipelineMoveCount || 0;
+      document.getElementById("autoPaymentCount").textContent = summary.autoPaymentCount || 0;
+      document.getElementById("autoStockChangeCount").textContent = summary.autoStockChangeCount || 0;
+
+      const listResponse = await fetch("/api/manual-deal-outcomes");
+      const listData = await listResponse.json();
+      allOutcomes = Array.isArray(listData.dealOutcomes) ? listData.dealOutcomes : [];
+
+      renderOutcomes();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderOutcomes);
+    document.getElementById("outcomeFilter").addEventListener("change", renderOutcomes);
+    document.getElementById("temperatureFilter").addEventListener("change", renderOutcomes);
+    document.getElementById("riskFilter").addEventListener("change", renderOutcomes);
+
+    loadManualDealOutcomeDashboard().catch(error => {
+      document.getElementById("outcomeRows").innerHTML =
+        `<tr><td colspan="15">Manual deal outcome dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>
