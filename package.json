@@ -64,7 +64,8 @@
     "version:19b": "node tools/version19b-buyer-reply-tracking-dashboard-smoke-test.js",
     "version:19c": "node tools/version19c-admin-hub-link-buyer-reply-smoke-test.js",
     "version:20a": "node tools/version20a-buyer-reply-followup-action-gate-smoke-test.js",
-    "version:20b": "node tools/version20b-buyer-reply-followup-action-dashboard-smoke-test.js"
+    "version:20b": "node tools/version20b-buyer-reply-followup-action-dashboard-smoke-test.js",
+    "version:20c": "node tools/version20c-admin-hub-link-buyer-reply-followup-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

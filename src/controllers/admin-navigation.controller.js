@@ -15,6 +15,7 @@ const manualQuoteDraftService = require("../services/manual-quote-draft.service"
 const manualQuoteCopyService = require("../services/manual-quote-copy.service");
 const manualQuoteSentConfirmationService = require("../services/manual-quote-sent-confirmation.service");
 const buyerReplyService = require("../services/buyer-reply.service");
+const buyerReplyFollowupActionService = require("../services/buyer-reply-followup-action.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -31,7 +32,8 @@ const modules = [
   { name: "Safe Manual Quote Draft Builder", path: "/manual-quote-draft", purpose: "Safe manual quote draft visibility. Draft-only; price may appear inside draft after eligibility but is not sent to buyer." },
   { name: "Manual Quote Copy Button", path: "/manual-quote-copy", purpose: "Prepared quote copy text visibility. Manual select only; no clipboard automation, no WhatsApp sending, no sent marking." },
   { name: "Manual Quote Sent Confirmation Gate", path: "/manual-quote-sent-confirmation", purpose: "Manual sent confirmation visibility. Confirmation record only; system does not send buyer message." },
-  { name: "Buyer Reply Tracking", path: "/buyer-reply", purpose: "Manual buyer reply visibility. Manual-entry only; no WhatsApp reading, private scraping, hidden harvesting, auto-reply, or auto-send." }
+  { name: "Buyer Reply Tracking", path: "/buyer-reply", purpose: "Manual buyer reply visibility. Manual-entry only; no WhatsApp reading, private scraping, hidden harvesting, auto-reply, or auto-send." },
+  { name: "Buyer Reply Follow-Up Action Gate", path: "/buyer-reply-followup", purpose: "Manual follow-up action visibility. Manual action only; system does not execute, send, auto-reply, move pipeline, close sale, read messages, scrape, or harvest data." }
 ];
 
 function safeRead(factory, fallback) {
@@ -70,6 +72,15 @@ function getSafety() {
     manualQuoteCopyFoundationOnly: true,
     manualQuoteSentConfirmationOnly: true,
     buyerReplyTrackingOnly: true,
+    buyerReplyFollowupActionGateOnly: true,
+    manualActionOnly: true,
+    actionPreparedOnly: true,
+    requiresBuyerReply: true,
+    requiresAdminReviewedBuyerReply: true,
+    requiresManualActionApproval: true,
+    systemDoesNotExecuteAction: true,
+    systemDoesNotMovePipeline: true,
+    systemDoesNotCloseSale: true,
     preparesCopyTextOnly: true,
     confirmationRecordOnly: true,
     requiresPreparedCopyAction: true,
@@ -145,6 +156,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const manualQuoteCopy = safeRead(() => manualQuoteCopyService.getManualQuoteCopySummary(), {});
   const manualQuoteSentConfirmation = safeRead(() => manualQuoteSentConfirmationService.getManualQuoteSentConfirmationSummary(), {});
   const buyerReply = safeRead(() => buyerReplyService.getBuyerReplySummary(), {});
+  const buyerReplyFollowupAction = safeRead(() => buyerReplyFollowupActionService.getBuyerReplyFollowupActionSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -168,7 +180,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       manualQuoteDraft,
       manualQuoteCopy,
       manualQuoteSentConfirmation,
-      buyerReply
+      buyerReply,
+      buyerReplyFollowupAction
     },
     safety: getSafety()
   });

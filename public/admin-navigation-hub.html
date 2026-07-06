@@ -45,6 +45,9 @@
       <span class="badge">NO HIDDEN DATA HARVESTING</span>
       <span class="badge">NO AUTO REPLY</span>
       <span class="badge">BUYER REPLY TRACKING IS MANUAL ENTRY ONLY</span>
+      <span class="badge">BUYER REPLY FOLLOW-UP ACTION IS MANUAL ACTION ONLY</span>
+      <span class="badge">SYSTEM DOES NOT EXECUTE FOLLOW-UP ACTION</span>
+      <span class="badge">NO AUTOMATIC CLOSING</span>
       <span class="badge warn">ADMIN MUST MANUALLY OBSERVE BUYER REPLY OUTSIDE THE SYSTEM</span>
       <ul>
         <li>This hub is navigation and visibility only.</li>
@@ -57,6 +60,9 @@
         <li>It does not auto-reply to buyers.</li>
         <li>It does not move buyer pipeline stages automatically.</li>
         <li>Buyer reply tracking only displays replies manually entered by admin.</li>
+        <li>Buyer reply follow-up action only displays manual next-action plans.</li>
+        <li>It does not execute follow-up actions automatically.</li>
+        <li>It does not close sales automatically.</li>
       </ul>
     </section>
 
@@ -84,6 +90,11 @@
         <div class="metric"><h2>System Read Count</h2><strong id="systemReadCount">0</strong></div>
         <div class="metric"><h2>Scraping Count</h2><strong id="scrapingCount">0</strong></div>
         <div class="metric"><h2>Auto Reply Count</h2><strong id="autoReplyCount">0</strong></div>
+        <div class="metric"><h2>Follow-Up Actions</h2><strong id="buyerReplyFollowupActions">0</strong></div>
+        <div class="metric"><h2>Urgent Follow-Ups</h2><strong id="urgentFollowupActions">0</strong></div>
+        <div class="metric"><h2>Manual Action Only</h2><strong id="manualActionOnlyCount">0</strong></div>
+        <div class="metric"><h2>System Executed</h2><strong id="systemExecutedActions">0</strong></div>
+        <div class="metric"><h2>Auto Close Count</h2><strong id="autoCloseCount">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -104,6 +115,7 @@
       <div class="card"><h2>Manual Quote Copy Button</h2><p>View prepared manual quote copy text. The button only selects text for human admin copy and does not auto-copy or send.</p><a href="/manual-quote-copy">Open Manual Quote Copy</a></div>
       <div class="card"><h2>Manual Quote Sent Confirmation Gate</h2><p>View manual sent confirmations. This only records that admin manually sent the copied quote outside the system after review.</p><a href="/manual-quote-sent-confirmation">Open Sent Confirmation Gate</a></div>
       <div class="card"><h2>Buyer Reply Tracking</h2><p>View buyer replies manually observed and entered by admin. No WhatsApp reading, scraping, harvesting, auto-reply, or auto-send.</p><a href="/buyer-reply">Open Buyer Reply Tracking</a></div>
+      <div class="card"><h2>Buyer Reply Follow-Up Action Gate</h2><p>View manual next-action plans after buyer replies. No system execution, auto-send, auto-reply, pipeline movement, automatic closing, message reading, scraping, or hidden harvesting.</p><a href="/buyer-reply-followup">Open Follow-Up Action Gate</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -139,6 +151,11 @@
       document.getElementById("systemReadCount").textContent = safeNumber(metrics.buyerReply && metrics.buyerReply.replyReadBySystemCount);
       document.getElementById("scrapingCount").textContent = safeNumber(metrics.buyerReply && metrics.buyerReply.scrapingCount);
       document.getElementById("autoReplyCount").textContent = safeNumber(metrics.buyerReply && metrics.buyerReply.autoReplyToBuyerCount);
+      document.getElementById("buyerReplyFollowupActions").textContent = safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.totalBuyerReplyFollowupActions);
+      document.getElementById("urgentFollowupActions").textContent = safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.urgentActionCount);
+      document.getElementById("manualActionOnlyCount").textContent = safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.manualActionOnlyCount);
+      document.getElementById("systemExecutedActions").textContent = safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.actionExecutedBySystemCount);
+      document.getElementById("autoCloseCount").textContent = safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.autoCloseCount);
 
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
@@ -152,7 +169,8 @@
         safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.autoSendWhatsAppCount) +
         safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.autoSendWhatsAppCount) +
         safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.autoSendWhatsAppCount) +
-        safeNumber(metrics.buyerReply && metrics.buyerReply.autoSendWhatsAppCount);
+        safeNumber(metrics.buyerReply && metrics.buyerReply.autoSendWhatsAppCount) +
+        safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {
