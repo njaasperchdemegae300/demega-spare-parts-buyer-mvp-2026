@@ -1,40 +1,41 @@
 # LATEST STATUS
 
 Current Phase:
-Version 22B — Manual Stock Movement Review Dashboard Display
+Version 22C-FIX1 — Admin Hub Link Manual Stock Movement Review Gate
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /manual-stock-movement-review
-- GET /manual-stock-movement-reviews
-- Manual Stock Movement Review dashboard
-- Stock movement review metric cards
-- Stock movement review table
-- Movement type filter
-- Review status filter
-- Safety status filter
-- Shelf / supplier display
-- Quantity review display
-- Review note display
-- Safety labels
+- Manual Stock Movement Review Gate linked inside Admin Navigation Hub
+- Stock Movement Reviews metric
+- Stock Deduction Reviews metric
+- Manual Stock Update Approved metric
+- Inventory Changed By System metric
+- Auto Inventory Update metric
+- Auto Ledger Count metric
+- Manual stock movement review metrics inside admin metrics API
+- Manual stock movement review safety locks inside admin summary
+- Linked Manual Stock Movement Review dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays manual stock movement review records only
-- Dashboard does not update inventory automatically
-- Dashboard does not reduce stock automatically
-- Dashboard does not reserve stock automatically
-- Dashboard does not release stock automatically
-- Dashboard does not create stock ledger automatically
-- Dashboard does not handle payment
-- Dashboard does not send WhatsApp
-- Dashboard does not read buyer messages
-- Dashboard does not scrape private messages
-- Dashboard does not harvest hidden data
+- Admin hub remains navigation and visibility only
+- Metrics API is read-only
+- Manual Stock Movement Review Gate remains review-only
 - Manual deal outcome is required before stock movement review
-- Admin review and manual stock movement approval are required
-- Manual inventory update and manual ledger entry are required after review
+- Admin reviewed deal outcome is required
+- Manual stock movement approval is required
+- Admin hub does not update inventory
+- Admin hub does not reduce stock
+- Admin hub does not reserve stock
+- Admin hub does not release stock
+- Admin hub does not create stock ledger
+- Admin hub does not handle payment
+- Admin hub does not send WhatsApp
+- Admin hub does not read buyer messages
+- Admin hub does not scrape private messages
+- Admin hub does not harvest hidden data
+- Manual inventory update and manual ledger entry remain required
 
 Next Phase:
-Version 22C — Admin Hub Link Manual Stock Movement Review Gate
+Version 23A — Manual Accounting Review Gate Foundation

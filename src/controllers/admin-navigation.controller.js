@@ -17,6 +17,7 @@ const manualQuoteSentConfirmationService = require("../services/manual-quote-sen
 const buyerReplyService = require("../services/buyer-reply.service");
 const buyerReplyFollowupActionService = require("../services/buyer-reply-followup-action.service");
 const manualDealOutcomeService = require("../services/manual-deal-outcome.service");
+const manualStockMovementReviewService = require("../services/manual-stock-movement-review.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -36,7 +37,8 @@ const modules = [
   { name: "Buyer Reply Tracking", path: "/buyer-reply", purpose: "Manual buyer reply visibility. Manual-entry only; no WhatsApp reading, private scraping, hidden harvesting, auto-reply, or auto-send." },
   { name: "Buyer Reply Follow-Up Action Gate", path: "/buyer-reply-followup", purpose: "Manual follow-up action visibility. Manual action only; system does not execute, send, auto-reply, move pipeline, close sale, read messages, scrape, or harvest data." }
 ,
-  { name: "Manual Deal Outcome Gate", path: "/manual-deal-outcome", purpose: "Manual deal outcome visibility. Outcome record only; system does not close sale, move pipeline, send, auto-reply, handle payment, change stock, read messages, scrape, or harvest data." }];
+  { name: "Manual Deal Outcome Gate", path: "/manual-deal-outcome", purpose: "Manual deal outcome visibility. Outcome record only; system does not close sale, move pipeline, send, auto-reply, handle payment, change stock, read messages, scrape, or harvest data." },
+  { name: "Manual Stock Movement Review Gate", path: "/manual-stock-movement-review", purpose: "Manual stock movement review visibility. Review-only; system does not update inventory, reduce stock, reserve stock, release stock, create stock ledger, handle payment, send, read messages, scrape, or harvest data." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -65,6 +67,7 @@ function getSafety() {
     navigationOnly: true,
     visibilityOnly: true,
     metricsReadOnly: true,
+
     hotBuyerRankingReadOnly: true,
     whatsappManualOpenOnly: true,
     stockConfirmationManualOnly: true,
@@ -76,73 +79,127 @@ function getSafety() {
     buyerReplyTrackingOnly: true,
     buyerReplyFollowupActionGateOnly: true,
     manualDealOutcomeGateOnly: true,
-    manualDealOutcomeOnly: true,
-    manualOutcomeRecordOnly: true,
-    requiresFollowupAction: true,
-    requiresAdminCompletedManualAction: true,
-    requiresManualOutcomeApproval: true,
-    systemDoesNotHandlePayment: true,
-    systemDoesNotChangeStock: true,
-    autoCloseSale: false,
-    collectPaymentAutomatically: false,
-    verifyPaymentAutomatically: false,
-    autoReserveStock: false,
-    autoReduceStock: false,
+    manualStockMovementReviewGateOnly: true,
+
+    manualEntryOnly: true,
     manualActionOnly: true,
     actionPreparedOnly: true,
-    requiresBuyerReply: true,
-    requiresAdminReviewedBuyerReply: true,
-    requiresManualActionApproval: true,
-    systemDoesNotExecuteAction: true,
-    systemDoesNotMovePipeline: true,
-    systemDoesNotCloseSale: true,
-    preparesCopyTextOnly: true,
-    confirmationRecordOnly: true,
+    manualDealOutcomeOnly: true,
+    manualOutcomeRecordOnly: true,
+    manualStockMovementReviewOnly: true,
+    stockUpdatePreparedOnly: true,
+
     requiresPreparedCopyAction: true,
     requiresManualAdminConfirmation: true,
     requiresManualReviewCompleted: true,
     requiresManualSentConfirmation: true,
+    requiresBuyerReply: true,
+    requiresAdminReviewedBuyerReply: true,
+    requiresManualActionApproval: true,
+    requiresFollowupAction: true,
+    requiresAdminCompletedManualAction: true,
+    requiresManualOutcomeApproval: true,
+    requiresManualDealOutcome: true,
+    requiresAdminReviewedDealOutcome: true,
+    requiresManualStockMovementReviewApproval: true,
     adminObservedReplyRequired: true,
-    systemDoesNotSendMessage: true,
-    systemDoesNotReadBuyerMessages: true,
-    manualEntryOnly: true,
-    serverDoesNotAccessClipboard: true,
-    browserAutoCopy: false,
-    copiedToClipboardByBrowser: false,
+
+    preparesCopyTextOnly: true,
+    confirmationRecordOnly: true,
     draftOnly: true,
-    quoteAllowedAtStockGate: false,
+    quoteEligibilityOnly: true,
     stockAndCompatibilityRequiredBeforeQuote: true,
     manualQuoteDraftAllowedOnlyAfterBothGates: true,
     requiresFinalQuoteEligibility: true,
+
+    systemDoesNotSendMessage: true,
+    systemDoesNotSendWhatsApp: true,
+    systemDoesNotReadBuyerMessages: true,
+    systemDoesNotExecuteAction: true,
+    systemDoesNotAutoReply: true,
+    systemDoesNotOpenBrowser: true,
+    systemDoesNotMovePipeline: true,
+    systemDoesNotCloseSale: true,
+    systemDoesNotHandlePayment: true,
+    systemDoesNotChangeStock: true,
+    systemDoesNotUpdateInventory: true,
+    systemDoesNotReduceStock: true,
+    systemDoesNotReserveStock: true,
+    systemDoesNotReleaseStock: true,
+    systemDoesNotCreateStockLedger: true,
+
+    serverDoesNotAccessClipboard: true,
+    browserAutoCopy: false,
+    copiedToClipboardByBrowser: false,
+
+    quoteAllowedAtStockGate: false,
+    quoteBeforeStockConfirmation: false,
+    quoteBeforeCompatibilityConfirmation: false,
     priceAllowedInDraftAfterEligibility: true,
     priceMayAppearInCopyTextAfterEligibility: true,
     priceSentToBuyer: false,
     quoteAmountSentToBuyer: false,
-    systemSentToBuyer: false,
-    sentToBuyerBySystem: false,
-    quoteMarkedSentBySystem: false,
-    priceSentBySystem: false,
+    priceIncluded: false,
+    quoteAmountIncluded: false,
+
     autoReadWhatsApp: false,
     readBuyerMessagesAutomatically: false,
     scrapeWhatsappMessages: false,
     privateMessageScraping: false,
     hiddenDataHarvesting: false,
     autoReplyToBuyer: false,
-    autoSendWhatsApp: false,
-    autoOpenBrowser: false,
     automaticBuyerMessage: false,
+    autoSendWhatsApp: false,
+    sendWhatsApp: false,
+    autoOpenBrowser: false,
     autoCreateQuote: false,
     autoMovePipelineStage: false,
+    pipelineMovedAutomatically: false,
     autoCompleteBuyerAction: false,
     autoContactHotBuyer: false,
+
     sentToBuyer: false,
     sentByAdmin: false,
-    priceIncluded: false,
-    quoteAmountIncluded: false,
+    systemSentToBuyer: false,
+    sentToBuyerBySystem: false,
+    quoteMarkedSentBySystem: false,
+    priceSentBySystem: false,
+
+    autoCloseSale: false,
+    closeSaleAutomatically: false,
+    markSaleWonAutomatically: false,
+    markSaleLostAutomatically: false,
+    markLeadClosedAutomatically: false,
+    closeBuyerAutomatically: false,
+
+    collectPaymentAutomatically: false,
+    verifyPaymentAutomatically: false,
+    autoReserveStock: false,
+    autoReduceStock: false,
+    autoReleaseStock: false,
+    autoUpdateInventory: false,
+    updateInventoryAutomatically: false,
+    reduceStockAutomatically: false,
+    reserveStockAutomatically: false,
+    releaseStockAutomatically: false,
+    autoChangeStockQuantity: false,
+    changeStockAutomatically: false,
+    inventoryChangedBySystem: false,
+    stockReducedBySystem: false,
+    stockReservedBySystem: false,
+    stockReleasedBySystem: false,
+    autoCreateInventoryEvent: false,
+    autoCreateStockLedgerEntry: false,
+
     manualReviewRequired: true,
     manualReviewRequiredForNextStep: true,
-    quoteBeforeStockConfirmation: false,
-    quoteBeforeCompatibilityConfirmation: false
+    manualReviewRequiredBeforeExecution: true,
+    manualReviewRequiredForAccounting: true,
+    manualReviewRequiredForPipelineUpdate: true,
+    manualReviewRequiredForStockUpdate: true,
+    manualReviewRequiredBeforeInventoryChange: true,
+    manualInventoryUpdateRequired: true,
+    manualLedgerEntryRequired: true
   };
 }
 
@@ -173,6 +230,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const buyerReply = safeRead(() => buyerReplyService.getBuyerReplySummary(), {});
   const buyerReplyFollowupAction = safeRead(() => buyerReplyFollowupActionService.getBuyerReplyFollowupActionSummary(), {});
   const manualDealOutcome = safeRead(() => manualDealOutcomeService.getManualDealOutcomeSummary(), {});
+  const manualStockMovementReview = safeRead(() => manualStockMovementReviewService.getManualStockMovementReviewSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -198,7 +256,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       manualQuoteSentConfirmation,
       buyerReply,
       buyerReplyFollowupAction,
-      manualDealOutcome
+      manualDealOutcome,
+      manualStockMovementReview
     },
     safety: getSafety()
   });
