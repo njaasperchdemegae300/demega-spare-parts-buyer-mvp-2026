@@ -9,6 +9,7 @@ const actionQueueService = require("../services/action-queue.service");
 const hotBuyerService = require("../services/hot-buyer.service");
 const whatsappManualService = require("../services/whatsapp-manual.service");
 const stockConfirmationService = require("../services/stock-confirmation.service");
+const compatibilityConfirmationService = require("../services/compatibility-confirmation.service");
 
 const modules = [
   {
@@ -55,6 +56,11 @@ const modules = [
     name: "Stock Confirmation Gate",
     path: "/stock-confirmation",
     purpose: "Manual stock confirmation visibility while quote remains blocked until compatibility confirmation."
+  },
+  {
+    name: "Compatibility Confirmation Gate",
+    path: "/compatibility-confirmation",
+    purpose: "Manual compatibility confirmation visibility while manual quote draft is allowed only after stock and compatibility are both confirmed."
   }
 ];
 
@@ -88,8 +94,10 @@ function getSafety() {
     hotBuyerRankingReadOnly: true,
     whatsappManualOpenOnly: true,
     stockConfirmationManualOnly: true,
+    compatibilityConfirmationManualOnly: true,
     quoteAllowedAtStockGate: false,
-    compatibilityRequiredBeforeQuote: true,
+    stockAndCompatibilityRequiredBeforeQuote: true,
+    manualQuoteDraftAllowedAfterBothConfirmed: true,
     autoSendWhatsApp: false,
     autoOpenBrowser: false,
     automaticBuyerMessage: false,
@@ -124,6 +132,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const hotBuyers = safeRead(() => hotBuyerService.getHotBuyerSummary(), {});
   const whatsappManual = safeRead(() => whatsappManualService.getManualWhatsAppSummary(), {});
   const stockConfirmation = safeRead(() => stockConfirmationService.getStockConfirmationSummary(), {});
+  const compatibilityConfirmation = safeRead(() => compatibilityConfirmationService.getCompatibilityConfirmationSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -141,7 +150,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       actionQueue,
       hotBuyers,
       whatsappManual,
-      stockConfirmation
+      stockConfirmation,
+      compatibilityConfirmation
     },
     safety: getSafety()
   });

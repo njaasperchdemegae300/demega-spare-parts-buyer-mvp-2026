@@ -29,7 +29,7 @@
 <body>
   <header>
     <h1>Demega Admin Navigation Hub</h1>
-    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, manual WhatsApp links, and stock confirmation.</p>
+    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, manual WhatsApp links, stock confirmation, and compatibility confirmation.</p>
   </header>
 
   <main>
@@ -43,7 +43,8 @@
       <span class="badge">HOT BUYER RANKING IS READ ONLY</span>
       <span class="badge">WHATSAPP LINKS ARE MANUAL OPEN ONLY</span>
       <span class="badge">STOCK CONFIRMATION IS MANUAL ONLY</span>
-      <span class="badge warn">QUOTE ONLY AFTER STOCK + COMPATIBILITY CONFIRMATION</span>
+      <span class="badge">COMPATIBILITY CONFIRMATION IS MANUAL ONLY</span>
+      <span class="badge warn">MANUAL QUOTE DRAFT ONLY AFTER STOCK + COMPATIBILITY CONFIRMATION</span>
       <ul>
         <li>This hub is navigation and visibility only.</li>
         <li>It does not send WhatsApp messages.</li>
@@ -52,7 +53,7 @@
         <li>It does not create quotes automatically.</li>
         <li>It does not move buyer pipeline stages automatically.</li>
         <li>It does not contact hot buyers automatically.</li>
-        <li>Stock confirmation alone does not allow quote creation.</li>
+        <li>Stock confirmation and compatibility confirmation must both pass before any manual quote draft.</li>
       </ul>
     </section>
 
@@ -69,8 +70,10 @@
         <div class="metric"><h2>Hot Buyers</h2><strong id="hotBuyers">0</strong></div>
         <div class="metric"><h2>Manual WhatsApp Links</h2><strong id="manualWhatsappLinks">0</strong></div>
         <div class="metric"><h2>Stock Confirmations</h2><strong id="stockConfirmations">0</strong></div>
-        <div class="metric"><h2>Confirmed In Stock</h2><strong id="confirmedInStock">0</strong></div>
-        <div class="metric"><h2>Quote Allowed At Stock Gate</h2><strong id="quoteAllowedAtStockGate">0</strong></div>
+        <div class="metric"><h2>Compatibility Confirmations</h2><strong id="compatibilityConfirmations">0</strong></div>
+        <div class="metric"><h2>Compatibility Confirmed</h2><strong id="compatibilityConfirmed">0</strong></div>
+        <div class="metric"><h2>Quote Gate Ready</h2><strong id="quoteGateReady">0</strong></div>
+        <div class="metric"><h2>Auto Quote Count</h2><strong id="autoQuoteCount">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -131,6 +134,12 @@
       </div>
 
       <div class="card">
+        <h2>Compatibility Confirmation Gate</h2>
+        <p>View manual compatibility confirmations. Manual quote draft is allowed only after stock and compatibility are both confirmed.</p>
+        <a href="/compatibility-confirmation">Open Compatibility Confirmation Gate</a>
+      </div>
+
+      <div class="card">
         <h2>System Health</h2>
         <p>Check whether the backend server foundation is alive and responding.</p>
         <a href="/api/health">Open Health API</a>
@@ -158,8 +167,14 @@
       document.getElementById("hotBuyers").textContent = safeNumber(metrics.hotBuyers && metrics.hotBuyers.hotBuyers);
       document.getElementById("manualWhatsappLinks").textContent = safeNumber(metrics.whatsappManual && metrics.whatsappManual.totalManualLinks);
       document.getElementById("stockConfirmations").textContent = safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.totalStockConfirmations);
-      document.getElementById("confirmedInStock").textContent = safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.confirmedInStock);
-      document.getElementById("quoteAllowedAtStockGate").textContent = safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.quoteAllowedCount);
+      document.getElementById("compatibilityConfirmations").textContent = safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.totalCompatibilityConfirmations);
+      document.getElementById("compatibilityConfirmed").textContent = safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.compatibilityConfirmed);
+      document.getElementById("quoteGateReady").textContent = safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.quoteGateReadyCount);
+
+      document.getElementById("autoQuoteCount").textContent =
+        safeNumber(metrics.quotes && metrics.quotes.autoCreateQuoteCount) +
+        safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.autoCreateQuoteCount) +
+        safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.autoCreateQuoteCount);
 
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
@@ -167,7 +182,8 @@
         safeNumber(metrics.actionQueue && metrics.actionQueue.autoSendWhatsAppCount) +
         safeNumber(metrics.hotBuyers && metrics.hotBuyers.autoSendWhatsAppCount) +
         safeNumber(metrics.whatsappManual && metrics.whatsappManual.autoSendWhatsAppCount) +
-        safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.autoSendWhatsAppCount);
+        safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.autoSendWhatsAppCount) +
+        safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {
