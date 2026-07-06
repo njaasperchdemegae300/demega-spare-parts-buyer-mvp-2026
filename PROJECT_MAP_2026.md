@@ -927,3 +927,52 @@ Create a safe manual deal outcome gate after buyer reply follow-up action planni
 
 ## Next Phase After Approval
 Version 21B — Manual Deal Outcome Dashboard Display
+
+# Version 21C — Admin Hub Link Manual Deal Outcome Gate
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect Manual Deal Outcome Gate into the polished Admin Navigation Hub and Live Business Snapshot.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /manual-deal-outcome
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/manual-deal-outcome/summary
+
+## Features
+- Manual Deal Outcome Gate card in Admin Hub
+- Deal Outcomes metric
+- Manual Deal Won metric
+- Amount Received metric
+- System Closed Sales metric
+- Auto Payment Count metric
+- Auto Stock Count metric
+- Manual deal outcome metrics inside admin metrics API
+- Manual deal outcome safety locks inside admin summary
+
+## Safety Rules
+- Navigation and visibility only
+- Metrics API is read-only
+- Manual Deal Outcome Gate is outcome-record-only
+- Follow-up action is required
+- Admin completed manual action is required
+- Manual outcome approval is required
+- No automatic sale closing
+- No automatic pipeline movement
+- No WhatsApp auto-send
+- No auto-reply
+- No automatic browser opening
+- No automatic payment handling
+- No automatic stock change
+- No buyer message reading
+- No private message scraping
+- No hidden data harvesting
+- Manual review required before accounting, pipeline, or stock update
+
+## Next Phase After Approval
+Version 22A — Manual Stock Movement Review Gate Foundation

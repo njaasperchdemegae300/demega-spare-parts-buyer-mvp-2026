@@ -47,6 +47,10 @@
       <span class="badge">BUYER REPLY TRACKING IS MANUAL ENTRY ONLY</span>
       <span class="badge">BUYER REPLY FOLLOW-UP ACTION IS MANUAL ACTION ONLY</span>
       <span class="badge">SYSTEM DOES NOT EXECUTE FOLLOW-UP ACTION</span>
+      <span class="badge">MANUAL DEAL OUTCOME IS RECORD ONLY</span>
+      <span class="badge">NO AUTOMATIC SALE CLOSING</span>
+      <span class="badge">NO PAYMENT AUTOMATION</span>
+      <span class="badge">NO STOCK AUTOMATION</span>
       <span class="badge">NO AUTOMATIC CLOSING</span>
       <span class="badge warn">ADMIN MUST MANUALLY OBSERVE BUYER REPLY OUTSIDE THE SYSTEM</span>
       <ul>
@@ -63,6 +67,9 @@
         <li>Buyer reply follow-up action only displays manual next-action plans.</li>
         <li>It does not execute follow-up actions automatically.</li>
         <li>It does not close sales automatically.</li>
+        <li>Manual deal outcome only displays admin-recorded deal outcomes.</li>
+        <li>It does not handle payment automatically.</li>
+        <li>It does not change stock automatically.</li>
       </ul>
     </section>
 
@@ -95,6 +102,12 @@
         <div class="metric"><h2>Manual Action Only</h2><strong id="manualActionOnlyCount">0</strong></div>
         <div class="metric"><h2>System Executed</h2><strong id="systemExecutedActions">0</strong></div>
         <div class="metric"><h2>Auto Close Count</h2><strong id="autoCloseCount">0</strong></div>
+        <div class="metric"><h2>Deal Outcomes</h2><strong id="manualDealOutcomes">0</strong></div>
+        <div class="metric"><h2>Manual Deal Won</h2><strong id="manualDealWon">0</strong></div>
+        <div class="metric"><h2>Amount Received</h2><strong id="manualDealAmountReceived">0</strong></div>
+        <div class="metric"><h2>System Closed Sales</h2><strong id="manualDealSystemClosed">0</strong></div>
+        <div class="metric"><h2>Auto Payment Count</h2><strong id="manualDealAutoPayment">0</strong></div>
+        <div class="metric"><h2>Auto Stock Count</h2><strong id="manualDealAutoStock">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -116,6 +129,7 @@
       <div class="card"><h2>Manual Quote Sent Confirmation Gate</h2><p>View manual sent confirmations. This only records that admin manually sent the copied quote outside the system after review.</p><a href="/manual-quote-sent-confirmation">Open Sent Confirmation Gate</a></div>
       <div class="card"><h2>Buyer Reply Tracking</h2><p>View buyer replies manually observed and entered by admin. No WhatsApp reading, scraping, harvesting, auto-reply, or auto-send.</p><a href="/buyer-reply">Open Buyer Reply Tracking</a></div>
       <div class="card"><h2>Buyer Reply Follow-Up Action Gate</h2><p>View manual next-action plans after buyer replies. No system execution, auto-send, auto-reply, pipeline movement, automatic closing, message reading, scraping, or hidden harvesting.</p><a href="/buyer-reply-followup">Open Follow-Up Action Gate</a></div>
+      <div class="card"><h2>Manual Deal Outcome Gate</h2><p>View admin-recorded deal outcomes after manual action completion. No automatic sale closing, pipeline movement, payment handling, stock change, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-deal-outcome">Open Manual Deal Outcome Gate</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -156,6 +170,12 @@
       document.getElementById("manualActionOnlyCount").textContent = safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.manualActionOnlyCount);
       document.getElementById("systemExecutedActions").textContent = safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.actionExecutedBySystemCount);
       document.getElementById("autoCloseCount").textContent = safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.autoCloseCount);
+      document.getElementById("manualDealOutcomes").textContent = safeNumber(metrics.manualDealOutcome && metrics.manualDealOutcome.totalManualDealOutcomes);
+      document.getElementById("manualDealWon").textContent = safeNumber(metrics.manualDealOutcome && metrics.manualDealOutcome.dealWonManualCount);
+      document.getElementById("manualDealAmountReceived").textContent = safeNumber(metrics.manualDealOutcome && metrics.manualDealOutcome.amountActuallyReceivedTotal).toLocaleString();
+      document.getElementById("manualDealSystemClosed").textContent = safeNumber(metrics.manualDealOutcome && metrics.manualDealOutcome.systemClosedSaleCount);
+      document.getElementById("manualDealAutoPayment").textContent = safeNumber(metrics.manualDealOutcome && metrics.manualDealOutcome.autoPaymentCount);
+      document.getElementById("manualDealAutoStock").textContent = safeNumber(metrics.manualDealOutcome && metrics.manualDealOutcome.autoStockChangeCount);
 
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
@@ -170,7 +190,8 @@
         safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.autoSendWhatsAppCount) +
         safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.autoSendWhatsAppCount) +
         safeNumber(metrics.buyerReply && metrics.buyerReply.autoSendWhatsAppCount) +
-        safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.autoSendWhatsAppCount);
+        safeNumber(metrics.buyerReplyFollowupAction && metrics.buyerReplyFollowupAction.autoSendWhatsAppCount) +
+        safeNumber(metrics.manualDealOutcome && metrics.manualDealOutcome.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {

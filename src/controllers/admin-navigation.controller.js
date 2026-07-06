@@ -16,6 +16,7 @@ const manualQuoteCopyService = require("../services/manual-quote-copy.service");
 const manualQuoteSentConfirmationService = require("../services/manual-quote-sent-confirmation.service");
 const buyerReplyService = require("../services/buyer-reply.service");
 const buyerReplyFollowupActionService = require("../services/buyer-reply-followup-action.service");
+const manualDealOutcomeService = require("../services/manual-deal-outcome.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -34,7 +35,8 @@ const modules = [
   { name: "Manual Quote Sent Confirmation Gate", path: "/manual-quote-sent-confirmation", purpose: "Manual sent confirmation visibility. Confirmation record only; system does not send buyer message." },
   { name: "Buyer Reply Tracking", path: "/buyer-reply", purpose: "Manual buyer reply visibility. Manual-entry only; no WhatsApp reading, private scraping, hidden harvesting, auto-reply, or auto-send." },
   { name: "Buyer Reply Follow-Up Action Gate", path: "/buyer-reply-followup", purpose: "Manual follow-up action visibility. Manual action only; system does not execute, send, auto-reply, move pipeline, close sale, read messages, scrape, or harvest data." }
-];
+,
+  { name: "Manual Deal Outcome Gate", path: "/manual-deal-outcome", purpose: "Manual deal outcome visibility. Outcome record only; system does not close sale, move pipeline, send, auto-reply, handle payment, change stock, read messages, scrape, or harvest data." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -73,6 +75,19 @@ function getSafety() {
     manualQuoteSentConfirmationOnly: true,
     buyerReplyTrackingOnly: true,
     buyerReplyFollowupActionGateOnly: true,
+    manualDealOutcomeGateOnly: true,
+    manualDealOutcomeOnly: true,
+    manualOutcomeRecordOnly: true,
+    requiresFollowupAction: true,
+    requiresAdminCompletedManualAction: true,
+    requiresManualOutcomeApproval: true,
+    systemDoesNotHandlePayment: true,
+    systemDoesNotChangeStock: true,
+    autoCloseSale: false,
+    collectPaymentAutomatically: false,
+    verifyPaymentAutomatically: false,
+    autoReserveStock: false,
+    autoReduceStock: false,
     manualActionOnly: true,
     actionPreparedOnly: true,
     requiresBuyerReply: true,
@@ -157,6 +172,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const manualQuoteSentConfirmation = safeRead(() => manualQuoteSentConfirmationService.getManualQuoteSentConfirmationSummary(), {});
   const buyerReply = safeRead(() => buyerReplyService.getBuyerReplySummary(), {});
   const buyerReplyFollowupAction = safeRead(() => buyerReplyFollowupActionService.getBuyerReplyFollowupActionSummary(), {});
+  const manualDealOutcome = safeRead(() => manualDealOutcomeService.getManualDealOutcomeSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -181,7 +197,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       manualQuoteCopy,
       manualQuoteSentConfirmation,
       buyerReply,
-      buyerReplyFollowupAction
+      buyerReplyFollowupAction,
+      manualDealOutcome
     },
     safety: getSafety()
   });
