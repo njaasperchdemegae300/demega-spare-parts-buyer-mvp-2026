@@ -669,3 +669,45 @@ Create the safe backend foundation for manual quote copy. It prepares copy text 
 
 ## Next Phase After Approval
 Version 17B — Manual Quote Copy Button Dashboard Display
+
+# Version 17C — Admin Hub Link Manual Quote Copy Button
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect the Manual Quote Copy Button into the polished Admin Navigation Hub and Live Business Snapshot.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /manual-quote-copy
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/manual-quote-copy/summary
+
+## Features
+- Manual Quote Copy Button card in Admin Hub
+- Manual Quote Copy Actions metric
+- Copy Prepared metric
+- Manual Copy Only metric
+- Clipboard Access metric
+- Manual quote copy metrics inside admin metrics API
+- Manual quote copy safety locks inside admin summary
+
+## Safety Rules
+- Navigation and visibility only
+- Metrics API is read-only
+- Manual Quote Copy Button is prepare-text-only
+- No server clipboard access
+- No browser auto-copy
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic browser opening
+- No automatic pipeline movement
+- No quote marked as sent
+- sentToBuyer remains false
+- Manual review remains required
+
+## Next Phase After Approval
+Version 18A — Manual Quote Sent Confirmation Gate Foundation

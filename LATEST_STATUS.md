@@ -1,33 +1,34 @@
 # LATEST STATUS
 
 Current Phase:
-Version 17B — Manual Quote Copy Button Dashboard Display
+Version 17C — Admin Hub Link Manual Quote Copy Button
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /manual-quote-copy
-- GET /manual-quote-copies
-- Manual Quote Copy Button dashboard
-- Prepared copy text table
-- Manual select-text button
-- Copy action metric cards
-- Copy action filters
-- Copy safety labels
+- Manual Quote Copy Button linked inside Admin Navigation Hub
+- Manual Quote Copy Actions metric
+- Copy Prepared metric
+- Manual Copy Only metric
+- Clipboard Access metric
+- Manual quote copy metrics inside admin metrics API
+- Manual quote copy safety locks inside admin summary
+- Linked Manual Quote Copy dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays prepared copy text only
-- Manual select button only selects text for human admin copy
-- Dashboard does not access browser clipboard
-- Dashboard does not send WhatsApp
-- Dashboard does not message buyer automatically
-- Dashboard does not open browser automatically
-- Dashboard does not move pipeline automatically
-- Dashboard does not mark quote as sent
-- Price may appear inside copy text after eligibility, but price is not sent to buyer
+- Admin hub remains navigation and visibility only
+- Metrics API is read-only
+- Manual Quote Copy Button remains prepare-text-only
+- Admin hub does not access clipboard
+- Admin hub does not auto-copy quote text
+- Admin hub does not send WhatsApp
+- Admin hub does not message buyer automatically
+- Admin hub does not open browser automatically
+- Admin hub does not move pipeline automatically
+- Admin hub does not mark quote as sent
 - sentToBuyer remains false
 - Manual review remains required
 
 Next Phase:
-Version 17C — Admin Hub Link Manual Quote Copy Button
+Version 18A — Manual Quote Sent Confirmation Gate Foundation

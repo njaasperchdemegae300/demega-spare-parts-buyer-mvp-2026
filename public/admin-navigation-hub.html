@@ -29,7 +29,7 @@
 <body>
   <header>
     <h1>Demega Admin Navigation Hub</h1>
-    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, manual WhatsApp links, stock confirmation, compatibility confirmation, final quote eligibility, and safe manual quote drafts.</p>
+    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, manual WhatsApp links, stock confirmation, compatibility confirmation, quote eligibility, manual quote drafts, and manual quote copy.</p>
   </header>
 
   <main>
@@ -40,23 +40,21 @@
       <span class="badge">NO AUTO QUOTE</span>
       <span class="badge">NO AUTO PIPELINE MOVE</span>
       <span class="badge">NO AUTO BROWSER OPEN</span>
-      <span class="badge">ACTION QUEUE IS MANUAL ONLY</span>
-      <span class="badge">HOT BUYER RANKING IS READ ONLY</span>
-      <span class="badge">WHATSAPP LINKS ARE MANUAL OPEN ONLY</span>
-      <span class="badge">STOCK CONFIRMATION IS MANUAL ONLY</span>
-      <span class="badge">COMPATIBILITY CONFIRMATION IS MANUAL ONLY</span>
-      <span class="badge">FINAL QUOTE ELIGIBILITY IS CHECK ONLY</span>
-      <span class="badge">MANUAL QUOTE DRAFT IS DRAFT ONLY</span>
-      <span class="badge warn">PRICE MAY APPEAR ONLY INSIDE UNSENT DRAFT AFTER ELIGIBILITY</span>
+      <span class="badge">NO QUOTE MARKED AS SENT</span>
+      <span class="badge">NO SERVER CLIPBOARD ACCESS</span>
+      <span class="badge">NO BROWSER AUTO-COPY</span>
+      <span class="badge">MANUAL QUOTE COPY IS PREPARE TEXT ONLY</span>
+      <span class="badge warn">PRICE MAY APPEAR ONLY INSIDE COPY TEXT AFTER ELIGIBILITY BUT IS NOT SENT TO BUYER</span>
       <ul>
         <li>This hub is navigation and visibility only.</li>
         <li>It does not send WhatsApp messages.</li>
         <li>It does not open WhatsApp automatically.</li>
         <li>It does not message buyers automatically.</li>
         <li>It does not create or send quotes automatically.</li>
-        <li>It does not mark quote drafts as sent.</li>
+        <li>It does not access the clipboard.</li>
+        <li>It does not auto-copy prepared quote text.</li>
+        <li>It does not mark quote copy actions as sent.</li>
         <li>It does not move buyer pipeline stages automatically.</li>
-        <li>Manual quote draft price is allowed only inside an unsent draft after final quote eligibility passes.</li>
       </ul>
     </section>
 
@@ -76,9 +74,10 @@
         <div class="metric"><h2>Compatibility Confirmations</h2><strong id="compatibilityConfirmations">0</strong></div>
         <div class="metric"><h2>Quote Eligibility Checks</h2><strong id="quoteEligibilityChecks">0</strong></div>
         <div class="metric"><h2>Manual Quote Drafts</h2><strong id="manualQuoteDrafts">0</strong></div>
-        <div class="metric"><h2>Draft Only</h2><strong id="draftOnlyCount">0</strong></div>
-        <div class="metric"><h2>Price In Draft</h2><strong id="priceIncludedInDraft">0</strong></div>
-        <div class="metric"><h2>Price Sent To Buyer</h2><strong id="priceSentToBuyer">0</strong></div>
+        <div class="metric"><h2>Manual Quote Copy Actions</h2><strong id="manualQuoteCopyActions">0</strong></div>
+        <div class="metric"><h2>Copy Prepared</h2><strong id="copyPreparedCount">0</strong></div>
+        <div class="metric"><h2>Manual Copy Only</h2><strong id="manualCopyOnlyCount">0</strong></div>
+        <div class="metric"><h2>Clipboard Access</h2><strong id="serverClipboardAccessCount">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -157,6 +156,12 @@
       </div>
 
       <div class="card">
+        <h2>Manual Quote Copy Button</h2>
+        <p>View prepared manual quote copy text. The button only selects text for human admin copy and does not auto-copy or send.</p>
+        <a href="/manual-quote-copy">Open Manual Quote Copy</a>
+      </div>
+
+      <div class="card">
         <h2>System Health</h2>
         <p>Check whether the backend server foundation is alive and responding.</p>
         <a href="/api/health">Open Health API</a>
@@ -187,9 +192,10 @@
       document.getElementById("compatibilityConfirmations").textContent = safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.totalCompatibilityConfirmations);
       document.getElementById("quoteEligibilityChecks").textContent = safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.totalQuoteEligibilityChecks);
       document.getElementById("manualQuoteDrafts").textContent = safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.totalManualQuoteDrafts);
-      document.getElementById("draftOnlyCount").textContent = safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.draftOnlyCount);
-      document.getElementById("priceIncludedInDraft").textContent = safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.priceIncludedInDraftCount);
-      document.getElementById("priceSentToBuyer").textContent = safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.priceSentToBuyerCount);
+      document.getElementById("manualQuoteCopyActions").textContent = safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.totalManualQuoteCopyActions);
+      document.getElementById("copyPreparedCount").textContent = safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.copyPreparedCount);
+      document.getElementById("manualCopyOnlyCount").textContent = safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.manualCopyOnlyCount);
+      document.getElementById("serverClipboardAccessCount").textContent = safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.serverClipboardAccessCount);
 
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
@@ -200,7 +206,8 @@
         safeNumber(metrics.stockConfirmation && metrics.stockConfirmation.autoSendWhatsAppCount) +
         safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.autoSendWhatsAppCount) +
         safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.autoSendWhatsAppCount) +
-        safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.autoSendWhatsAppCount);
+        safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.autoSendWhatsAppCount) +
+        safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {
