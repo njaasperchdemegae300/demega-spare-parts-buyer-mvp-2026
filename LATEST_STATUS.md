@@ -1,28 +1,32 @@
 # LATEST STATUS
 
 Current Phase:
-Version 10C — Admin Hub Link Action Queue
+Version 11A-FIX1 — Hot Buyer Command Center Foundation Verified
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Buyer Action Queue linked inside Admin Navigation Hub
-- Buyer Actions metric
-- Urgent Actions metric
-- Action queue metrics inside admin metrics API
-- Action queue safety locks inside admin summary
-- Linked Buyer Action Queue dashboard reachable
+- GET /api/hot-buyers/preview
+- GET /api/hot-buyers
+- GET /api/hot-buyers/summary
+- Hot buyer ranking
+- Hot buyer score
+- Hot / warm / cold classification
+- Recommended manual actions
+- Pending action count
+- Pending follow-up count
+- Urgent action count
+- Safe hot buyer metrics
 
 Safety Confirmed:
-- Admin hub remains navigation and visibility only
-- Metrics API is read-only
-- Admin hub does not send WhatsApp
-- Admin hub does not message buyer automatically
-- Admin hub does not create quote automatically
-- Admin hub does not move pipeline stage automatically
-- Admin hub does not complete buyer actions automatically
+- Hot Buyer Command Center ranking is read-only
+- Hot Buyer Command Center does not send WhatsApp
+- Hot Buyer Command Center does not message buyer automatically
+- Hot Buyer Command Center does not create quote automatically
+- Hot Buyer Command Center does not move pipeline stage automatically
+- sentToBuyer remains false
 - Manual review remains required
 
 Next Phase:
-Version 11A — Hot Buyer Command Center Foundation
+Version 11B — Hot Buyer Command Center Dashboard Display

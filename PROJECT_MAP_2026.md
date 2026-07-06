@@ -277,3 +277,38 @@ Show safe manual buyer actions in a read-only dashboard.
 
 ## Next Phase After Approval
 Version 10C — Admin Hub Link Action Queue
+
+# Version 11A — Hot Buyer Command Center Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create a read-only Hot Buyer Command Center API that ranks serious buyer opportunities using buyer lead signals, urgency, source quality, action queue signals, follow-up signals, and pipeline signals.
+
+## Routes
+- GET /api/hot-buyers/preview
+- GET /api/hot-buyers
+- GET /api/hot-buyers/summary
+
+## Features
+- Hot buyer ranking
+- Hot buyer score
+- Hot / warm / cold classification
+- Recommended manual actions
+- Pending action count
+- Pending follow-up count
+- Urgent action count
+- Safe hot buyer metrics
+
+## Safety Rules
+- Read-only ranking
+- No WhatsApp auto-send
+- No automatic buyer message
+- No automatic quote creation
+- No automatic pipeline movement
+- sentToBuyer remains false
+- Manual review remains required
+
+## Next Phase After Approval
+Version 11B — Hot Buyer Command Center Dashboard Display

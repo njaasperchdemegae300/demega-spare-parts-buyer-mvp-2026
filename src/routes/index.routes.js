@@ -11,6 +11,7 @@ const buyerPipelineController = require("../controllers/buyer-pipeline.controlle
 const followUpController = require("../controllers/followup.controller");
 const adminNavigationController = require("../controllers/admin-navigation.controller");
 const actionQueueController = require("../controllers/action-queue.controller");
+const hotBuyerController = require("../controllers/hot-buyer.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -43,6 +44,9 @@ function routeRequest(req, res, sendJson) {
         "/buyer-action-queue",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
+        "/api/hot-buyers/preview",
+        "/api/hot-buyers",
+        "/api/hot-buyers/summary",
         "/api/action-queue/preview",
         "/api/action-queue",
         "/api/action-queue/summary",
@@ -86,6 +90,18 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/admin-navigation/dashboard-metrics") {
     return adminNavigationController.adminNavigationDashboardMetricsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/hot-buyers/preview") {
+    return hotBuyerController.hotBuyerPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/hot-buyers") {
+    return hotBuyerController.listHotBuyersController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/hot-buyers/summary") {
+    return hotBuyerController.hotBuyerSummaryController(req, res, sendJson);
   }
 
   if (method === "GET" && (url.pathname === "/action-queue" || url.pathname === "/buyer-action-queue")) {
