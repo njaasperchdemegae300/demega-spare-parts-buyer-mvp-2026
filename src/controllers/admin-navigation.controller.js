@@ -11,6 +11,7 @@ const whatsappManualService = require("../services/whatsapp-manual.service");
 const stockConfirmationService = require("../services/stock-confirmation.service");
 const compatibilityConfirmationService = require("../services/compatibility-confirmation.service");
 const quoteEligibilityService = require("../services/quote-eligibility.service");
+const manualQuoteDraftService = require("../services/manual-quote-draft.service");
 
 const modules = [
   {
@@ -26,7 +27,7 @@ const modules = [
   {
     name: "Quote Draft Dashboard",
     path: "/quotes",
-    purpose: "Draft-only quote messages with manual review."
+    purpose: "Legacy draft-only quote messages with manual review."
   },
   {
     name: "Buyer Pipeline Dashboard",
@@ -67,6 +68,11 @@ const modules = [
     name: "Safe Final Quote Eligibility Gate",
     path: "/quote-eligibility",
     purpose: "Final quote eligibility visibility. Eligibility-check only; no automatic quote, no price, no WhatsApp sending."
+  },
+  {
+    name: "Safe Manual Quote Draft Builder",
+    path: "/manual-quote-draft",
+    purpose: "Safe manual quote draft visibility. Draft-only; price may appear inside draft after eligibility but is not sent to buyer."
   }
 ];
 
@@ -102,10 +108,16 @@ function getSafety() {
     stockConfirmationManualOnly: true,
     compatibilityConfirmationManualOnly: true,
     quoteEligibilityOnly: true,
+    manualQuoteDraftBuilderOnly: true,
+    draftOnly: true,
     quoteAllowedAtStockGate: false,
     stockAndCompatibilityRequiredBeforeQuote: true,
     manualQuoteDraftAllowedOnlyAfterBothGates: true,
     manualQuoteDraftAllowedAfterBothConfirmed: true,
+    requiresFinalQuoteEligibility: true,
+    priceAllowedInDraftAfterEligibility: true,
+    priceSentToBuyer: false,
+    quoteAmountSentToBuyer: false,
     autoSendWhatsApp: false,
     autoOpenBrowser: false,
     automaticBuyerMessage: false,
@@ -143,6 +155,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const stockConfirmation = safeRead(() => stockConfirmationService.getStockConfirmationSummary(), {});
   const compatibilityConfirmation = safeRead(() => compatibilityConfirmationService.getCompatibilityConfirmationSummary(), {});
   const quoteEligibility = safeRead(() => quoteEligibilityService.getQuoteEligibilitySummary(), {});
+  const manualQuoteDraft = safeRead(() => manualQuoteDraftService.getManualQuoteDraftSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -162,7 +175,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       whatsappManual,
       stockConfirmation,
       compatibilityConfirmation,
-      quoteEligibility
+      quoteEligibility,
+      manualQuoteDraft
     },
     safety: getSafety()
   });

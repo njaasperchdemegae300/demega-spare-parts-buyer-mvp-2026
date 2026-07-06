@@ -1,33 +1,34 @@
 # LATEST STATUS
 
 Current Phase:
-Version 16B — Safe Manual Quote Draft Builder Dashboard Display
+Version 16C — Admin Hub Link Safe Manual Quote Draft Builder
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /manual-quote-draft
-- GET /manual-quote-drafts
-- Safe Manual Quote Draft Builder dashboard
-- Manual quote draft metric cards
-- Manual quote draft table
-- Draft-only filter
-- Eligibility filter
-- Draft message display
-- Safety labels
+- Safe Manual Quote Draft Builder linked inside Admin Navigation Hub
+- Manual Quote Drafts metric
+- Draft Only metric
+- Price In Draft metric
+- Price Sent To Buyer metric
+- Manual quote draft metrics inside admin metrics API
+- Manual quote draft safety locks inside admin summary
+- Linked Safe Manual Quote Draft Builder dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays manual quote drafts only
-- Dashboard does not send WhatsApp
-- Dashboard does not message buyer automatically
-- Dashboard does not open browser automatically
-- Dashboard does not move pipeline automatically
-- Dashboard does not mark quote as sent
-- Price is shown only inside draft after eligibility
+- Admin hub remains navigation and visibility only
+- Metrics API is read-only
+- Safe Manual Quote Draft Builder remains draft-only
+- Requires final quote eligibility
+- Price may appear only inside unsent draft after eligibility
 - Price is not sent to buyer
+- Admin hub does not send WhatsApp
+- Admin hub does not message buyer automatically
+- Admin hub does not open browser automatically
+- Admin hub does not move pipeline automatically
 - sentToBuyer remains false
 - Manual review remains required
 
 Next Phase:
-Version 16C — Admin Hub Link Safe Manual Quote Draft Builder
+Version 17A — Manual Quote Copy Button Foundation
