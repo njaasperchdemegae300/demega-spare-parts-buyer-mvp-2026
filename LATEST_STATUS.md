@@ -1,33 +1,34 @@
 # LATEST STATUS
 
 Current Phase:
-Version 18B — Manual Quote Sent Confirmation Dashboard Display
+Version 18C — Admin Hub Link Manual Quote Sent Confirmation Gate
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /manual-quote-sent-confirmation
-- GET /manual-quote-sent-confirmations
-- Manual Quote Sent Confirmation dashboard
-- Sent confirmation metric cards
-- Sent confirmation table
-- Manual channel filter
-- Safety status filter
-- Copy text snapshot display
-- Safety labels
+- Manual Quote Sent Confirmation Gate linked inside Admin Navigation Hub
+- Manual Sent Confirmations metric
+- Admin Manual Sent metric
+- Manual Review Completed metric
+- System Sent Count metric
+- Manual sent confirmation metrics inside admin metrics API
+- Manual sent confirmation safety locks inside admin summary
+- Linked Manual Quote Sent Confirmation dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays manual sent confirmation records only
-- Dashboard does not send WhatsApp
-- Dashboard does not message buyer automatically
-- Dashboard does not open browser automatically
-- Dashboard does not access clipboard
-- Dashboard does not auto-copy
-- Dashboard does not move pipeline automatically
-- Dashboard does not mark quote as sent by system
-- Dashboard confirms admin manual sent action only
-- Price may exist in manually sent copy text, but price is not sent by the system
+- Admin hub remains navigation and visibility only
+- Metrics API is read-only
+- Manual Quote Sent Confirmation Gate remains confirmation-record-only
+- Admin hub does not send WhatsApp
+- Admin hub does not message buyer automatically
+- Admin hub does not open browser automatically
+- Admin hub does not access clipboard
+- Admin hub does not auto-copy
+- Admin hub does not move pipeline automatically
+- Admin hub does not mark quote as sent by system
+- System does not send buyer message
+- Manual review remains required
 
 Next Phase:
-Version 18C — Admin Hub Link Manual Quote Sent Confirmation Gate
+Version 19A — Buyer Reply Tracking Foundation

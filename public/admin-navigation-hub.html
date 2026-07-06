@@ -29,7 +29,7 @@
 <body>
   <header>
     <h1>Demega Admin Navigation Hub</h1>
-    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, manual WhatsApp links, stock confirmation, compatibility confirmation, quote eligibility, manual quote drafts, and manual quote copy.</p>
+    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, manual WhatsApp links, quote eligibility, manual quote copy, and manual sent confirmation.</p>
   </header>
 
   <main>
@@ -40,11 +40,11 @@
       <span class="badge">NO AUTO QUOTE</span>
       <span class="badge">NO AUTO PIPELINE MOVE</span>
       <span class="badge">NO AUTO BROWSER OPEN</span>
-      <span class="badge">NO QUOTE MARKED AS SENT</span>
       <span class="badge">NO SERVER CLIPBOARD ACCESS</span>
       <span class="badge">NO BROWSER AUTO-COPY</span>
-      <span class="badge">MANUAL QUOTE COPY IS PREPARE TEXT ONLY</span>
-      <span class="badge warn">PRICE MAY APPEAR ONLY INSIDE COPY TEXT AFTER ELIGIBILITY BUT IS NOT SENT TO BUYER</span>
+      <span class="badge">MANUAL SENT CONFIRMATION IS RECORD ONLY</span>
+      <span class="badge">SYSTEM DOES NOT SEND BUYER MESSAGE</span>
+      <span class="badge warn">ADMIN MANUAL SENT CONFIRMATION REQUIRED AFTER HUMAN REVIEW</span>
       <ul>
         <li>This hub is navigation and visibility only.</li>
         <li>It does not send WhatsApp messages.</li>
@@ -53,8 +53,9 @@
         <li>It does not create or send quotes automatically.</li>
         <li>It does not access the clipboard.</li>
         <li>It does not auto-copy prepared quote text.</li>
-        <li>It does not mark quote copy actions as sent.</li>
+        <li>It does not mark quote as sent by system.</li>
         <li>It does not move buyer pipeline stages automatically.</li>
+        <li>Manual sent confirmation only records what admin already did outside the system after review.</li>
       </ul>
     </section>
 
@@ -75,97 +76,30 @@
         <div class="metric"><h2>Quote Eligibility Checks</h2><strong id="quoteEligibilityChecks">0</strong></div>
         <div class="metric"><h2>Manual Quote Drafts</h2><strong id="manualQuoteDrafts">0</strong></div>
         <div class="metric"><h2>Manual Quote Copy Actions</h2><strong id="manualQuoteCopyActions">0</strong></div>
-        <div class="metric"><h2>Copy Prepared</h2><strong id="copyPreparedCount">0</strong></div>
-        <div class="metric"><h2>Manual Copy Only</h2><strong id="manualCopyOnlyCount">0</strong></div>
-        <div class="metric"><h2>Clipboard Access</h2><strong id="serverClipboardAccessCount">0</strong></div>
+        <div class="metric"><h2>Manual Sent Confirmations</h2><strong id="manualSentConfirmations">0</strong></div>
+        <div class="metric"><h2>Admin Manual Sent</h2><strong id="adminManualSentConfirmed">0</strong></div>
+        <div class="metric"><h2>Manual Review Completed</h2><strong id="manualReviewCompleted">0</strong></div>
+        <div class="metric"><h2>System Sent Count</h2><strong id="systemSentCount">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
 
     <section class="cards">
-      <div class="card">
-        <h2>Buyer Lead Dashboard</h2>
-        <p>View captured buyer leads, scoring, temperature, source quality, and manual review status.</p>
-        <a href="/dashboard">Open Buyer Dashboard</a>
-      </div>
-
-      <div class="card">
-        <h2>Inventory Command Center</h2>
-        <p>View inventory items, stock status, condition, compatibility notes, and quote-blocking safety.</p>
-        <a href="/inventory">Open Inventory</a>
-      </div>
-
-      <div class="card">
-        <h2>Quote Draft Dashboard</h2>
-        <p>View legacy safe draft-only quote messages. Copy Draft is manual-only and does not send WhatsApp.</p>
-        <a href="/quotes">Open Quote Drafts</a>
-      </div>
-
-      <div class="card">
-        <h2>Buyer Pipeline Dashboard</h2>
-        <p>Track buyers through stages such as follow-up needed, manual contacted, won, lost, and blocked.</p>
-        <a href="/pipeline">Open Pipeline</a>
-      </div>
-
-      <div class="card">
-        <h2>Follow-Up Reminder Dashboard</h2>
-        <p>View manual follow-up reminders, due times, status, and safety labels.</p>
-        <a href="/followups">Open Follow-Ups</a>
-      </div>
-
-      <div class="card">
-        <h2>Buyer Action Queue</h2>
-        <p>View urgent manual buyer actions: call buyer, verify stock, verify compatibility, prepare quote draft, confirm delivery, close sale, or block lead.</p>
-        <a href="/action-queue">Open Action Queue</a>
-      </div>
-
-      <div class="card">
-        <h2>Hot Buyer Command Center</h2>
-        <p>View ranked serious buyers by urgency, source quality, buyer intent, action queue signals, follow-up signals, and pipeline signals.</p>
-        <a href="/hot-buyers">Open Hot Buyers</a>
-      </div>
-
-      <div class="card">
-        <h2>WhatsApp Manual Open Dashboard</h2>
-        <p>View safe WhatsApp manual-open links. No auto-send, no auto-open, no price, and no automatic quote.</p>
-        <a href="/whatsapp-manual">Open WhatsApp Manual Links</a>
-      </div>
-
-      <div class="card">
-        <h2>Stock Confirmation Gate</h2>
-        <p>View manual stock confirmations. Quote remains blocked until compatibility confirmation is completed.</p>
-        <a href="/stock-confirmation">Open Stock Confirmation Gate</a>
-      </div>
-
-      <div class="card">
-        <h2>Compatibility Confirmation Gate</h2>
-        <p>View manual compatibility confirmations. Manual quote draft is allowed only after stock and compatibility are both confirmed.</p>
-        <a href="/compatibility-confirmation">Open Compatibility Confirmation Gate</a>
-      </div>
-
-      <div class="card">
-        <h2>Safe Final Quote Eligibility Gate</h2>
-        <p>View final manual quote eligibility checks. This gate only checks readiness and never creates quote automatically.</p>
-        <a href="/quote-eligibility">Open Quote Eligibility Gate</a>
-      </div>
-
-      <div class="card">
-        <h2>Safe Manual Quote Draft Builder</h2>
-        <p>View safe manual quote drafts. Drafts are not sent to buyers and still require manual review.</p>
-        <a href="/manual-quote-draft">Open Manual Quote Draft Builder</a>
-      </div>
-
-      <div class="card">
-        <h2>Manual Quote Copy Button</h2>
-        <p>View prepared manual quote copy text. The button only selects text for human admin copy and does not auto-copy or send.</p>
-        <a href="/manual-quote-copy">Open Manual Quote Copy</a>
-      </div>
-
-      <div class="card">
-        <h2>System Health</h2>
-        <p>Check whether the backend server foundation is alive and responding.</p>
-        <a href="/api/health">Open Health API</a>
-      </div>
+      <div class="card"><h2>Buyer Lead Dashboard</h2><p>View captured buyer leads, scoring, temperature, source quality, and manual review status.</p><a href="/dashboard">Open Buyer Dashboard</a></div>
+      <div class="card"><h2>Inventory Command Center</h2><p>View inventory items, stock status, condition, compatibility notes, and quote-blocking safety.</p><a href="/inventory">Open Inventory</a></div>
+      <div class="card"><h2>Quote Draft Dashboard</h2><p>View legacy safe draft-only quote messages. Copy Draft is manual-only and does not send WhatsApp.</p><a href="/quotes">Open Quote Drafts</a></div>
+      <div class="card"><h2>Buyer Pipeline Dashboard</h2><p>Track buyers through stages such as follow-up needed, manual contacted, won, lost, and blocked.</p><a href="/pipeline">Open Pipeline</a></div>
+      <div class="card"><h2>Follow-Up Reminder Dashboard</h2><p>View manual follow-up reminders, due times, status, and safety labels.</p><a href="/followups">Open Follow-Ups</a></div>
+      <div class="card"><h2>Buyer Action Queue</h2><p>View urgent manual buyer actions: call buyer, verify stock, verify compatibility, prepare quote draft, confirm delivery, close sale, or block lead.</p><a href="/action-queue">Open Action Queue</a></div>
+      <div class="card"><h2>Hot Buyer Command Center</h2><p>View ranked serious buyers by urgency, source quality, buyer intent, action queue signals, follow-up signals, and pipeline signals.</p><a href="/hot-buyers">Open Hot Buyers</a></div>
+      <div class="card"><h2>WhatsApp Manual Open Dashboard</h2><p>View safe WhatsApp manual-open links. No auto-send, no auto-open, no price, and no automatic quote.</p><a href="/whatsapp-manual">Open WhatsApp Manual Links</a></div>
+      <div class="card"><h2>Stock Confirmation Gate</h2><p>View manual stock confirmations. Quote remains blocked until compatibility confirmation is completed.</p><a href="/stock-confirmation">Open Stock Confirmation Gate</a></div>
+      <div class="card"><h2>Compatibility Confirmation Gate</h2><p>View manual compatibility confirmations. Manual quote draft is allowed only after stock and compatibility are both confirmed.</p><a href="/compatibility-confirmation">Open Compatibility Confirmation Gate</a></div>
+      <div class="card"><h2>Safe Final Quote Eligibility Gate</h2><p>View final manual quote eligibility checks. This gate only checks readiness and never creates quote automatically.</p><a href="/quote-eligibility">Open Quote Eligibility Gate</a></div>
+      <div class="card"><h2>Safe Manual Quote Draft Builder</h2><p>View safe manual quote drafts. Drafts are not sent to buyers and still require manual review.</p><a href="/manual-quote-draft">Open Manual Quote Draft Builder</a></div>
+      <div class="card"><h2>Manual Quote Copy Button</h2><p>View prepared manual quote copy text. The button only selects text for human admin copy and does not auto-copy or send.</p><a href="/manual-quote-copy">Open Manual Quote Copy</a></div>
+      <div class="card"><h2>Manual Quote Sent Confirmation Gate</h2><p>View manual sent confirmations. This only records that admin manually sent the copied quote outside the system after review.</p><a href="/manual-quote-sent-confirmation">Open Sent Confirmation Gate</a></div>
+      <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
 
@@ -193,9 +127,10 @@
       document.getElementById("quoteEligibilityChecks").textContent = safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.totalQuoteEligibilityChecks);
       document.getElementById("manualQuoteDrafts").textContent = safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.totalManualQuoteDrafts);
       document.getElementById("manualQuoteCopyActions").textContent = safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.totalManualQuoteCopyActions);
-      document.getElementById("copyPreparedCount").textContent = safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.copyPreparedCount);
-      document.getElementById("manualCopyOnlyCount").textContent = safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.manualCopyOnlyCount);
-      document.getElementById("serverClipboardAccessCount").textContent = safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.serverClipboardAccessCount);
+      document.getElementById("manualSentConfirmations").textContent = safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.totalManualQuoteSentConfirmations);
+      document.getElementById("adminManualSentConfirmed").textContent = safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.adminManualSentConfirmedCount);
+      document.getElementById("manualReviewCompleted").textContent = safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.manualReviewCompletedCount);
+      document.getElementById("systemSentCount").textContent = safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.systemSentToBuyerCount);
 
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
@@ -207,7 +142,8 @@
         safeNumber(metrics.compatibilityConfirmation && metrics.compatibilityConfirmation.autoSendWhatsAppCount) +
         safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.autoSendWhatsAppCount) +
         safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.autoSendWhatsAppCount) +
-        safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.autoSendWhatsAppCount);
+        safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.autoSendWhatsAppCount) +
+        safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {

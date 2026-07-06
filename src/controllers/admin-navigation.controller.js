@@ -13,6 +13,7 @@ const compatibilityConfirmationService = require("../services/compatibility-conf
 const quoteEligibilityService = require("../services/quote-eligibility.service");
 const manualQuoteDraftService = require("../services/manual-quote-draft.service");
 const manualQuoteCopyService = require("../services/manual-quote-copy.service");
+const manualQuoteSentConfirmationService = require("../services/manual-quote-sent-confirmation.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -27,7 +28,8 @@ const modules = [
   { name: "Compatibility Confirmation Gate", path: "/compatibility-confirmation", purpose: "Manual compatibility confirmation visibility while manual quote draft is allowed only after stock and compatibility are both confirmed." },
   { name: "Safe Final Quote Eligibility Gate", path: "/quote-eligibility", purpose: "Final quote eligibility visibility. Eligibility-check only; no automatic quote, no price, no WhatsApp sending." },
   { name: "Safe Manual Quote Draft Builder", path: "/manual-quote-draft", purpose: "Safe manual quote draft visibility. Draft-only; price may appear inside draft after eligibility but is not sent to buyer." },
-  { name: "Manual Quote Copy Button", path: "/manual-quote-copy", purpose: "Prepared quote copy text visibility. Manual select only; no clipboard automation, no WhatsApp sending, no sent marking." }
+  { name: "Manual Quote Copy Button", path: "/manual-quote-copy", purpose: "Prepared quote copy text visibility. Manual select only; no clipboard automation, no WhatsApp sending, no sent marking." },
+  { name: "Manual Quote Sent Confirmation Gate", path: "/manual-quote-sent-confirmation", purpose: "Manual sent confirmation visibility. Confirmation record only; system does not send buyer message." }
 ];
 
 function safeRead(factory, fallback) {
@@ -64,7 +66,13 @@ function getSafety() {
     quoteEligibilityOnly: true,
     manualQuoteDraftBuilderOnly: true,
     manualQuoteCopyFoundationOnly: true,
+    manualQuoteSentConfirmationOnly: true,
     preparesCopyTextOnly: true,
+    confirmationRecordOnly: true,
+    requiresPreparedCopyAction: true,
+    requiresManualAdminConfirmation: true,
+    requiresManualReviewCompleted: true,
+    systemDoesNotSendMessage: true,
     serverDoesNotAccessClipboard: true,
     browserAutoCopy: false,
     copiedToClipboardByBrowser: false,
@@ -77,6 +85,10 @@ function getSafety() {
     priceMayAppearInCopyTextAfterEligibility: true,
     priceSentToBuyer: false,
     quoteAmountSentToBuyer: false,
+    systemSentToBuyer: false,
+    sentToBuyerBySystem: false,
+    quoteMarkedSentBySystem: false,
+    priceSentBySystem: false,
     autoSendWhatsApp: false,
     autoOpenBrowser: false,
     automaticBuyerMessage: false,
@@ -89,6 +101,7 @@ function getSafety() {
     priceIncluded: false,
     quoteAmountIncluded: false,
     manualReviewRequired: true,
+    manualReviewRequiredForNextStep: true,
     quoteBeforeStockConfirmation: false,
     quoteBeforeCompatibilityConfirmation: false
   };
@@ -117,6 +130,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const quoteEligibility = safeRead(() => quoteEligibilityService.getQuoteEligibilitySummary(), {});
   const manualQuoteDraft = safeRead(() => manualQuoteDraftService.getManualQuoteDraftSummary(), {});
   const manualQuoteCopy = safeRead(() => manualQuoteCopyService.getManualQuoteCopySummary(), {});
+  const manualQuoteSentConfirmation = safeRead(() => manualQuoteSentConfirmationService.getManualQuoteSentConfirmationSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -138,7 +152,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       compatibilityConfirmation,
       quoteEligibility,
       manualQuoteDraft,
-      manualQuoteCopy
+      manualQuoteCopy,
+      manualQuoteSentConfirmation
     },
     safety: getSafety()
   });
