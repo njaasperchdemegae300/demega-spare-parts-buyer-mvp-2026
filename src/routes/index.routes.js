@@ -18,6 +18,7 @@ const compatibilityConfirmationController = require("../controllers/compatibilit
 const quoteEligibilityController = require("../controllers/quote-eligibility.controller");
 const manualQuoteDraftController = require("../controllers/manual-quote-draft.controller");
 const manualQuoteCopyController = require("../controllers/manual-quote-copy.controller");
+const manualQuoteSentConfirmationController = require("../controllers/manual-quote-sent-confirmation.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -82,6 +83,9 @@ function routeRequest(req, res, sendJson) {
         "/api/manual-quote-copy/preview",
         "/api/manual-quote-copies",
         "/api/manual-quote-copy/summary",
+        "/api/manual-quote-sent-confirmation/preview",
+        "/api/manual-quote-sent-confirmations",
+        "/api/manual-quote-sent-confirmation/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -119,6 +123,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/quote-eligibility/check",
         "POST /api/manual-quote-draft/build",
         "POST /api/manual-quote-copy/prepare",
+        "POST /api/manual-quote-sent-confirmation/confirm",
         "GET /api/leads"
       ]
     });
@@ -158,6 +163,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-quote-copy" || url.pathname === "/manual-quote-copies")) {
     return manualQuoteCopyController.manualQuoteCopyDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-quote-sent-confirmation/preview") {
+    return manualQuoteSentConfirmationController.manualQuoteSentConfirmationPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-quote-sent-confirmations") {
+    return manualQuoteSentConfirmationController.listManualQuoteSentConfirmationsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/manual-quote-sent-confirmation/summary") {
+    return manualQuoteSentConfirmationController.manualQuoteSentConfirmationSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/manual-quote-sent-confirmation/confirm") {
+    return manualQuoteSentConfirmationController.confirmManualQuoteSentController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/manual-quote-copy/preview") {

@@ -56,7 +56,8 @@
     "version:16c": "node tools/version16c-admin-hub-link-manual-quote-draft-smoke-test.js",
     "version:17a": "node tools/version17a-manual-quote-copy-button-foundation-smoke-test.js",
     "version:17b": "node tools/version17b-manual-quote-copy-button-dashboard-smoke-test.js",
-    "version:17c": "node tools/version17c-admin-hub-link-manual-quote-copy-smoke-test.js"
+    "version:17c": "node tools/version17c-admin-hub-link-manual-quote-copy-smoke-test.js",
+    "version:18a": "node tools/version18a-manual-quote-sent-confirmation-gate-smoke-test.js"
   },
   "keywords": [
     "spare-parts",
