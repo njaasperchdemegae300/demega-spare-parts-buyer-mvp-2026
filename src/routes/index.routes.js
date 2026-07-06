@@ -42,6 +42,8 @@ function routeRequest(req, res, sendJson) {
         "/follow-up-reminders",
         "/action-queue",
         "/buyer-action-queue",
+        "/hot-buyers",
+        "/hot-buyer-command-center",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/hot-buyers/preview",
@@ -90,6 +92,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/admin-navigation/dashboard-metrics") {
     return adminNavigationController.adminNavigationDashboardMetricsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && (url.pathname === "/hot-buyers" || url.pathname === "/hot-buyer-command-center")) {
+    return hotBuyerController.hotBuyerDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/hot-buyers/preview") {

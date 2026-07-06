@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Hot Buyer Command Center</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1400px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .hot { background: #fee2e2; color: #991b1b; }
+    .warm { background: #fef3c7; color: #92400e; }
+    .cold { background: #e0f2fe; color: #075985; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 180px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Hot Buyer Command Center</h1>
+    <p>Read-only serious-buyer ranking. No WhatsApp auto-send. No automatic quote or pipeline movement.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Candidates</h2><strong id="totalHotBuyerCandidates">0</strong></div>
+      <div class="card"><h2>Hot Buyers</h2><strong id="hotBuyers">0</strong></div>
+      <div class="card"><h2>Warm Buyers</h2><strong id="warmBuyers">0</strong></div>
+      <div class="card"><h2>Urgent Hot Buyers</h2><strong id="urgentHotBuyers">0</strong></div>
+      <div class="card"><h2>Pending Actions</h2><strong id="pendingActionTotal">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">READ ONLY</strong></div>
+    </section>
+
+    <section class="panel">
+      <h2>Ranked Hot Buyers</h2>
+      <p class="muted">This table ranks serious buyers only. You must still verify stock, verify compatibility, prepare quote draft, and contact buyer manually.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search buyer, phone, part, car, location..." />
+        <select id="temperatureFilter">
+          <option value="">All temperature</option>
+          <option value="hot">Hot</option>
+          <option value="warm">Warm</option>
+          <option value="cold">Cold</option>
+        </select>
+        <select id="actionFilter">
+          <option value="">All manual actions</option>
+          <option value="verify_stock">Verify Stock</option>
+          <option value="verify_compatibility">Verify Compatibility</option>
+          <option value="call_buyer">Call Buyer</option>
+          <option value="prepare_quote_draft">Prepare Quote Draft</option>
+          <option value="manual_follow_up">Manual Follow-Up</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Buyer</th>
+            <th>Phone</th>
+            <th>Part Needed</th>
+            <th>Vehicle</th>
+            <th>Location</th>
+            <th>Source</th>
+            <th>Urgency</th>
+            <th>Hot Score</th>
+            <th>Temperature</th>
+            <th>Pipeline Stage</th>
+            <th>Pending Actions</th>
+            <th>Urgent Actions</th>
+            <th>Recommended Manual Actions</th>
+            <th>Safety</th>
+          </tr>
+        </thead>
+        <tbody id="hotBuyerRows">
+          <tr><td colspan="15">Loading hot buyers...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allHotBuyers = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function getFilteredHotBuyers() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const temperature = document.getElementById("temperatureFilter").value;
+      const action = document.getElementById("actionFilter").value;
+
+      return allHotBuyers.filter(item => {
+        const actions = Array.isArray(item.recommendedManualActions) ? item.recommendedManualActions : [];
+        const haystack = [
+          item.buyerName,
+          item.buyerPhone,
+          item.partNeeded,
+          item.vehicleBrand,
+          item.vehicleModel,
+          item.vehicleYear,
+          item.engineCode,
+          item.location,
+          item.source,
+          item.urgency,
+          item.hotBuyerTemperature,
+          item.pipelineStage,
+          actions.join(" ")
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!temperature || item.hotBuyerTemperature === temperature) &&
+          (!action || actions.includes(action));
+      });
+    }
+
+    function renderHotBuyers() {
+      const tbody = document.getElementById("hotBuyerRows");
+      const hotBuyers = getFilteredHotBuyers();
+
+      if (!hotBuyers.length) {
+        tbody.innerHTML = '<tr><td colspan="15">No matching hot buyers.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = hotBuyers.map((item, index) => {
+        const tempClass = item.hotBuyerTemperature === "hot" ? "hot" : item.hotBuyerTemperature === "warm" ? "warm" : "cold";
+        const actions = Array.isArray(item.recommendedManualActions) ? item.recommendedManualActions : [];
+        const actionBadges = actions.map(action => badge(action)).join("<br>");
+        const safety = [
+          item.manualActionOnly ? badge("Manual", "safe") : badge("Risk", "danger"),
+          item.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          item.automaticBuyerMessage ? badge("Auto-message risk", "danger") : badge("No auto-message", "safe"),
+          item.quoteCreatedAutomatically ? badge("Auto-quote risk", "danger") : badge("No auto-quote", "safe"),
+          item.pipelineMovedAutomatically ? badge("Auto-pipeline risk", "danger") : badge("No auto-pipeline", "safe"),
+          item.sentToBuyer ? badge("Sent risk", "danger") : badge("Not sent", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${escapeHtml(item.buyerName)}</td>
+            <td>${escapeHtml(item.buyerPhone)}</td>
+            <td>${escapeHtml(item.partNeeded)}</td>
+            <td>${escapeHtml(`${item.vehicleBrand || ""} ${item.vehicleModel || ""} ${item.vehicleYear || ""}`)}</td>
+            <td>${escapeHtml(item.location)}</td>
+            <td>${badge(item.source || "unknown")}</td>
+            <td>${badge(item.urgency || "unknown")}</td>
+            <td><strong>${escapeHtml(item.hotBuyerScore)}</strong></td>
+            <td>${badge(item.hotBuyerTemperature || "unknown", tempClass)}</td>
+            <td>${badge(item.pipelineStage || "new")}</td>
+            <td>${escapeHtml(item.pendingActionCount || 0)}</td>
+            <td>${escapeHtml(item.urgentActionCount || 0)}</td>
+            <td>${actionBadges || badge("review_manually")}</td>
+            <td>${safety}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadHotBuyerDashboard() {
+      const summaryResponse = await fetch("/api/hot-buyers/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalHotBuyerCandidates").textContent = summary.totalHotBuyerCandidates || 0;
+      document.getElementById("hotBuyers").textContent = summary.hotBuyers || 0;
+      document.getElementById("warmBuyers").textContent = summary.warmBuyers || 0;
+      document.getElementById("urgentHotBuyers").textContent = summary.urgentHotBuyers || 0;
+      document.getElementById("pendingActionTotal").textContent = summary.pendingActionTotal || 0;
+
+      const listResponse = await fetch("/api/hot-buyers");
+      const listData = await listResponse.json();
+      allHotBuyers = Array.isArray(listData.hotBuyers) ? listData.hotBuyers : [];
+
+      renderHotBuyers();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderHotBuyers);
+    document.getElementById("temperatureFilter").addEventListener("change", renderHotBuyers);
+    document.getElementById("actionFilter").addEventListener("change", renderHotBuyers);
+
+    loadHotBuyerDashboard().catch(error => {
+      document.getElementById("hotBuyerRows").innerHTML =
+        `<tr><td colspan="15">Hot buyer dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

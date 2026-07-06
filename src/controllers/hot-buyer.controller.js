@@ -1,4 +1,20 @@
+const fs = require("fs");
+const path = require("path");
 const hotBuyerService = require("../services/hot-buyer.service");
+
+function hotBuyerDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "hot-buyer-command-center.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Hot Buyer Command Center dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function hotBuyerPreviewController(req, res, sendJson) {
   return sendJson(res, 200, {
@@ -30,6 +46,7 @@ function hotBuyerSummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  hotBuyerDashboardController,
   hotBuyerPreviewController,
   listHotBuyersController,
   hotBuyerSummaryController
