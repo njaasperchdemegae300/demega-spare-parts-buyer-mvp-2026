@@ -14,6 +14,7 @@ const quoteEligibilityService = require("../services/quote-eligibility.service")
 const manualQuoteDraftService = require("../services/manual-quote-draft.service");
 const manualQuoteCopyService = require("../services/manual-quote-copy.service");
 const manualQuoteSentConfirmationService = require("../services/manual-quote-sent-confirmation.service");
+const buyerReplyService = require("../services/buyer-reply.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -29,7 +30,8 @@ const modules = [
   { name: "Safe Final Quote Eligibility Gate", path: "/quote-eligibility", purpose: "Final quote eligibility visibility. Eligibility-check only; no automatic quote, no price, no WhatsApp sending." },
   { name: "Safe Manual Quote Draft Builder", path: "/manual-quote-draft", purpose: "Safe manual quote draft visibility. Draft-only; price may appear inside draft after eligibility but is not sent to buyer." },
   { name: "Manual Quote Copy Button", path: "/manual-quote-copy", purpose: "Prepared quote copy text visibility. Manual select only; no clipboard automation, no WhatsApp sending, no sent marking." },
-  { name: "Manual Quote Sent Confirmation Gate", path: "/manual-quote-sent-confirmation", purpose: "Manual sent confirmation visibility. Confirmation record only; system does not send buyer message." }
+  { name: "Manual Quote Sent Confirmation Gate", path: "/manual-quote-sent-confirmation", purpose: "Manual sent confirmation visibility. Confirmation record only; system does not send buyer message." },
+  { name: "Buyer Reply Tracking", path: "/buyer-reply", purpose: "Manual buyer reply visibility. Manual-entry only; no WhatsApp reading, private scraping, hidden harvesting, auto-reply, or auto-send." }
 ];
 
 function safeRead(factory, fallback) {
@@ -67,12 +69,17 @@ function getSafety() {
     manualQuoteDraftBuilderOnly: true,
     manualQuoteCopyFoundationOnly: true,
     manualQuoteSentConfirmationOnly: true,
+    buyerReplyTrackingOnly: true,
     preparesCopyTextOnly: true,
     confirmationRecordOnly: true,
     requiresPreparedCopyAction: true,
     requiresManualAdminConfirmation: true,
     requiresManualReviewCompleted: true,
+    requiresManualSentConfirmation: true,
+    adminObservedReplyRequired: true,
     systemDoesNotSendMessage: true,
+    systemDoesNotReadBuyerMessages: true,
+    manualEntryOnly: true,
     serverDoesNotAccessClipboard: true,
     browserAutoCopy: false,
     copiedToClipboardByBrowser: false,
@@ -89,6 +96,12 @@ function getSafety() {
     sentToBuyerBySystem: false,
     quoteMarkedSentBySystem: false,
     priceSentBySystem: false,
+    autoReadWhatsApp: false,
+    readBuyerMessagesAutomatically: false,
+    scrapeWhatsappMessages: false,
+    privateMessageScraping: false,
+    hiddenDataHarvesting: false,
+    autoReplyToBuyer: false,
     autoSendWhatsApp: false,
     autoOpenBrowser: false,
     automaticBuyerMessage: false,
@@ -131,6 +144,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const manualQuoteDraft = safeRead(() => manualQuoteDraftService.getManualQuoteDraftSummary(), {});
   const manualQuoteCopy = safeRead(() => manualQuoteCopyService.getManualQuoteCopySummary(), {});
   const manualQuoteSentConfirmation = safeRead(() => manualQuoteSentConfirmationService.getManualQuoteSentConfirmationSummary(), {});
+  const buyerReply = safeRead(() => buyerReplyService.getBuyerReplySummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -153,7 +167,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       quoteEligibility,
       manualQuoteDraft,
       manualQuoteCopy,
-      manualQuoteSentConfirmation
+      manualQuoteSentConfirmation,
+      buyerReply
     },
     safety: getSafety()
   });

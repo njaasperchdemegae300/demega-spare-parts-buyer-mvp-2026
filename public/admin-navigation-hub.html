@@ -29,7 +29,7 @@
 <body>
   <header>
     <h1>Demega Admin Navigation Hub</h1>
-    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, manual WhatsApp links, quote eligibility, manual quote copy, and manual sent confirmation.</p>
+    <p>One safe command center for buyer leads, inventory, quote drafts, pipeline, follow-ups, action queue, hot buyers, quote eligibility, manual sent confirmation, and buyer reply tracking.</p>
   </header>
 
   <main>
@@ -40,22 +40,23 @@
       <span class="badge">NO AUTO QUOTE</span>
       <span class="badge">NO AUTO PIPELINE MOVE</span>
       <span class="badge">NO AUTO BROWSER OPEN</span>
-      <span class="badge">NO SERVER CLIPBOARD ACCESS</span>
-      <span class="badge">NO BROWSER AUTO-COPY</span>
-      <span class="badge">MANUAL SENT CONFIRMATION IS RECORD ONLY</span>
-      <span class="badge">SYSTEM DOES NOT SEND BUYER MESSAGE</span>
-      <span class="badge warn">ADMIN MANUAL SENT CONFIRMATION REQUIRED AFTER HUMAN REVIEW</span>
+      <span class="badge">NO WHATSAPP MESSAGE READING</span>
+      <span class="badge">NO PRIVATE MESSAGE SCRAPING</span>
+      <span class="badge">NO HIDDEN DATA HARVESTING</span>
+      <span class="badge">NO AUTO REPLY</span>
+      <span class="badge">BUYER REPLY TRACKING IS MANUAL ENTRY ONLY</span>
+      <span class="badge warn">ADMIN MUST MANUALLY OBSERVE BUYER REPLY OUTSIDE THE SYSTEM</span>
       <ul>
         <li>This hub is navigation and visibility only.</li>
         <li>It does not send WhatsApp messages.</li>
         <li>It does not open WhatsApp automatically.</li>
         <li>It does not message buyers automatically.</li>
-        <li>It does not create or send quotes automatically.</li>
-        <li>It does not access the clipboard.</li>
-        <li>It does not auto-copy prepared quote text.</li>
-        <li>It does not mark quote as sent by system.</li>
+        <li>It does not read WhatsApp messages.</li>
+        <li>It does not scrape private messages.</li>
+        <li>It does not harvest hidden data.</li>
+        <li>It does not auto-reply to buyers.</li>
         <li>It does not move buyer pipeline stages automatically.</li>
-        <li>Manual sent confirmation only records what admin already did outside the system after review.</li>
+        <li>Buyer reply tracking only displays replies manually entered by admin.</li>
       </ul>
     </section>
 
@@ -77,9 +78,12 @@
         <div class="metric"><h2>Manual Quote Drafts</h2><strong id="manualQuoteDrafts">0</strong></div>
         <div class="metric"><h2>Manual Quote Copy Actions</h2><strong id="manualQuoteCopyActions">0</strong></div>
         <div class="metric"><h2>Manual Sent Confirmations</h2><strong id="manualSentConfirmations">0</strong></div>
-        <div class="metric"><h2>Admin Manual Sent</h2><strong id="adminManualSentConfirmed">0</strong></div>
-        <div class="metric"><h2>Manual Review Completed</h2><strong id="manualReviewCompleted">0</strong></div>
-        <div class="metric"><h2>System Sent Count</h2><strong id="systemSentCount">0</strong></div>
+        <div class="metric"><h2>Buyer Replies</h2><strong id="buyerReplies">0</strong></div>
+        <div class="metric"><h2>Hot Replies</h2><strong id="hotReplies">0</strong></div>
+        <div class="metric"><h2>Manual Entry Replies</h2><strong id="manualEntryReplies">0</strong></div>
+        <div class="metric"><h2>System Read Count</h2><strong id="systemReadCount">0</strong></div>
+        <div class="metric"><h2>Scraping Count</h2><strong id="scrapingCount">0</strong></div>
+        <div class="metric"><h2>Auto Reply Count</h2><strong id="autoReplyCount">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -99,6 +103,7 @@
       <div class="card"><h2>Safe Manual Quote Draft Builder</h2><p>View safe manual quote drafts. Drafts are not sent to buyers and still require manual review.</p><a href="/manual-quote-draft">Open Manual Quote Draft Builder</a></div>
       <div class="card"><h2>Manual Quote Copy Button</h2><p>View prepared manual quote copy text. The button only selects text for human admin copy and does not auto-copy or send.</p><a href="/manual-quote-copy">Open Manual Quote Copy</a></div>
       <div class="card"><h2>Manual Quote Sent Confirmation Gate</h2><p>View manual sent confirmations. This only records that admin manually sent the copied quote outside the system after review.</p><a href="/manual-quote-sent-confirmation">Open Sent Confirmation Gate</a></div>
+      <div class="card"><h2>Buyer Reply Tracking</h2><p>View buyer replies manually observed and entered by admin. No WhatsApp reading, scraping, harvesting, auto-reply, or auto-send.</p><a href="/buyer-reply">Open Buyer Reply Tracking</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -128,9 +133,12 @@
       document.getElementById("manualQuoteDrafts").textContent = safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.totalManualQuoteDrafts);
       document.getElementById("manualQuoteCopyActions").textContent = safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.totalManualQuoteCopyActions);
       document.getElementById("manualSentConfirmations").textContent = safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.totalManualQuoteSentConfirmations);
-      document.getElementById("adminManualSentConfirmed").textContent = safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.adminManualSentConfirmedCount);
-      document.getElementById("manualReviewCompleted").textContent = safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.manualReviewCompletedCount);
-      document.getElementById("systemSentCount").textContent = safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.systemSentToBuyerCount);
+      document.getElementById("buyerReplies").textContent = safeNumber(metrics.buyerReply && metrics.buyerReply.totalBuyerReplies);
+      document.getElementById("hotReplies").textContent = safeNumber(metrics.buyerReply && metrics.buyerReply.hotReplyCount);
+      document.getElementById("manualEntryReplies").textContent = safeNumber(metrics.buyerReply && metrics.buyerReply.manualEntryOnlyCount);
+      document.getElementById("systemReadCount").textContent = safeNumber(metrics.buyerReply && metrics.buyerReply.replyReadBySystemCount);
+      document.getElementById("scrapingCount").textContent = safeNumber(metrics.buyerReply && metrics.buyerReply.scrapingCount);
+      document.getElementById("autoReplyCount").textContent = safeNumber(metrics.buyerReply && metrics.buyerReply.autoReplyToBuyerCount);
 
       document.getElementById("autoSendCount").textContent =
         safeNumber(metrics.quotes && metrics.quotes.autoSendWhatsAppCount) +
@@ -143,7 +151,8 @@
         safeNumber(metrics.quoteEligibility && metrics.quoteEligibility.autoSendWhatsAppCount) +
         safeNumber(metrics.manualQuoteDraft && metrics.manualQuoteDraft.autoSendWhatsAppCount) +
         safeNumber(metrics.manualQuoteCopy && metrics.manualQuoteCopy.autoSendWhatsAppCount) +
-        safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.autoSendWhatsAppCount);
+        safeNumber(metrics.manualQuoteSentConfirmation && metrics.manualQuoteSentConfirmation.autoSendWhatsAppCount) +
+        safeNumber(metrics.buyerReply && metrics.buyerReply.autoSendWhatsAppCount);
     }
 
     loadAdminMetrics().catch(() => {

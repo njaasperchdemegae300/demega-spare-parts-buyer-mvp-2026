@@ -1,35 +1,37 @@
 # LATEST STATUS
 
 Current Phase:
-Version 19B — Buyer Reply Tracking Dashboard Display
+Version 19C — Admin Hub Link Buyer Reply Tracking
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /buyer-reply
-- GET /buyer-replies
-- Buyer Reply Tracking dashboard
-- Buyer reply metric cards
-- Buyer reply table
-- Temperature filter
-- Reply type filter
-- Safety status filter
-- Reply text display
-- Next action display
-- Safety labels
+- Buyer Reply Tracking linked inside Admin Navigation Hub
+- Buyer Replies metric
+- Hot Replies metric
+- Manual Entry Replies metric
+- System Read Count metric
+- Scraping Count metric
+- Auto Reply Count metric
+- Buyer reply metrics inside admin metrics API
+- Buyer reply safety locks inside admin summary
+- Linked Buyer Reply Tracking dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays buyer replies manually entered by admin only
-- Dashboard does not read WhatsApp messages
-- Dashboard does not scrape private messages
-- Dashboard does not harvest hidden data
-- Dashboard does not auto-reply to buyer
-- Dashboard does not send WhatsApp
-- Dashboard does not open browser automatically
-- Dashboard does not move pipeline automatically
-- Manual sent confirmation is required before buyer reply tracking
-- Manual review is required before next action
+- Admin hub remains navigation and visibility only
+- Metrics API is read-only
+- Buyer Reply Tracking remains manual-entry only
+- Manual sent confirmation is required
+- Admin observed reply is required
+- Admin hub does not read WhatsApp messages
+- Admin hub does not scrape private messages
+- Admin hub does not harvest hidden data
+- Admin hub does not auto-reply to buyer
+- Admin hub does not send WhatsApp
+- Admin hub does not open browser automatically
+- Admin hub does not move pipeline automatically
+- Manual review remains required
 
 Next Phase:
-Version 19C — Admin Hub Link Buyer Reply Tracking
+Version 20A — Buyer Reply Follow-Up Action Gate Foundation

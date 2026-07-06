@@ -791,3 +791,48 @@ Create safe buyer reply tracking after manual quote sent confirmation. This reco
 
 ## Next Phase After Approval
 Version 19B — Buyer Reply Tracking Dashboard Display
+
+# Version 19C — Admin Hub Link Buyer Reply Tracking
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect Buyer Reply Tracking into the polished Admin Navigation Hub and Live Business Snapshot.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /buyer-reply
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/buyer-reply/summary
+
+## Features
+- Buyer Reply Tracking card in Admin Hub
+- Buyer Replies metric
+- Hot Replies metric
+- Manual Entry Replies metric
+- System Read Count metric
+- Scraping Count metric
+- Auto Reply Count metric
+- Buyer reply metrics inside admin metrics API
+- Buyer reply safety locks inside admin summary
+
+## Safety Rules
+- Navigation and visibility only
+- Metrics API is read-only
+- Buyer Reply Tracking is manual-entry only
+- Manual sent confirmation is required
+- Admin observed reply is required
+- No WhatsApp message reading
+- No private message scraping
+- No hidden data harvesting
+- No auto-reply
+- No WhatsApp auto-send
+- No automatic browser opening
+- No automatic pipeline movement
+- Manual review remains required
+
+## Next Phase After Approval
+Version 20A — Buyer Reply Follow-Up Action Gate Foundation
