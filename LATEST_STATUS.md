@@ -1,34 +1,32 @@
 # LATEST STATUS
 
 Current Phase:
-Version 32B — Controlled Buyer-Gate Manual Stock Check Dashboard Display
+Version 32C — Admin Hub Link Controlled Buyer-Gate Manual Stock Check
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /controlled-buyer-gate-manual-stock-check
-- GET /controlled-buyer-gate-manual-stock-checks
-- Manual Stock Check dashboard
-- Total stock checks metric
-- Completed checks metric
-- Stock available metric
-- Stock not available metric
-- Supplier confirmation metric
-- Latest stock check status metric
-- Latest stock decision metric
-- Latest source metric
-- Manual stock check table
-- Decision filter
-- Safety filter
+- Manual Stock Check linked inside Admin Navigation Hub
+- Manual Stock Checks metric
+- Completed Stock Checks metric
+- Stock Available metric
+- Stock Not Available metric
+- Supplier Confirmation metric
+- Latest Stock Status metric
+- Latest Stock Decision metric
+- Latest Stock Source metric
+- Manual Stock Check metrics inside Admin Hub metrics API
+- Manual Stock Check safety locks inside Admin Hub summary
+- Linked Manual Stock Check dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays manual stock check records only
-- Dashboard is read-only
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
 - Manual stock check gate only
 - Manual stock check record only
 - Controlled stock check only
-- Stock status is confirmed manually
+- Stock status confirmed manually
 - Manual stock check does not contact buyer
 - Manual stock check does not prepare quote
 - Quote remains blocked until compatibility confirmation
@@ -46,5 +44,11 @@ Safety Confirmed:
 - No pipeline movement
 - Manual compatibility check required next
 
+Business Readiness Confirmed:
+- Admin Hub now exposes Manual Stock Check metrics
+- Admin Hub now links directly to Manual Stock Check dashboard
+- Controlled inbound leads now require visible stock confirmation before compatibility check
+- Next required build is manual compatibility check gate before quote preparation
+
 Next Phase:
-Version 32C — Admin Hub Link Controlled Buyer-Gate Manual Stock Check
+Version 33A — Controlled Buyer-Gate Manual Compatibility Check Gate Foundation

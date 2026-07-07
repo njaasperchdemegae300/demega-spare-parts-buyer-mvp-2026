@@ -27,6 +27,7 @@ const controlledBuyerGateManualActivationApprovalService = require("../services/
 const controlledBuyerGateActivationExecutionService = require("../services/controlled-buyer-gate-activation-execution.service");
 const controlledBuyerGateLeadSlotEnforcementService = require("../services/controlled-buyer-gate-lead-slot-enforcement.service");
 const controlledBuyerGateManualLeadReviewService = require("../services/controlled-buyer-gate-manual-lead-review.service");
+const controlledBuyerGateManualStockCheckService = require("../services/controlled-buyer-gate-manual-stock-check.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -56,7 +57,8 @@ const modules = [
   { name: "Controlled Buyer-Gate Manual Activation Approval", path: "/controlled-buyer-gate-manual-activation-approval", purpose: "Read-only manual activation approval dashboard. Approval is not activation; buyer gate remains closed, live traffic remains inactive, no buyer is contacted, no WhatsApp is sent/read, no scraping, no inventory/accounting/sale/pipeline mutation." },
   { name: "Controlled Buyer-Gate Activation Execution", path: "/controlled-buyer-gate-activation-execution", purpose: "Read-only controlled activation execution dashboard. Shows controlled 15-lead manual inbound gate only; no outbound traffic, no paid ads, no buyer auto-contact, no WhatsApp send/read, no scraping, no inventory/accounting/sale/pipeline mutation." },
   { name: "Controlled Buyer-Gate Lead-Slot Enforcement", path: "/controlled-buyer-gate-lead-slot-enforcement", purpose: "Read-only controlled lead-slot dashboard. Shows inbound buyer-initiated lead slots, 15-lead limit, remaining slots, and limit status. No buyer contact, no WhatsApp send/read, no scraping, no quote, no inventory/accounting/sale/pipeline mutation." },
-  { name: "Controlled Buyer-Gate Manual Lead Review", path: "/controlled-buyer-gate-manual-lead-review", purpose: "Read-only manual lead review dashboard. Shows accept/reject review decisions before buyer contact or quote preparation. No WhatsApp send/read, no scraping, no inventory/accounting/sale/pipeline mutation." }];
+  { name: "Controlled Buyer-Gate Manual Lead Review", path: "/controlled-buyer-gate-manual-lead-review", purpose: "Read-only manual lead review dashboard. Shows accept/reject review decisions before buyer contact or quote preparation. No WhatsApp send/read, no scraping, no inventory/accounting/sale/pipeline mutation." },
+  { name: "Controlled Buyer-Gate Manual Stock Check", path: "/controlled-buyer-gate-manual-stock-check", purpose: "Read-only manual stock check dashboard. Shows manually confirmed stock decisions before compatibility check or quote preparation. No buyer contact, no quote, no WhatsApp send/read, no scraping, no inventory mutation, no accounting, no sale closing, and no pipeline movement." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -107,6 +109,7 @@ function getSafety() {
     controlledManualInboundOnly: true,
     buyerGateOpenForManualInboundOnly: true,
     approvedForManualInboundLeadAcceptanceOnly: true,
+
     controlledBuyerGateLeadSlotEnforcementOnly: true,
     leadSlotEnforcementOnly: true,
     controlledLeadSlotOnly: true,
@@ -124,6 +127,18 @@ function getSafety() {
     acceptRejectDecisionOnly: true,
     acceptedForManualStockCheckOnly: true,
     rejectedAsNotReadyOnly: true,
+
+    controlledBuyerGateManualStockCheckOnly: true,
+    manualStockCheckGateOnly: true,
+    stockCheckRecordOnly: true,
+    controlledStockCheckOnly: true,
+    manualStockStatusOnly: true,
+    stockCheckCompletedOnly: true,
+    stockDecisionRecordOnly: true,
+    stockConfirmedManuallyOnly: true,
+    stockConfirmedAvailableOnly: true,
+    stockNotAvailableOnly: true,
+    stockNeedsSupplierConfirmationOnly: true,
 
     leadLimitOnly: true,
     leadLimit: 15,
@@ -160,10 +175,13 @@ function getSafety() {
     manualReviewRequiredBeforeAnyBuyerContact: true,
     inboundBuyerInitiatedContactRequired: true,
 
-    manualStockCheckRequiredNext: true,
+    manualStockCheckRequired: true,
+    manualStockCheckCompletedOnly: true,
+    manualCompatibilityCheckRequiredNext: true,
     manualCompatibilityCheckRequiredLater: true,
-    stockConfirmationRequiredBeforeQuote: true,
     compatibilityConfirmationRequiredBeforeQuote: true,
+    stockConfirmationRequiredBeforeQuote: true,
+    quoteBlockedUntilCompatibility: true,
 
     hotBuyerRankingReadOnly: true,
     whatsappManualOpenOnly: true,
@@ -191,27 +209,6 @@ function getSafety() {
     accountingEntryPreparedOnly: true,
     manualFinalBusinessReviewOnly: true,
     finalBusinessRecordPreparedOnly: true,
-
-    requiresPreparedCopyAction: true,
-    requiresManualAdminConfirmation: true,
-    requiresManualReviewCompleted: true,
-    requiresManualSentConfirmation: true,
-    requiresBuyerReply: true,
-    requiresAdminReviewedBuyerReply: true,
-    requiresManualActionApproval: true,
-    requiresFollowupAction: true,
-    requiresAdminCompletedManualAction: true,
-    requiresManualOutcomeApproval: true,
-    requiresManualDealOutcome: true,
-    requiresAdminReviewedDealOutcome: true,
-    requiresManualStockMovementReviewApproval: true,
-    requiresManualStockMovementReview: true,
-    requiresAdminReviewedStockMovement: true,
-    requiresManualAccountingReviewApproval: true,
-    requiresManualAccountingReview: true,
-    requiresAdminReviewedAccounting: true,
-    requiresManualFinalBusinessReviewApproval: true,
-    adminObservedReplyRequired: true,
 
     preparesCopyTextOnly: true,
     confirmationRecordOnly: true,
@@ -247,14 +244,35 @@ function getSafety() {
     systemDoesNotRecordRevenue: true,
     systemDoesNotCreateFinalBusinessRecord: true,
 
+    inventoryUpdated: false,
+    stockReserved: false,
+    stockReduced: false,
+    stockReleased: false,
+    autoReserveStock: false,
+    autoReduceStock: false,
+    autoReleaseStock: false,
+    autoUpdateInventory: false,
+    updateInventoryAutomatically: false,
+    reduceStockAutomatically: false,
+    reserveStockAutomatically: false,
+    releaseStockAutomatically: false,
+    autoChangeStockQuantity: false,
+    changeStockAutomatically: false,
+    inventoryChangedBySystem: false,
+    stockReducedBySystem: false,
+    stockReservedBySystem: false,
+    stockReleasedBySystem: false,
+    autoCreateInventoryEvent: false,
+    autoCreateStockLedgerEntry: false,
+
     serverDoesNotAccessClipboard: true,
     browserAutoCopy: false,
     copiedToClipboardByBrowser: false,
 
     quotePrepared: false,
+    quoteAllowedAtStockCheckGate: false,
     quoteAllowedAtReviewGate: false,
     quoteAllowedAtSlotGate: false,
-    quoteAllowedAtStockGate: false,
     autoCreateQuote: false,
     autoCreateQuoteAndSend: false,
     quoteBeforeStockConfirmation: false,
@@ -299,23 +317,6 @@ function getSafety() {
 
     collectPaymentAutomatically: false,
     verifyPaymentAutomatically: false,
-    autoReserveStock: false,
-    autoReduceStock: false,
-    autoReleaseStock: false,
-    autoUpdateInventory: false,
-    updateInventoryAutomatically: false,
-    reduceStockAutomatically: false,
-    reserveStockAutomatically: false,
-    releaseStockAutomatically: false,
-    autoChangeStockQuantity: false,
-    changeStockAutomatically: false,
-    inventoryChangedBySystem: false,
-    stockReducedBySystem: false,
-    stockReservedBySystem: false,
-    stockReleasedBySystem: false,
-    autoCreateInventoryEvent: false,
-    autoCreateStockLedgerEntry: false,
-
     autoCreateAccountingEntry: false,
     createAccountingEntryAutomatically: false,
     accountingEntryCreatedBySystem: false,
@@ -398,6 +399,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const controlledBuyerGateActivationExecution = safeRead(() => controlledBuyerGateActivationExecutionService.getActivationExecutionSummary(), {});
   const controlledBuyerGateLeadSlotEnforcement = safeRead(() => controlledBuyerGateLeadSlotEnforcementService.getLeadSlotSummary(), {});
   const controlledBuyerGateManualLeadReview = safeRead(() => controlledBuyerGateManualLeadReviewService.getManualLeadReviewSummary(), {});
+  const controlledBuyerGateManualStockCheck = safeRead(() => controlledBuyerGateManualStockCheckService.getManualStockCheckSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -433,7 +435,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       controlledBuyerGateManualActivationApproval,
       controlledBuyerGateActivationExecution,
       controlledBuyerGateLeadSlotEnforcement,
-      controlledBuyerGateManualLeadReview
+      controlledBuyerGateManualLeadReview,
+      controlledBuyerGateManualStockCheck
     },
     safety: getSafety()
   });

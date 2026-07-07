@@ -95,6 +95,12 @@
       <span class="badge">REVIEW RECORD ONLY</span>
       <span class="badge">NO BUYER CONTACT FROM REVIEW GATE</span>
       <span class="badge">NO QUOTE PREPARED AT REVIEW GATE</span>
+      <span class="badge">MANUAL STOCK CHECK DASHBOARD ONLY</span>
+      <span class="badge">STOCK CHECK RECORD ONLY</span>
+      <span class="badge">NO BUYER CONTACT FROM STOCK GATE</span>
+      <span class="badge">NO QUOTE PREPARED AT STOCK GATE</span>
+      <span class="badge">NO INVENTORY MUTATION</span>
+      <span class="badge">QUOTE BLOCKED UNTIL COMPATIBILITY</span>
       <span class="badge">ACCEPT MOVES TO MANUAL STOCK CHECK ONLY</span>
       <span class="badge">REJECT RECORDS NOT-READY ONLY</span>
       <span class="badge">NO WHATSAPP AUTO-READ</span>
@@ -161,6 +167,12 @@
         <li>Manual lead review records review decisions only.</li>
         <li>Manual review does not contact buyers.</li>
         <li>Manual review does not prepare quote.</li>
+        <li>Manual stock check records stock status only.</li>
+        <li>Manual stock check does not contact buyers.</li>
+        <li>Manual stock check does not prepare quote.</li>
+        <li>Manual stock check does not update, reserve, or reduce stock.</li>
+        <li>Quote remains blocked until compatibility confirmation.</li>
+        <li>Manual compatibility check is required next.</li>
         <li>Accepted review moves only toward manual stock check next.</li>
         <li>Rejected review records not-ready status only.</li>
       </ul>
@@ -269,6 +281,14 @@
         <div class="metric"><h2>Latest Review Decision</h2><strong id="manualLeadReviewLatestDecision">NONE</strong></div>
         <div class="metric"><h2>Latest Review Slot</h2><strong id="manualLeadReviewLatestSlot">0</strong></div>
         <div class="metric"><h2>Latest Review Source</h2><strong id="manualLeadReviewLatestSource">NONE</strong></div>
+        <div class="metric"><h2>Manual Stock Checks</h2><strong id="manualStockCheckTotal">0</strong></div>
+        <div class="metric"><h2>Completed Stock Checks</h2><strong id="manualStockCheckCompleted">0</strong></div>
+        <div class="metric"><h2>Stock Available</h2><strong id="manualStockAvailable">0</strong></div>
+        <div class="metric"><h2>Stock Not Available</h2><strong id="manualStockNotAvailable">0</strong></div>
+        <div class="metric"><h2>Supplier Confirmation</h2><strong id="manualStockSupplierConfirm">0</strong></div>
+        <div class="metric"><h2>Latest Stock Status</h2><strong id="manualStockLatestStatus">NO_STOCK_CHECK</strong></div>
+        <div class="metric"><h2>Latest Stock Decision</h2><strong id="manualStockLatestDecision">NONE</strong></div>
+        <div class="metric"><h2>Latest Stock Source</h2><strong id="manualStockLatestSource">NONE</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -308,6 +328,8 @@
       <div class="card"><h2>Controlled Buyer-Gate Lead-Slot Enforcement</h2><p>View controlled buyer-initiated inbound lead slots, accepted slots, remaining slots, and 15-lead limit status. Read-only; no buyer contact, no WhatsApp auto-send/read, no scraping, no quote, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-lead-slot-enforcement">Open Lead-Slot Enforcement</a></div>
 
       <div class="card"><h2>Controlled Buyer-Gate Manual Lead Review</h2><p>View controlled manual lead review decisions before buyer contact. Read-only; no buyer contact, no WhatsApp auto-send/read, no scraping, no quote preparation, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-lead-review">Open Manual Lead Review</a></div>
+
+      <div class="card"><h2>Controlled Buyer-Gate Manual Stock Check</h2><p>View controlled manual stock check decisions before compatibility check or quote preparation. Read-only; no buyer contact, no quote, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-stock-check">Open Manual Stock Check</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -592,6 +614,35 @@
     }
 
     loadManualLeadReviewHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadManualStockCheckHubMetrics() {
+      try {
+        const response = await fetch("/api/controlled-buyer-gate-manual-stock-check/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("manualStockCheckTotal", summary.totalStockChecks || 0);
+        setText("manualStockCheckCompleted", summary.completedStockCheckCount || 0);
+        setText("manualStockAvailable", summary.stockConfirmedAvailableCount || 0);
+        setText("manualStockNotAvailable", summary.stockNotAvailableCount || 0);
+        setText("manualStockSupplierConfirm", summary.stockNeedsSupplierConfirmationCount || 0);
+        setText("manualStockLatestStatus", summary.latestStockCheckStatus || "NO_STOCK_CHECK");
+        setText("manualStockLatestDecision", summary.latestStockDecision || "NONE");
+        setText("manualStockLatestSource", summary.latestSource || "NONE");
+      } catch (error) {
+        const element = document.getElementById("manualStockLatestStatus");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadManualStockCheckHubMetrics();
   </script>
 
 </body>
