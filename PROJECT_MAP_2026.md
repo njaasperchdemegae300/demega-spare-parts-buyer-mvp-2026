@@ -1590,3 +1590,61 @@ Create the controlled buyer-gate activation execution gate foundation. This acti
 
 ## Next Phase After Approval
 Version 29B — Controlled Buyer-Gate Activation Execution Dashboard Display
+
+# Version 29C — Admin Hub Link Controlled Buyer-Gate Activation Execution
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect Controlled Buyer-Gate Activation Execution into Admin Navigation Hub so manual inbound activation status and lead-slot status are visible before real inbound lead counting.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /controlled-buyer-gate-activation-execution
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/controlled-buyer-gate-activation-execution/summary
+
+## Features
+- Controlled Buyer-Gate Activation Execution card in Admin Hub
+- Activation Executions metric
+- Latest Activation Status metric
+- Activation Lead Limit metric
+- Activation Source metric
+- Remaining Lead Slots metric
+- Manual Inbound Gates metric
+- Outbound Started metric
+- Auto Contact Count metric
+- Activation Execution metrics inside Admin Hub metrics API
+- Activation Execution safety locks inside Admin Hub summary
+- Linked Activation Execution dashboard reachable
+
+## Safety Rules
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
+- Controlled 15-lead manual inbound gate only
+- Source remains WhatsApp click-to-chat inbound
+- Accepted lead count starts at 0
+- Remaining lead slots start at 15
+- No outbound traffic automatically started
+- No paid ads automatically started
+- No lead form automatically published
+- No real buyer automatically contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Lead-slot enforcement gate required next
+- Manual review required before any buyer contact
+
+## Next Phase After Approval
+Version 30A — Controlled Buyer-Gate Lead-Slot Enforcement Foundation

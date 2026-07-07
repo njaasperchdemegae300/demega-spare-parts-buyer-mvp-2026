@@ -24,6 +24,7 @@ const assistantSalesAgentTestLabService = require("../services/assistant-sales-a
 const internalBuyerGateReadinessGuardianService = require("../services/internal-buyer-gate-readiness-guardian.service");
 const controlledBuyerGateTestPlanService = require("../services/controlled-buyer-gate-test-plan.service");
 const controlledBuyerGateManualActivationApprovalService = require("../services/controlled-buyer-gate-manual-activation-approval.service");
+const controlledBuyerGateActivationExecutionService = require("../services/controlled-buyer-gate-activation-execution.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -50,7 +51,8 @@ const modules = [
   { name: "Assistant Sales Agent Test Lab", path: "/assistant-sales-agent-test-lab", purpose: "Internal simulation-only sales-agent behavior testing before live buyer traffic. No live buyer contact, no WhatsApp auto-send, no WhatsApp auto-read, no scraping, no hidden harvesting, no quote before stock and compatibility gates." },
   { name: "Internal Buyer-Gate Readiness Guardian", path: "/internal-buyer-gate-readiness", purpose: "Read-only readiness guardian before live buyer traffic. Checks source-of-truth readiness and Assistant Sales Agent readiness. Does not open buyer gate, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." },
   { name: "Controlled Buyer-Gate Test Plan", path: "/controlled-buyer-gate-test-plan", purpose: "Read-only controlled 15-lead buyer-gate test plan display. Shows plan readiness only; does not open buyer gate, activate live traffic, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." },
-  { name: "Controlled Buyer-Gate Manual Activation Approval", path: "/controlled-buyer-gate-manual-activation-approval", purpose: "Read-only manual activation approval dashboard. Approval is not activation; buyer gate remains closed, live traffic remains inactive, no buyer is contacted, no WhatsApp is sent/read, no scraping, no inventory/accounting/sale/pipeline mutation." }];
+  { name: "Controlled Buyer-Gate Manual Activation Approval", path: "/controlled-buyer-gate-manual-activation-approval", purpose: "Read-only manual activation approval dashboard. Approval is not activation; buyer gate remains closed, live traffic remains inactive, no buyer is contacted, no WhatsApp is sent/read, no scraping, no inventory/accounting/sale/pipeline mutation." },
+  { name: "Controlled Buyer-Gate Activation Execution", path: "/controlled-buyer-gate-activation-execution", purpose: "Read-only controlled activation execution dashboard. Shows controlled 15-lead manual inbound gate only; no outbound traffic, no paid ads, no buyer auto-contact, no WhatsApp send/read, no scraping, no inventory/accounting/sale/pipeline mutation." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -94,33 +96,53 @@ function getSafety() {
     manualActivationApprovalGateOnly: true,
     manualApprovalRecordedOnly: true,
     approvalIsNotActivation: true,
-    approvedForControlledPreparationOnly: true,
-    approvedForLiveActivationExecution: false,
-    activationExecuted: false,
+    controlledBuyerGateActivationExecutionOnly: true,
+    activationExecutionGateOnly: true,
+    controlledGateActiveManualInboundOnly: true,
+    controlledManualInboundOnly: true,
+    buyerGateOpenForManualInboundOnly: true,
+    approvedForManualInboundLeadAcceptanceOnly: true,
     simulationOnly: true,
 
-    noLiveBuyerGateOpened: true,
+    leadLimitOnly: true,
+    leadLimit: 15,
+    acceptedLeadCountStartsAtZero: true,
+    acceptedLeadCount: 0,
+    remainingLeadSlotsStartAtFifteen: true,
+    remainingLeadSlots: 15,
+    chosenFirstSource: "whatsapp_click_to_chat_inbound",
+    testSource: "whatsapp_click_to_chat_inbound",
+
+    noLiveBuyerGateOpened: false,
     liveBuyerGateOpened: false,
-    buyerGateOpened: false,
+    buyerGateOpened: true,
+    buyerGateOpenedForManualInboundOnly: true,
     openLiveBuyerGate: false,
     activateBuyerGate: false,
     enableLiveTraffic: false,
     startLiveBuyerTraffic: false,
     liveTrafficActivated: false,
+    liveTrafficPushStarted: false,
+    outboundTrafficStarted: false,
+    startOutboundTraffic: false,
+    startPaidAdsAutomatically: false,
+    publishLeadFormAutomatically: false,
 
     noRealBuyerContacted: true,
     realBuyerContacted: false,
+    autoContactBuyer: false,
     contactRealBuyerAutomatically: false,
     contactBuyerAutomatically: false,
 
-    leadLimitOnly: true,
-    leadLimit: 15,
     manualReviewRequired: true,
     manualReplyOnly: true,
     noAutoSend: true,
     noSpam: true,
     noUnsolicitedWhatsApp: true,
-    chosenFirstSource: "whatsapp_click_to_chat_inbound",
+    requiresLeadSlotEnforcementNext: true,
+    leadSlotEnforcementRequiredNext: true,
+    manualReviewRequiredBeforeAnyBuyerContact: true,
+    inboundBuyerInitiatedContactRequired: true,
 
     hotBuyerRankingReadOnly: true,
     whatsappManualOpenOnly: true,
@@ -180,9 +202,11 @@ function getSafety() {
     systemDoesNotSendMessage: true,
     systemDoesNotSendWhatsApp: true,
     systemDoesNotReadBuyerMessages: true,
-    systemDoesNotExecuteAction: true,
+    systemDoesNotExecuteBuyerContact: true,
     systemDoesNotAutoReply: true,
-    systemDoesNotOpenBrowser: true,
+    systemDoesNotStartOutboundTraffic: true,
+    systemDoesNotStartPaidAds: true,
+    systemDoesNotPublishLeadForm: true,
     systemDoesNotMovePipeline: true,
     systemDoesNotCloseSale: true,
     systemDoesNotHandlePayment: true,
@@ -201,9 +225,6 @@ function getSafety() {
     systemDoesNotCreateInvoice: true,
     systemDoesNotRecordRevenue: true,
     systemDoesNotCreateFinalBusinessRecord: true,
-    systemDoesNotOpenLiveBuyerGate: true,
-    systemDoesNotActivateLiveTraffic: true,
-    systemDoesNotContactRealBuyer: true,
 
     serverDoesNotAccessClipboard: true,
     browserAutoCopy: false,
@@ -212,8 +233,6 @@ function getSafety() {
     quoteAllowedAtStockGate: false,
     quoteBeforeStockConfirmation: false,
     quoteBeforeCompatibilityConfirmation: false,
-    priceAllowedInDraftAfterEligibility: true,
-    priceMayAppearInCopyTextAfterEligibility: true,
     priceSentToBuyer: false,
     quoteAmountSentToBuyer: false,
     priceIncluded: false,
@@ -230,6 +249,7 @@ function getSafety() {
     automaticBuyerMessage: false,
     autoSendWhatsApp: false,
     sendWhatsApp: false,
+    broadcastWhatsApp: false,
     autoOpenBrowser: false,
     autoCreateQuote: false,
     autoCreateQuoteAndSend: false,
@@ -296,8 +316,6 @@ function getSafety() {
     manualReviewRequiredBeforeLiveBuyerGate: true,
     manualApprovalRequiredBeforeActivation: true,
     manualApprovalRequiredToOpenBuyerGateLater: true,
-    separateActivationExecutionGateRequiredLater: true,
-    manualReviewRequiredBeforeAnyBuyerContact: true,
     manualReviewRequiredForAccounting: true,
     manualReviewRequiredForPipelineUpdate: true,
     manualReviewRequiredForStockUpdate: true,
@@ -353,6 +371,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const internalBuyerGateReadiness = safeRead(() => internalBuyerGateReadinessGuardianService.getInternalBuyerGateReadinessSummary(), {});
   const controlledBuyerGateTestPlan = safeRead(() => controlledBuyerGateTestPlanService.getControlledBuyerGateTestPlanSummary(), {});
   const controlledBuyerGateManualActivationApproval = safeRead(() => controlledBuyerGateManualActivationApprovalService.getManualActivationApprovalSummary(), {});
+  const controlledBuyerGateActivationExecution = safeRead(() => controlledBuyerGateActivationExecutionService.getActivationExecutionSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -385,7 +404,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       assistantSalesAgentTestLab,
       internalBuyerGateReadiness,
       controlledBuyerGateTestPlan,
-      controlledBuyerGateManualActivationApproval
+      controlledBuyerGateManualActivationApproval,
+      controlledBuyerGateActivationExecution
     },
     safety: getSafety()
   });

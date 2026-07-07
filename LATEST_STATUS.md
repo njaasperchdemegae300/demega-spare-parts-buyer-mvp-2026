@@ -1,30 +1,28 @@
 # LATEST STATUS
 
 Current Phase:
-Version 29B — Controlled Buyer-Gate Activation Execution Dashboard Display
+Version 29C — Admin Hub Link Controlled Buyer-Gate Activation Execution
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /controlled-buyer-gate-activation-execution
-- GET /controlled-buyer-gate-activation-executions
-- Activation Execution dashboard
-- Total executions metric
-- Latest activation status metric
-- Latest lead limit metric
-- Latest test source metric
-- Remaining lead slots metric
-- Manual inbound gate count metric
-- Outbound traffic started count metric
-- Auto contact count metric
-- Activation execution records table
-- Activation status filter
-- Safety filter
+- Controlled Buyer-Gate Activation Execution linked inside Admin Navigation Hub
+- Activation Executions metric
+- Latest Activation Status metric
+- Activation Lead Limit metric
+- Activation Source metric
+- Remaining Lead Slots metric
+- Manual Inbound Gates metric
+- Outbound Started metric
+- Auto Contact Count metric
+- Activation Execution metrics inside Admin Hub metrics API
+- Activation Execution safety locks inside Admin Hub summary
+- Linked Activation Execution dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays activation execution records only
-- Dashboard is read-only
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
 - Controlled 15-lead manual inbound gate only
 - Source remains WhatsApp click-to-chat inbound
 - Accepted lead count starts at 0
@@ -44,7 +42,14 @@ Safety Confirmed:
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
-- Lead-slot enforcement gate remains required next
+- Lead-slot enforcement gate required next
+- Manual review required before any buyer contact
+
+Business Readiness Confirmed:
+- Admin Hub now exposes Activation Execution metrics
+- Admin Hub now links directly to Activation Execution dashboard
+- Gate is active only for controlled manual inbound lead acceptance
+- Next required build is lead-slot enforcement before counting real inbound leads
 
 Next Phase:
-Version 29C — Admin Hub Link Controlled Buyer-Gate Activation Execution
+Version 30A — Controlled Buyer-Gate Lead-Slot Enforcement Foundation
