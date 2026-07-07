@@ -1,48 +1,50 @@
 # LATEST STATUS
 
 Current Phase:
-Version 25B — Assistant Sales Agent Readiness Test Lab Foundation
+Version 25C — Assistant Sales Agent Test Lab Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /api/assistant-sales-agent-test-lab/preview
-- POST /api/assistant-sales-agent-test-lab/run
-- GET /api/assistant-sales-agent-test-lab/runs
-- GET /api/assistant-sales-agent-test-lab/summary
-- Internal Assistant Sales Agent behavior simulation
-- Urgent confirmed buyer test
-- Compatibility-unknown buyer test
-- Stock-unknown buyer test
-- Bulk buyer qualification test
-- Lowball price checker test
-- Wrong-part / subpart risk test
-- Unsafe automation request blocking
-- Readiness summary
+- GET /assistant-sales-agent-test-lab
+- GET /assistant-sales-agent-test-runs
+- Assistant Sales Agent Test Lab dashboard
+- Test run metric cards
+- Latest verdict display
+- Passed/failed count display
+- Scenario table
+- Buyer type filter
+- Verdict filter
+- Safety status filter
+- Reply draft display
+- Test failure display
+- Safety labels
 
 Safety Confirmed:
-- Assistant Sales Agent Test Lab is simulation-only
-- No live buyer gate opened
-- No real buyer contacted
-- No WhatsApp auto-send
-- No WhatsApp auto-read
-- No private message scraping
-- No hidden data harvesting
-- No quote before stock confirmation
-- No quote before compatibility confirmation
-- No inventory update
-- No accounting entry creation
-- No sale closing
-- No pipeline movement
-- Manual review is required before real buyer traffic
+- Dashboard displays Assistant Sales Agent readiness runs only
+- Dashboard is read-only
+- Dashboard does not open live buyer gate
+- Dashboard does not contact real buyers
+- Dashboard does not send WhatsApp
+- Dashboard does not read WhatsApp
+- Dashboard does not scrape private messages
+- Dashboard does not harvest hidden data
+- Dashboard does not quote before stock confirmation
+- Dashboard does not quote before compatibility confirmation
+- Dashboard does not update inventory
+- Dashboard does not create accounting entries
+- Dashboard does not close sales
+- Dashboard does not move pipeline
+- Manual review remains required before real buyer traffic
 
-Business Readiness Confirmed:
-- The agent can distinguish serious buyer, lowball price checker, bulk buyer, stock-check-needed buyer, compatibility-needed buyer, and wrong-part-risk buyer
-- The agent prepares safe reply drafts only
-- The agent does not contact buyers
-- The agent does not open live traffic
-- The agent does not pretend incomplete stock or compatibility is ready
+Business Readiness Display Confirmed:
+- Dashboard displays readiness verdict
+- Dashboard displays passed and failed counts
+- Dashboard displays buyer type and next action
+- Dashboard displays safe reply draft
+- Dashboard displays stock, compatibility, and price eligibility status
+- Dashboard displays scenario safety labels
 
 Next Phase:
-Version 25C — Assistant Sales Agent Test Lab Dashboard Display
+Version 25D — Admin Hub Link Assistant Sales Agent Test Lab

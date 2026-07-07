@@ -41,3 +41,6 @@ Project Source-of-Truth Handover System Foundation added.
 
 ### Version 25B
 Assistant Sales Agent Readiness Test Lab Foundation added.
+
+### Version 25C
+Assistant Sales Agent Test Lab Dashboard Display added.

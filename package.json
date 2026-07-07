@@ -79,7 +79,8 @@
     "version:24b": "node tools/version24b-manual-final-business-review-dashboard-smoke-test.js",
     "version:24c": "node tools/version24c-admin-hub-link-manual-final-business-review-smoke-test.js",
     "version:25a": "node tools/version25a-project-source-of-truth-smoke-test.js",
-    "version:25b": "node tools/version25b-assistant-sales-agent-test-lab-smoke-test.js"
+    "version:25b": "node tools/version25b-assistant-sales-agent-test-lab-smoke-test.js",
+    "version:25c": "node tools/version25c-assistant-sales-agent-test-lab-dashboard-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

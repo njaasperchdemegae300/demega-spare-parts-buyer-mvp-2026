@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Assistant Sales Agent Test Lab Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 2600px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    pre { white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; max-width: 520px; max-height: 230px; overflow: auto; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .approved { background: #dcfce7; color: #166534; }
+    .blocked { background: #fee2e2; color: #991b1b; }
+    .neutral { background: #e5e7eb; color: #374151; }
+    .hot { background: #fee2e2; color: #991b1b; }
+    .bulk { background: #dbeafe; color: #1e40af; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Assistant Sales Agent Test Lab Dashboard</h1>
+    <p>Internal simulation dashboard for testing sales-agent behavior before opening real buyer traffic.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Test Runs</h2><strong id="totalRuns">0</strong></div>
+      <div class="card"><h2>Latest Verdict</h2><strong id="latestVerdict">NOT_RUN</strong></div>
+      <div class="card"><h2>Latest Total Tests</h2><strong id="latestTotalTests">0</strong></div>
+      <div class="card"><h2>Latest Passed</h2><strong id="latestPassedCount">0</strong></div>
+      <div class="card"><h2>Latest Failed</h2><strong id="latestFailedCount">0</strong></div>
+      <div class="card"><h2>Approved Runs</h2><strong id="approvedRuns">0</strong></div>
+      <div class="card"><h2>Blocked Runs</h2><strong id="blockedRuns">0</strong></div>
+      <div class="card"><h2>Default Scenarios</h2><strong id="defaultTestCaseCount">0</strong></div>
+      <div class="card"><h2>Safety Status</h2><strong class="badge safe">SIMULATION ONLY</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Before Opening Buyer Gate</h2>
+      <p class="muted">
+        This dashboard is for internal sales-agent behavior testing only. It must not contact real buyers,
+        send WhatsApp, read WhatsApp, scrape private messages, harvest hidden data, update inventory,
+        create accounting entries, close sales, or move pipeline.
+      </p>
+      <span class="badge safe">Simulation only</span>
+      <span class="badge safe">No live buyer gate opened</span>
+      <span class="badge safe">No real buyer contacted</span>
+      <span class="badge safe">No WhatsApp auto-send</span>
+      <span class="badge safe">No WhatsApp auto-read</span>
+      <span class="badge safe">No private message scraping</span>
+      <span class="badge safe">No hidden harvesting</span>
+      <span class="badge safe">No quote before stock confirmation</span>
+      <span class="badge safe">No quote before compatibility confirmation</span>
+      <span class="badge safe">Manual review before live buyer traffic</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Sales Agent Behavior Scenarios</h2>
+      <p class="muted">The test lab checks whether the Assistant Sales Agent can correctly handle these buyer situations before real traffic starts.</p>
+      <span class="badge hot">Urgent confirmed alternator buyer</span>
+      <span class="badge warn">Compatibility-unknown buyer</span>
+      <span class="badge warn">Stock-unknown buyer</span>
+      <span class="badge bulk">Bulk buyer request</span>
+      <span class="badge warn">Lowball price checker</span>
+      <span class="badge warn">Wrong-part / subpart risk</span>
+    </section>
+
+    <section class="panel">
+      <h2>Assistant Sales Agent Test Run Results</h2>
+      <p class="muted">Read-only display of internal readiness runs. This page does not run tests and does not contact buyers.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search test title, buyer type, action, reply..." />
+        <select id="verdictFilter">
+          <option value="">All verdicts</option>
+          <option value="APPROVED">APPROVED</option>
+          <option value="NEEDS FIX">NEEDS FIX</option>
+        </select>
+        <select id="buyerTypeFilter">
+          <option value="">All buyer types</option>
+          <option value="serious_buyer">Serious Buyer</option>
+          <option value="needs_compatibility_check">Compatibility Needed</option>
+          <option value="stock_check_required">Stock Check Required</option>
+          <option value="bulk_buyer">Bulk Buyer</option>
+          <option value="price_checker_lowball">Lowball Price Checker</option>
+          <option value="specific_subpart_buyer">Wrong-Part/Subpart Risk</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety statuses</option>
+          <option value="safe">Safe Simulation</option>
+          <option value="risk">Risk Detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Run Verdict</th>
+            <th>Test Case</th>
+            <th>Buyer Type</th>
+            <th>Next Action</th>
+            <th>Stock</th>
+            <th>Compatibility</th>
+            <th>Quote Eligibility</th>
+            <th>Price Allowed</th>
+            <th>Reply Draft</th>
+            <th>Test Passed</th>
+            <th>Failures</th>
+            <th>Safety</th>
+            <th>Run By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="testRows">
+          <tr><td colspan="14">Loading Assistant Sales Agent test runs...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allRuns = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function formatLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function buyerTypeClass(value) {
+      if (value === "serious_buyer") return "hot";
+      if (value === "bulk_buyer") return "bulk";
+      if (value) return "warn";
+      return "neutral";
+    }
+
+    function hasRisk(item) {
+      return item.autoSendWhatsApp === true ||
+        item.sentToBuyer === true ||
+        item.autoOpenBrowser === true ||
+        item.autoReadWhatsApp === true ||
+        item.readBuyerMessagesAutomatically === true ||
+        item.scrapeWhatsappMessages === true ||
+        item.privateMessageScraping === true ||
+        item.hiddenDataHarvesting === true ||
+        item.autoUpdateInventory === true ||
+        item.autoCreateAccountingEntry === true ||
+        item.autoCloseSale === true ||
+        item.autoMovePipelineStage === true;
+    }
+
+    function flattenRows() {
+      const rows = [];
+
+      allRuns.forEach(run => {
+        const results = Array.isArray(run.results) ? run.results : [];
+        results.forEach(result => {
+          rows.push({ run, result });
+        });
+      });
+
+      return rows;
+    }
+
+    function getFilteredRows() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const verdictFilter = document.getElementById("verdictFilter").value;
+      const buyerTypeFilter = document.getElementById("buyerTypeFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return flattenRows().filter(({ run, result }) => {
+        const haystack = [
+          run.verdict,
+          run.runBy,
+          result.testCaseId,
+          result.title,
+          result.buyerType,
+          result.nextAction,
+          result.replyDraft,
+          result.failures && result.failures.join(" ")
+        ].join(" ").toLowerCase();
+
+        const risk = hasRisk(result) || hasRisk(run);
+
+        return (!search || haystack.includes(search)) &&
+          (!verdictFilter || run.verdict === verdictFilter) &&
+          (!buyerTypeFilter || result.buyerType === buyerTypeFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("testRows");
+      const rows = getFilteredRows();
+
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="14">No matching Assistant Sales Agent test results.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = rows.map(({ run, result }) => {
+        const risk = hasRisk(result) || hasRisk(run);
+        const failures = Array.isArray(result.failures) && result.failures.length
+          ? result.failures.join("\\n")
+          : "None";
+
+        const safety = [
+          result.assistantSalesAgentOnly ? badge("Assistant sales agent only", "safe") : badge("Agent scope risk", "danger"),
+          result.simulationOnly ? badge("Simulation only", "safe") : badge("Simulation risk", "danger"),
+          result.noLiveBuyerContact ? badge("No live buyer contact", "safe") : badge("Live contact risk", "danger"),
+          result.manualReviewRequired ? badge("Manual review required", "safe") : badge("Manual review missing", "danger"),
+          result.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          result.autoReadWhatsApp ? badge("Auto-read risk", "danger") : badge("No auto-read", "safe"),
+          result.privateMessageScraping ? badge("Private scraping risk", "danger") : badge("No private scraping", "safe"),
+          result.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe"),
+          result.autoUpdateInventory ? badge("Inventory risk", "danger") : badge("No inventory update", "safe"),
+          result.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          result.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe"),
+          result.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline move", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(run.verdict, run.verdict === "APPROVED" ? "approved" : "blocked")}</td>
+            <td>${escapeHtml(result.title || result.testCaseId)}</td>
+            <td>${badge(formatLabel(result.buyerType), buyerTypeClass(result.buyerType))}</td>
+            <td>${badge(formatLabel(result.nextAction), "safe")}</td>
+            <td>${result.stockConfirmed ? badge("Confirmed", "safe") : badge("Check required", "warn")}</td>
+            <td>${result.compatibilityConfirmed ? badge("Confirmed", "safe") : badge("Check required", "warn")}</td>
+            <td>${result.finalQuoteEligibilityPassed ? badge("Passed", "safe") : badge("Not passed", "warn")}</td>
+            <td>${result.priceMentionAllowed ? badge("Price allowed", "safe") : badge("No price yet", "warn")}</td>
+            <td><pre>${escapeHtml(result.replyDraft)}</pre></td>
+            <td>${result.passed ? badge("PASS", "approved") : badge("FAIL", "blocked")}</td>
+            <td><pre>${escapeHtml(failures)}</pre></td>
+            <td>${risk ? badge("Risk detected", "danger") : safety}</td>
+            <td>${escapeHtml(run.runBy)}</td>
+            <td>${formatDate(run.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadAssistantSalesAgentDashboard() {
+      const summaryResponse = await fetch("/api/assistant-sales-agent-test-lab/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalRuns").textContent = summary.totalRuns || 0;
+      document.getElementById("latestVerdict").textContent = summary.latestVerdict || "NOT_RUN";
+      document.getElementById("latestTotalTests").textContent = summary.latestTotalTests || 0;
+      document.getElementById("latestPassedCount").textContent = summary.latestPassedCount || 0;
+      document.getElementById("latestFailedCount").textContent = summary.latestFailedCount || 0;
+      document.getElementById("approvedRuns").textContent = summary.approvedRuns || 0;
+      document.getElementById("blockedRuns").textContent = summary.blockedRuns || 0;
+      document.getElementById("defaultTestCaseCount").textContent = summary.defaultTestCaseCount || 0;
+
+      const runsResponse = await fetch("/api/assistant-sales-agent-test-lab/runs");
+      const runsData = await runsResponse.json();
+      allRuns = Array.isArray(runsData.runs) ? runsData.runs : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("verdictFilter").addEventListener("change", renderRows);
+    document.getElementById("buyerTypeFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadAssistantSalesAgentDashboard().catch(error => {
+      document.getElementById("testRows").innerHTML =
+        `<tr><td colspan="14">Assistant Sales Agent dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

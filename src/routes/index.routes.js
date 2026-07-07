@@ -85,6 +85,8 @@ function routeRequest(req, res, sendJson) {
         "/manual-accounting-reviews",
         "/manual-final-business-review",
         "/manual-final-business-reviews",
+        "/assistant-sales-agent-test-lab",
+        "/assistant-sales-agent-test-runs",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -244,6 +246,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-final-business-review" || url.pathname === "/manual-final-business-reviews")) {
     return manualFinalBusinessReviewController.manualFinalBusinessReviewDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/assistant-sales-agent-test-lab" || url.pathname === "/assistant-sales-agent-test-runs")) {
+    return assistantSalesAgentTestLabController.assistantSalesAgentTestLabDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/assistant-sales-agent-test-lab/preview") {
