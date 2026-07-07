@@ -35,3 +35,6 @@ The Controlled Buyer-Gate Manual Activation Approval Gate records approval for c
 
 ## Decision 12 — Activation Execution Means Manual Inbound Only
 Controlled Buyer-Gate Activation Execution opens only a controlled 15-lead manual inbound gate. It must not start outbound traffic, paid ads, lead form publishing, automatic buyer contact, WhatsApp auto-send/read, scraping, quote sending, inventory mutation, accounting entry, sale closing, or pipeline movement. Lead-slot enforcement is required next.
+
+## Decision 13 — 15-Lead Slot Enforcement Before Real Lead Counting
+Controlled Buyer-Gate Lead-Slot Enforcement accepts only buyer-initiated WhatsApp click-to-chat inbound lead slots up to the 15-lead limit. The 16th slot must be blocked. Slot acceptance does not contact buyers, send/read WhatsApp, scrape data, quote, update inventory, create accounting entries, close sales, or move pipeline. Manual review is required before any buyer contact.

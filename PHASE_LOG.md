@@ -89,3 +89,6 @@ Controlled Buyer-Gate Activation Execution Dashboard Display added.
 
 ### Version 29C
 Admin Hub Link Controlled Buyer-Gate Activation Execution added.
+
+### Version 30A
+Controlled Buyer-Gate Lead-Slot Enforcement Foundation added.

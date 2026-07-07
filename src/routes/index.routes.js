@@ -31,6 +31,7 @@ const internalBuyerGateReadinessGuardianController = require("../controllers/int
 const controlledBuyerGateTestPlanController = require("../controllers/controlled-buyer-gate-test-plan.controller");
 const controlledBuyerGateManualActivationApprovalController = require("../controllers/controlled-buyer-gate-manual-activation-approval.controller");
 const controlledBuyerGateActivationExecutionController = require("../controllers/controlled-buyer-gate-activation-execution.controller");
+const controlledBuyerGateLeadSlotEnforcementController = require("../controllers/controlled-buyer-gate-lead-slot-enforcement.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -282,6 +283,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/controlled-buyer-gate-activation-execution" || url.pathname === "/controlled-buyer-gate-activation-executions")) {
     return controlledBuyerGateActivationExecutionController.dashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-lead-slot-enforcement/preview") {
+    return controlledBuyerGateLeadSlotEnforcementController.previewController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/controlled-buyer-gate-lead-slot/create") {
+    return controlledBuyerGateLeadSlotEnforcementController.createController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-lead-slots") {
+    return controlledBuyerGateLeadSlotEnforcementController.listController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-lead-slot-enforcement/summary") {
+    return controlledBuyerGateLeadSlotEnforcementController.summaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-activation-execution/preview") {

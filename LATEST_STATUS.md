@@ -1,32 +1,34 @@
 # LATEST STATUS
 
 Current Phase:
-Version 29C — Admin Hub Link Controlled Buyer-Gate Activation Execution
+Version 30A — Controlled Buyer-Gate Lead-Slot Enforcement Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Controlled Buyer-Gate Activation Execution linked inside Admin Navigation Hub
-- Activation Executions metric
-- Latest Activation Status metric
-- Activation Lead Limit metric
-- Activation Source metric
-- Remaining Lead Slots metric
-- Manual Inbound Gates metric
-- Outbound Started metric
-- Auto Contact Count metric
-- Activation Execution metrics inside Admin Hub metrics API
-- Activation Execution safety locks inside Admin Hub summary
-- Linked Activation Execution dashboard reachable
+- Controlled Buyer-Gate Lead-Slot Enforcement foundation
+- Lead-slot enforcement phrase requirement
+- Controlled activation execution prerequisite
+- WhatsApp click-to-chat inbound source preserved
+- Buyer-initiated inbound source required
+- 15-lead limit enforced
+- 16th lead slot blocked
+- Slot records accepted for manual review only
+- Manual review required before buyer contact
+- Manual stock confirmation required before quote
+- Manual compatibility confirmation required before quote
+- Lead-slot list API
+- Lead-slot summary API
 
 Safety Confirmed:
-- Admin Hub remains navigation and visibility only
-- Metrics API remains read-only
-- Controlled 15-lead manual inbound gate only
-- Source remains WhatsApp click-to-chat inbound
-- Accepted lead count starts at 0
-- Remaining lead slots start at 15
+- Lead-slot enforcement only
+- Controlled inbound lead slot only
+- Buyer-initiated inbound source only
+- 15-lead limit enforced
+- 16th lead slot blocked
+- Manual review required
+- Manual reply only
 - No outbound traffic automatically started
 - No paid ads automatically started
 - No lead form automatically published
@@ -42,14 +44,6 @@ Safety Confirmed:
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
-- Lead-slot enforcement gate required next
-- Manual review required before any buyer contact
-
-Business Readiness Confirmed:
-- Admin Hub now exposes Activation Execution metrics
-- Admin Hub now links directly to Activation Execution dashboard
-- Gate is active only for controlled manual inbound lead acceptance
-- Next required build is lead-slot enforcement before counting real inbound leads
 
 Next Phase:
-Version 30A — Controlled Buyer-Gate Lead-Slot Enforcement Foundation
+Version 30B — Controlled Buyer-Gate Lead-Slot Enforcement Dashboard Display
