@@ -62,3 +62,6 @@ Fixed Internal Buyer-Gate Readiness Guardian dashboard smoke test request option
 
 ### Version 26C
 Admin Hub Link Internal Buyer-Gate Readiness Guardian added.
+
+### Version 27A
+Controlled Buyer-Gate Test Plan Foundation added.

@@ -1408,3 +1408,33 @@ No production buyer-gate behavior was changed. The fix only corrects the smoke t
 
 ## Next Phase After Approval
 Version 26C — Admin Hub Link Internal Buyer-Gate Readiness Guardian
+
+# Version 27A — Controlled Buyer-Gate Test Plan Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create the safe controlled 15-lead buyer-gate test plan foundation. This creates a plan only. It does not open live buyer gate.
+
+## Routes
+- GET /api/controlled-buyer-gate-test-plan/preview
+- POST /api/controlled-buyer-gate-test-plan/create
+- GET /api/controlled-buyer-gate-test-plans
+- GET /api/controlled-buyer-gate-test-plan/summary
+
+## Safety
+- 15-lead limit only
+- Manual review required
+- Manual reply only
+- No auto-send
+- No spam
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- Buyer gate remains closed
+- Manual approval required before activation
+
+## Next Phase After Approval
+Version 27B — Controlled Buyer-Gate Test Plan Dashboard Display
