@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Manual Lead Review Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 26px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 3000px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .approved { background: #dcfce7; color: #166534; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Manual Lead Review Dashboard</h1>
+    <p>Read-only dashboard for manual lead review records. It does not contact buyers or prepare quotes.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Reviews</h2><strong id="totalReviews">0</strong></div>
+      <div class="card"><h2>Completed Reviews</h2><strong id="completedReviewCount">0</strong></div>
+      <div class="card"><h2>Accepted For Stock Check</h2><strong id="acceptedForManualStockCheckCount">0</strong></div>
+      <div class="card"><h2>Rejected Not Ready</h2><strong id="rejectedAsNotReadyCount">0</strong></div>
+      <div class="card"><h2>Latest Review Status</h2><strong id="latestReviewStatus">NO_REVIEW</strong></div>
+      <div class="card"><h2>Latest Review Decision</h2><strong id="latestReviewDecision">NONE</strong></div>
+      <div class="card"><h2>Latest Slot Number</h2><strong id="latestSlotNumber">0</strong></div>
+      <div class="card"><h2>Latest Source</h2><strong id="latestSource">NONE</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Lead Review Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It displays manual lead review decisions only.
+        Manual review does not contact the buyer, send WhatsApp, read WhatsApp, scrape messages, prepare quotes,
+        update inventory, create accounting entries, close sales, or move pipeline.
+      </p>
+      <span class="badge safe">Manual lead review gate only</span>
+      <span class="badge safe">Manual lead review record only</span>
+      <span class="badge safe">Controlled inbound lead review only</span>
+      <span class="badge safe">Buyer-initiated WhatsApp click-to-chat inbound only</span>
+      <span class="badge safe">No buyer contact from review gate</span>
+      <span class="badge safe">No quote prepared at review gate</span>
+      <span class="badge safe">Accepted moves only toward manual stock check next</span>
+      <span class="badge safe">Rejected records not-ready only</span>
+      <span class="badge safe">No outbound traffic</span>
+      <span class="badge safe">No paid ads auto-start</span>
+      <span class="badge safe">No lead form auto-publish</span>
+      <span class="badge safe">No WhatsApp auto-send</span>
+      <span class="badge safe">No WhatsApp auto-read</span>
+      <span class="badge safe">No buyer message scraping</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden data harvesting</span>
+      <span class="badge safe">No quote before stock confirmation</span>
+      <span class="badge safe">No quote before compatibility confirmation</span>
+      <span class="badge safe">Manual stock check required next</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Allowed Review Decisions</h2>
+      <p class="muted">
+        A review decision only classifies the inbound slot. It does not reply to the buyer.
+      </p>
+      <span class="badge safe">ACCEPT_FOR_MANUAL_STOCK_CHECK</span>
+      <span class="badge warn">REJECT_AS_NOT_READY</span>
+      <span class="badge safe">MANUAL_LEAD_REVIEW_COMPLETED</span>
+      <span class="badge safe">manual compatibility check required later</span>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled Buyer-Gate Manual Lead Reviews</h2>
+      <p class="muted">Read-only list of manual review records for accepted inbound lead slots.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search decision, part, vehicle, location, reviewer..." />
+        <select id="decisionFilter">
+          <option value="">All decisions</option>
+          <option value="ACCEPT_FOR_MANUAL_STOCK_CHECK">ACCEPT_FOR_MANUAL_STOCK_CHECK</option>
+          <option value="REJECT_AS_NOT_READY">REJECT_AS_NOT_READY</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe review records</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Review Status</th>
+            <th>Decision</th>
+            <th>Slot</th>
+            <th>Source</th>
+            <th>Lead Reference</th>
+            <th>Buyer Request</th>
+            <th>Review Scope</th>
+            <th>Contact Safety</th>
+            <th>Quote Safety</th>
+            <th>Business Mutation Safety</th>
+            <th>Reviewed By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="reviewRows">
+          <tr><td colspan="12">Loading manual lead review records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allReviews = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function sourceLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function hasRisk(review) {
+      return review.buyerContacted === true ||
+        review.realBuyerContacted === true ||
+        review.autoContactBuyer === true ||
+        review.contactRealBuyerAutomatically === true ||
+        review.startOutboundTraffic === true ||
+        review.startPaidAdsAutomatically === true ||
+        review.publishLeadFormAutomatically === true ||
+        review.autoSendWhatsApp === true ||
+        review.sendWhatsApp === true ||
+        review.broadcastWhatsApp === true ||
+        review.autoReadWhatsApp === true ||
+        review.scrapeWhatsappMessages === true ||
+        review.privateMessageScraping === true ||
+        review.hiddenDataHarvesting === true ||
+        review.quotePrepared === true ||
+        review.autoCreateQuote === true ||
+        review.autoCreateQuoteAndSend === true ||
+        review.quoteBeforeStockConfirmation === true ||
+        review.quoteBeforeCompatibilityConfirmation === true ||
+        review.autoUpdateInventory === true ||
+        review.autoCreateAccountingEntry === true ||
+        review.autoCloseSale === true ||
+        review.autoMovePipelineStage === true;
+    }
+
+    function getFilteredReviews() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const decisionFilter = document.getElementById("decisionFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allReviews.filter(review => {
+        const risk = hasRisk(review);
+        const haystack = [
+          review.reviewStatus,
+          review.reviewDecision,
+          review.source,
+          review.leadReference,
+          review.partNeeded,
+          review.vehicleDetail,
+          review.buyerLocation,
+          review.reviewedBy,
+          review.reviewNote
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!decisionFilter || review.reviewDecision === decisionFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("reviewRows");
+      const reviews = getFilteredReviews();
+
+      if (!reviews.length) {
+        tbody.innerHTML = '<tr><td colspan="12">No matching manual lead reviews.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = reviews.map(review => {
+        const risk = hasRisk(review);
+
+        const requestText = [
+          badge(`Part: ${review.partNeeded || "Not recorded"}`, "safe"),
+          badge(`Vehicle: ${review.vehicleDetail || "Not recorded"}`, "safe"),
+          badge(`Location: ${review.buyerLocation || "Not recorded"}`, "safe")
+        ].join("<br>");
+
+        const reviewScope = [
+          review.manualLeadReviewGateOnly ? badge("Review gate only", "safe") : badge("Review scope risk", "danger"),
+          review.leadReviewRecordOnly ? badge("Record only", "safe") : badge("Record scope risk", "danger"),
+          review.controlledLeadReviewOnly ? badge("Controlled lead review", "safe") : badge("Control scope risk", "danger"),
+          review.manualReviewCompleted ? badge("Manual review completed", "safe") : badge("Review not completed", "warn"),
+          review.acceptedForManualStockCheckOnly ? badge("Move to manual stock check", "safe") : "",
+          review.rejectedAsNotReadyOnly ? badge("Rejected as not ready", "warn") : ""
+        ].filter(Boolean).join("<br>");
+
+        const contactSafety = [
+          review.buyerContacted ? badge("Buyer contacted risk", "danger") : badge("Buyer not contacted", "safe"),
+          review.autoContactBuyer ? badge("Auto-contact risk", "danger") : badge("No auto-contact", "safe"),
+          review.autoSendWhatsApp ? badge("WhatsApp auto-send risk", "danger") : badge("No WhatsApp auto-send", "safe"),
+          review.autoReadWhatsApp ? badge("WhatsApp auto-read risk", "danger") : badge("No WhatsApp auto-read", "safe"),
+          review.scrapeWhatsappMessages ? badge("WhatsApp scraping risk", "danger") : badge("No WhatsApp scraping", "safe")
+        ].join("<br>");
+
+        const quoteSafety = [
+          review.quotePrepared ? badge("Quote prepared risk", "danger") : badge("No quote prepared", "safe"),
+          review.autoCreateQuote ? badge("Auto quote risk", "danger") : badge("No auto quote", "safe"),
+          review.quoteBeforeStockConfirmation ? badge("Stock quote risk", "danger") : badge("No quote before stock", "safe"),
+          review.quoteBeforeCompatibilityConfirmation ? badge("Compatibility quote risk", "danger") : badge("No quote before compatibility", "safe"),
+          review.manualStockCheckRequiredNext ? badge("Manual stock check next", "safe") : badge("Stock check missing", "danger"),
+          review.manualCompatibilityCheckRequiredLater ? badge("Compatibility check later", "safe") : badge("Compatibility check missing", "danger")
+        ].join("<br>");
+
+        const mutationSafety = risk ? badge("Risk detected", "danger") : [
+          review.startOutboundTraffic ? badge("Outbound risk", "danger") : badge("No outbound traffic", "safe"),
+          review.autoUpdateInventory ? badge("Inventory risk", "danger") : badge("No inventory update", "safe"),
+          review.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          review.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe"),
+          review.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline move", "safe"),
+          review.noPrivateDataScraping ? badge("No private scraping", "safe") : badge("Private scraping rule missing", "danger"),
+          review.noHiddenDataHarvesting ? badge("No hidden harvesting", "safe") : badge("Hidden harvesting rule missing", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(review.reviewStatus, review.reviewStatus === "MANUAL_LEAD_REVIEW_COMPLETED" ? "approved" : "danger")}</td>
+            <td>${badge(review.reviewDecision, review.reviewDecision === "ACCEPT_FOR_MANUAL_STOCK_CHECK" ? "safe" : "warn")}</td>
+            <td>${badge(`#${review.slotNumber}`, Number(review.slotNumber || 0) >= 1 && Number(review.slotNumber || 0) <= 15 ? "safe" : "danger")}</td>
+            <td>${badge(sourceLabel(review.source), review.source === "whatsapp_click_to_chat_inbound" ? "safe" : "warn")}</td>
+            <td>${escapeHtml(review.leadReference)}</td>
+            <td>${requestText}</td>
+            <td>${reviewScope}</td>
+            <td>${contactSafety}</td>
+            <td>${quoteSafety}</td>
+            <td>${mutationSafety}</td>
+            <td>${escapeHtml(review.reviewedBy)}</td>
+            <td>${formatDate(review.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-manual-lead-review/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalReviews").textContent = summary.totalReviews || 0;
+      document.getElementById("completedReviewCount").textContent = summary.completedReviewCount || 0;
+      document.getElementById("acceptedForManualStockCheckCount").textContent = summary.acceptedForManualStockCheckCount || 0;
+      document.getElementById("rejectedAsNotReadyCount").textContent = summary.rejectedAsNotReadyCount || 0;
+      document.getElementById("latestReviewStatus").textContent = summary.latestReviewStatus || "NO_REVIEW";
+      document.getElementById("latestReviewDecision").textContent = summary.latestReviewDecision || "NONE";
+      document.getElementById("latestSlotNumber").textContent = summary.latestSlotNumber || 0;
+      document.getElementById("latestSource").textContent = summary.latestSource || "NONE";
+
+      const reviewsResponse = await fetch("/api/controlled-buyer-gate-manual-lead-reviews");
+      const reviewsData = await reviewsResponse.json();
+      allReviews = Array.isArray(reviewsData.reviews) ? reviewsData.reviews : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("decisionFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("reviewRows").innerHTML =
+        `<tr><td colspan="12">Manual Lead Review dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

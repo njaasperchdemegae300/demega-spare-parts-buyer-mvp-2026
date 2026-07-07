@@ -1,30 +1,38 @@
 # LATEST STATUS
 
 Current Phase:
-Version 31A — Controlled Buyer-Gate Manual Lead Review Gate Foundation
+Version 31B — Controlled Buyer-Gate Manual Lead Review Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Controlled Buyer-Gate Manual Lead Review Gate foundation
-- Manual lead review phrase requirement
-- Lead-slot prerequisite
-- ACCEPT_FOR_MANUAL_STOCK_CHECK decision
-- REJECT_AS_NOT_READY decision
-- Duplicate manual review blocking
-- Manual stock check required next
-- Manual compatibility check required later
-- Manual lead review list API
-- Manual lead review summary API
+- GET /controlled-buyer-gate-manual-lead-review
+- GET /controlled-buyer-gate-manual-lead-reviews
+- Manual Lead Review dashboard
+- Total reviews metric
+- Completed reviews metric
+- Accepted for manual stock check metric
+- Rejected not-ready metric
+- Latest review status metric
+- Latest review decision metric
+- Latest slot number metric
+- Latest source metric
+- Manual lead review table
+- Decision filter
+- Safety filter
 
 Safety Confirmed:
+- Dashboard displays manual lead review records only
+- Dashboard is read-only
 - Manual lead review gate only
 - Manual lead review record only
 - Controlled inbound lead review only
 - Buyer-initiated WhatsApp click-to-chat inbound source only
-- Manual review does not contact buyer
-- Manual review does not prepare quote
+- Manual review completed does not contact buyer
+- Manual review completed does not prepare quote
+- Accepted review moves only toward manual stock check next
+- Rejected review records not-ready status only
 - No outbound traffic automatically started
 - No paid ads automatically started
 - No lead form automatically published
@@ -43,4 +51,4 @@ Safety Confirmed:
 - Manual stock check required next
 
 Next Phase:
-Version 31B — Controlled Buyer-Gate Manual Lead Review Dashboard Display
+Version 31C — Admin Hub Link Controlled Buyer-Gate Manual Lead Review
