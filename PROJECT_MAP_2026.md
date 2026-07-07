@@ -1703,3 +1703,55 @@ Display controlled buyer-gate lead-slot enforcement records in a read-only dashb
 
 ## Next Phase After Approval
 Version 30C — Admin Hub Link Controlled Buyer-Gate Lead-Slot Enforcement
+
+# Version 31A — Controlled Buyer-Gate Manual Lead Review Gate Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create the controlled buyer-gate manual lead review gate foundation. This records manual review decisions for accepted inbound lead slots before any buyer contact. It does not contact buyers or prepare quotes.
+
+## Routes
+- GET /api/controlled-buyer-gate-manual-lead-review/preview
+- POST /api/controlled-buyer-gate-manual-lead-review/create
+- GET /api/controlled-buyer-gate-manual-lead-reviews
+- GET /api/controlled-buyer-gate-manual-lead-review/summary
+
+## Features
+- Manual lead review phrase requirement
+- Lead-slot prerequisite
+- ACCEPT_FOR_MANUAL_STOCK_CHECK decision
+- REJECT_AS_NOT_READY decision
+- Duplicate manual review blocking
+- Manual stock check required next
+- Manual compatibility check required later
+- Manual lead review list API
+- Manual lead review summary API
+
+## Safety
+- Manual lead review gate only
+- Manual lead review record only
+- Controlled inbound lead review only
+- Buyer-initiated WhatsApp click-to-chat inbound source only
+- Manual review does not contact buyer
+- Manual review does not prepare quote
+- No outbound traffic automatically started
+- No paid ads automatically started
+- No lead form automatically published
+- No real buyer automatically contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Manual stock check required next
+
+## Next Phase After Approval
+Version 31B — Controlled Buyer-Gate Manual Lead Review Dashboard Display

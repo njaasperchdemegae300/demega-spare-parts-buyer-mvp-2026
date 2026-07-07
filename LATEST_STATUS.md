@@ -1,34 +1,30 @@
 # LATEST STATUS
 
 Current Phase:
-Version 30C — Admin Hub Link Controlled Buyer-Gate Lead-Slot Enforcement
+Version 31A — Controlled Buyer-Gate Manual Lead Review Gate Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Lead-Slot Enforcement linked inside Admin Navigation Hub
-- Lead Slots metric
-- Accepted Slots metric
-- Slot Lead Limit metric
-- Remaining Slots metric
-- Slot Limit Reached metric
-- Latest Slot Status metric
-- Latest Slot Number metric
-- Latest Slot Source metric
-- Lead-Slot Enforcement metrics inside Admin Hub metrics API
-- Lead-Slot Enforcement safety locks inside Admin Hub summary
-- Linked Lead-Slot Enforcement dashboard reachable
+- Controlled Buyer-Gate Manual Lead Review Gate foundation
+- Manual lead review phrase requirement
+- Lead-slot prerequisite
+- ACCEPT_FOR_MANUAL_STOCK_CHECK decision
+- REJECT_AS_NOT_READY decision
+- Duplicate manual review blocking
+- Manual stock check required next
+- Manual compatibility check required later
+- Manual lead review list API
+- Manual lead review summary API
 
 Safety Confirmed:
-- Admin Hub remains navigation and visibility only
-- Metrics API remains read-only
-- Lead-slot enforcement only
-- Controlled inbound lead slot only
+- Manual lead review gate only
+- Manual lead review record only
+- Controlled inbound lead review only
 - Buyer-initiated WhatsApp click-to-chat inbound source only
-- 15-lead limit remains enforced
-- Accepted lead slots are for manual review only
-- Manual reply only
+- Manual review does not contact buyer
+- Manual review does not prepare quote
 - No outbound traffic automatically started
 - No paid ads automatically started
 - No lead form automatically published
@@ -44,13 +40,7 @@ Safety Confirmed:
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
-- Manual review required before any buyer contact
-
-Business Readiness Confirmed:
-- Admin Hub now exposes Lead-Slot Enforcement metrics
-- Admin Hub now links directly to Lead-Slot Enforcement dashboard
-- Controlled manual inbound gate now has visible lead-slot tracking
-- Next required build is manual lead review gate before any buyer contact
+- Manual stock check required next
 
 Next Phase:
-Version 31A — Controlled Buyer-Gate Manual Lead Review Gate Foundation
+Version 31B — Controlled Buyer-Gate Manual Lead Review Dashboard Display

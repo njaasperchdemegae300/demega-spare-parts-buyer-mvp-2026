@@ -101,3 +101,6 @@ Admin Hub Link Controlled Buyer-Gate Lead-Slot Enforcement added.
 
 ### Version 30C
 Admin Hub Link Controlled Buyer-Gate Lead-Slot Enforcement added.
+
+### Version 31A
+Controlled Buyer-Gate Manual Lead Review Gate Foundation added.
