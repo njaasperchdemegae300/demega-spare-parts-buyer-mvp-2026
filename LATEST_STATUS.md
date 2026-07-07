@@ -1,36 +1,34 @@
 # LATEST STATUS
 
 Current Phase:
-Version 31B — Controlled Buyer-Gate Manual Lead Review Dashboard Display
+Version 31C — Admin Hub Link Controlled Buyer-Gate Manual Lead Review
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /controlled-buyer-gate-manual-lead-review
-- GET /controlled-buyer-gate-manual-lead-reviews
-- Manual Lead Review dashboard
-- Total reviews metric
-- Completed reviews metric
-- Accepted for manual stock check metric
-- Rejected not-ready metric
-- Latest review status metric
-- Latest review decision metric
-- Latest slot number metric
-- Latest source metric
-- Manual lead review table
-- Decision filter
-- Safety filter
+- Manual Lead Review linked inside Admin Navigation Hub
+- Manual Lead Reviews metric
+- Completed Reviews metric
+- Accepted For Stock Check metric
+- Rejected Not Ready metric
+- Latest Review Status metric
+- Latest Review Decision metric
+- Latest Review Slot metric
+- Latest Review Source metric
+- Manual Lead Review metrics inside Admin Hub metrics API
+- Manual Lead Review safety locks inside Admin Hub summary
+- Linked Manual Lead Review dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays manual lead review records only
-- Dashboard is read-only
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
 - Manual lead review gate only
 - Manual lead review record only
 - Controlled inbound lead review only
 - Buyer-initiated WhatsApp click-to-chat inbound source only
-- Manual review completed does not contact buyer
-- Manual review completed does not prepare quote
+- Manual review does not contact buyer
+- Manual review does not prepare quote
 - Accepted review moves only toward manual stock check next
 - Rejected review records not-ready status only
 - No outbound traffic automatically started
@@ -50,5 +48,11 @@ Safety Confirmed:
 - No pipeline movement
 - Manual stock check required next
 
+Business Readiness Confirmed:
+- Admin Hub now exposes Manual Lead Review metrics
+- Admin Hub now links directly to Manual Lead Review dashboard
+- Controlled inbound leads now require visible manual review before buyer contact
+- Next required build is manual stock check gate before quote preparation
+
 Next Phase:
-Version 31C — Admin Hub Link Controlled Buyer-Gate Manual Lead Review
+Version 32A — Controlled Buyer-Gate Manual Stock Check Gate Foundation

@@ -107,3 +107,6 @@ Controlled Buyer-Gate Manual Lead Review Gate Foundation added.
 
 ### Version 31B
 Controlled Buyer-Gate Manual Lead Review Dashboard Display added.
+
+### Version 31C
+Admin Hub Link Controlled Buyer-Gate Manual Lead Review added.

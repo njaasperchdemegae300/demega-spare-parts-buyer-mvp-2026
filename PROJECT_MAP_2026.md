@@ -1755,3 +1755,64 @@ Create the controlled buyer-gate manual lead review gate foundation. This record
 
 ## Next Phase After Approval
 Version 31B — Controlled Buyer-Gate Manual Lead Review Dashboard Display
+
+# Version 31C — Admin Hub Link Controlled Buyer-Gate Manual Lead Review
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect Controlled Buyer-Gate Manual Lead Review into Admin Navigation Hub so accept/reject manual review decisions are visible before any buyer contact or quote preparation.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /controlled-buyer-gate-manual-lead-review
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/controlled-buyer-gate-manual-lead-review/summary
+
+## Features
+- Manual Lead Review card in Admin Hub
+- Manual Lead Reviews metric
+- Completed Reviews metric
+- Accepted For Stock Check metric
+- Rejected Not Ready metric
+- Latest Review Status metric
+- Latest Review Decision metric
+- Latest Review Slot metric
+- Latest Review Source metric
+- Manual Lead Review metrics inside Admin Hub metrics API
+- Manual Lead Review safety locks inside Admin Hub summary
+- Linked Manual Lead Review dashboard reachable
+
+## Safety Rules
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
+- Manual lead review gate only
+- Manual lead review record only
+- Controlled inbound lead review only
+- Buyer-initiated WhatsApp click-to-chat inbound source only
+- Manual review does not contact buyer
+- Manual review does not prepare quote
+- Accepted review moves only toward manual stock check next
+- Rejected review records not-ready status only
+- No outbound traffic automatically started
+- No paid ads automatically started
+- No lead form automatically published
+- No real buyer automatically contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Manual stock check required next
+
+## Next Phase After Approval
+Version 32A — Controlled Buyer-Gate Manual Stock Check Gate Foundation

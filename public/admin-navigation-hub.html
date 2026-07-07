@@ -91,6 +91,12 @@
       <span class="badge">16TH LEAD SLOT BLOCKED</span>
       <span class="badge">ACCEPTED FOR MANUAL REVIEW ONLY</span>
       <span class="badge">NO BUYER CONTACT FROM SLOT GATE</span>
+      <span class="badge">MANUAL LEAD REVIEW DASHBOARD ONLY</span>
+      <span class="badge">REVIEW RECORD ONLY</span>
+      <span class="badge">NO BUYER CONTACT FROM REVIEW GATE</span>
+      <span class="badge">NO QUOTE PREPARED AT REVIEW GATE</span>
+      <span class="badge">ACCEPT MOVES TO MANUAL STOCK CHECK ONLY</span>
+      <span class="badge">REJECT RECORDS NOT-READY ONLY</span>
       <span class="badge">NO WHATSAPP AUTO-READ</span>
       <span class="badge">NO AUTOMATIC CLOSING</span>
       <span class="badge warn">ADMIN MUST MANUALLY OBSERVE BUYER REPLY OUTSIDE THE SYSTEM</span>
@@ -152,6 +158,11 @@
         <li>The 16th controlled lead slot must be blocked.</li>
         <li>Slot acceptance does not contact buyers.</li>
         <li>Every accepted slot remains pending manual review.</li>
+        <li>Manual lead review records review decisions only.</li>
+        <li>Manual review does not contact buyers.</li>
+        <li>Manual review does not prepare quote.</li>
+        <li>Accepted review moves only toward manual stock check next.</li>
+        <li>Rejected review records not-ready status only.</li>
       </ul>
     </section>
 
@@ -250,6 +261,14 @@
         <div class="metric"><h2>Latest Slot Status</h2><strong id="leadSlotLatestStatus">NO_SLOT</strong></div>
         <div class="metric"><h2>Latest Slot Number</h2><strong id="leadSlotLatestNumber">0</strong></div>
         <div class="metric"><h2>Latest Slot Source</h2><strong id="leadSlotLatestSource">NONE</strong></div>
+        <div class="metric"><h2>Manual Lead Reviews</h2><strong id="manualLeadReviewTotal">0</strong></div>
+        <div class="metric"><h2>Completed Reviews</h2><strong id="manualLeadReviewCompleted">0</strong></div>
+        <div class="metric"><h2>Accepted For Stock Check</h2><strong id="manualLeadReviewAcceptedStock">0</strong></div>
+        <div class="metric"><h2>Rejected Not Ready</h2><strong id="manualLeadReviewRejectedNotReady">0</strong></div>
+        <div class="metric"><h2>Latest Review Status</h2><strong id="manualLeadReviewLatestStatus">NO_REVIEW</strong></div>
+        <div class="metric"><h2>Latest Review Decision</h2><strong id="manualLeadReviewLatestDecision">NONE</strong></div>
+        <div class="metric"><h2>Latest Review Slot</h2><strong id="manualLeadReviewLatestSlot">0</strong></div>
+        <div class="metric"><h2>Latest Review Source</h2><strong id="manualLeadReviewLatestSource">NONE</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -287,6 +306,8 @@
       <div class="card"><h2>Controlled Buyer-Gate Activation Execution</h2><p>View controlled 15-lead manual inbound gate execution records. Read-only; no outbound traffic, no paid ads, no buyer auto-contact, no WhatsApp auto-send/read, no scraping, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-activation-execution">Open Activation Execution</a></div>
 
       <div class="card"><h2>Controlled Buyer-Gate Lead-Slot Enforcement</h2><p>View controlled buyer-initiated inbound lead slots, accepted slots, remaining slots, and 15-lead limit status. Read-only; no buyer contact, no WhatsApp auto-send/read, no scraping, no quote, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-lead-slot-enforcement">Open Lead-Slot Enforcement</a></div>
+
+      <div class="card"><h2>Controlled Buyer-Gate Manual Lead Review</h2><p>View controlled manual lead review decisions before buyer contact. Read-only; no buyer contact, no WhatsApp auto-send/read, no scraping, no quote preparation, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-lead-review">Open Manual Lead Review</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -542,6 +563,35 @@
     }
 
     loadLeadSlotEnforcementHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadManualLeadReviewHubMetrics() {
+      try {
+        const response = await fetch("/api/controlled-buyer-gate-manual-lead-review/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("manualLeadReviewTotal", summary.totalReviews || 0);
+        setText("manualLeadReviewCompleted", summary.completedReviewCount || 0);
+        setText("manualLeadReviewAcceptedStock", summary.acceptedForManualStockCheckCount || 0);
+        setText("manualLeadReviewRejectedNotReady", summary.rejectedAsNotReadyCount || 0);
+        setText("manualLeadReviewLatestStatus", summary.latestReviewStatus || "NO_REVIEW");
+        setText("manualLeadReviewLatestDecision", summary.latestReviewDecision || "NONE");
+        setText("manualLeadReviewLatestSlot", summary.latestSlotNumber || 0);
+        setText("manualLeadReviewLatestSource", summary.latestSource || "NONE");
+      } catch (error) {
+        const element = document.getElementById("manualLeadReviewLatestStatus");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadManualLeadReviewHubMetrics();
   </script>
 
 </body>
