@@ -25,6 +25,7 @@ const internalBuyerGateReadinessGuardianService = require("../services/internal-
 const controlledBuyerGateTestPlanService = require("../services/controlled-buyer-gate-test-plan.service");
 const controlledBuyerGateManualActivationApprovalService = require("../services/controlled-buyer-gate-manual-activation-approval.service");
 const controlledBuyerGateActivationExecutionService = require("../services/controlled-buyer-gate-activation-execution.service");
+const controlledBuyerGateLeadSlotEnforcementService = require("../services/controlled-buyer-gate-lead-slot-enforcement.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -52,7 +53,8 @@ const modules = [
   { name: "Internal Buyer-Gate Readiness Guardian", path: "/internal-buyer-gate-readiness", purpose: "Read-only readiness guardian before live buyer traffic. Checks source-of-truth readiness and Assistant Sales Agent readiness. Does not open buyer gate, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." },
   { name: "Controlled Buyer-Gate Test Plan", path: "/controlled-buyer-gate-test-plan", purpose: "Read-only controlled 15-lead buyer-gate test plan display. Shows plan readiness only; does not open buyer gate, activate live traffic, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." },
   { name: "Controlled Buyer-Gate Manual Activation Approval", path: "/controlled-buyer-gate-manual-activation-approval", purpose: "Read-only manual activation approval dashboard. Approval is not activation; buyer gate remains closed, live traffic remains inactive, no buyer is contacted, no WhatsApp is sent/read, no scraping, no inventory/accounting/sale/pipeline mutation." },
-  { name: "Controlled Buyer-Gate Activation Execution", path: "/controlled-buyer-gate-activation-execution", purpose: "Read-only controlled activation execution dashboard. Shows controlled 15-lead manual inbound gate only; no outbound traffic, no paid ads, no buyer auto-contact, no WhatsApp send/read, no scraping, no inventory/accounting/sale/pipeline mutation." }];
+  { name: "Controlled Buyer-Gate Activation Execution", path: "/controlled-buyer-gate-activation-execution", purpose: "Read-only controlled activation execution dashboard. Shows controlled 15-lead manual inbound gate only; no outbound traffic, no paid ads, no buyer auto-contact, no WhatsApp send/read, no scraping, no inventory/accounting/sale/pipeline mutation." },
+  { name: "Controlled Buyer-Gate Lead-Slot Enforcement", path: "/controlled-buyer-gate-lead-slot-enforcement", purpose: "Read-only controlled lead-slot dashboard. Shows inbound buyer-initiated lead slots, 15-lead limit, remaining slots, and limit status. No buyer contact, no WhatsApp send/read, no scraping, no quote, no inventory/accounting/sale/pipeline mutation." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -89,6 +91,7 @@ function getSafety() {
     internalBuyerGateReadinessGuardianOnly: true,
     internalReadinessCheckOnly: true,
     readinessGuardianOnly: true,
+
     controlledBuyerGateTestPlanOnly: true,
     controlledPlanOnly: true,
     controlled15LeadPlanOnly: true,
@@ -102,7 +105,14 @@ function getSafety() {
     controlledManualInboundOnly: true,
     buyerGateOpenForManualInboundOnly: true,
     approvedForManualInboundLeadAcceptanceOnly: true,
-    simulationOnly: true,
+
+    controlledBuyerGateLeadSlotEnforcementOnly: true,
+    leadSlotEnforcementOnly: true,
+    controlledLeadSlotOnly: true,
+    inboundLeadSlotOnly: true,
+    buyerInitiatedInboundOnly: true,
+    acceptedForManualReviewOnly: true,
+    slotAcceptanceOnly: true,
 
     leadLimitOnly: true,
     leadLimit: 15,
@@ -110,11 +120,11 @@ function getSafety() {
     acceptedLeadCount: 0,
     remainingLeadSlotsStartAtFifteen: true,
     remainingLeadSlots: 15,
+    limitReachedInitially: false,
+    sixteenthLeadBlocked: true,
     chosenFirstSource: "whatsapp_click_to_chat_inbound",
     testSource: "whatsapp_click_to_chat_inbound",
 
-    noLiveBuyerGateOpened: false,
-    liveBuyerGateOpened: false,
     buyerGateOpened: true,
     buyerGateOpenedForManualInboundOnly: true,
     openLiveBuyerGate: false,
@@ -130,6 +140,7 @@ function getSafety() {
 
     noRealBuyerContacted: true,
     realBuyerContacted: false,
+    buyerContacted: false,
     autoContactBuyer: false,
     contactRealBuyerAutomatically: false,
     contactBuyerAutomatically: false,
@@ -139,8 +150,8 @@ function getSafety() {
     noAutoSend: true,
     noSpam: true,
     noUnsolicitedWhatsApp: true,
-    requiresLeadSlotEnforcementNext: true,
-    leadSlotEnforcementRequiredNext: true,
+    requiresLeadSlotEnforcement: true,
+    leadSlotEnforcementActive: true,
     manualReviewRequiredBeforeAnyBuyerContact: true,
     inboundBuyerInitiatedContactRequired: true,
 
@@ -230,6 +241,8 @@ function getSafety() {
     browserAutoCopy: false,
     copiedToClipboardByBrowser: false,
 
+    quotePrepared: false,
+    quoteAllowedAtSlotGate: false,
     quoteAllowedAtStockGate: false,
     quoteBeforeStockConfirmation: false,
     quoteBeforeCompatibilityConfirmation: false,
@@ -372,6 +385,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const controlledBuyerGateTestPlan = safeRead(() => controlledBuyerGateTestPlanService.getControlledBuyerGateTestPlanSummary(), {});
   const controlledBuyerGateManualActivationApproval = safeRead(() => controlledBuyerGateManualActivationApprovalService.getManualActivationApprovalSummary(), {});
   const controlledBuyerGateActivationExecution = safeRead(() => controlledBuyerGateActivationExecutionService.getActivationExecutionSummary(), {});
+  const controlledBuyerGateLeadSlotEnforcement = safeRead(() => controlledBuyerGateLeadSlotEnforcementService.getLeadSlotSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -405,7 +419,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       internalBuyerGateReadiness,
       controlledBuyerGateTestPlan,
       controlledBuyerGateManualActivationApproval,
-      controlledBuyerGateActivationExecution
+      controlledBuyerGateActivationExecution,
+      controlledBuyerGateLeadSlotEnforcement
     },
     safety: getSafety()
   });

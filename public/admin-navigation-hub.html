@@ -85,6 +85,12 @@
       <span class="badge">NO OUTBOUND TRAFFIC</span>
       <span class="badge">NO BUYER AUTO-CONTACT</span>
       <span class="badge">LEAD-SLOT ENFORCEMENT REQUIRED NEXT</span>
+      <span class="badge">LEAD-SLOT ENFORCEMENT DASHBOARD ONLY</span>
+      <span class="badge">BUYER-INITIATED INBOUND ONLY</span>
+      <span class="badge">15-LEAD LIMIT ENFORCED</span>
+      <span class="badge">16TH LEAD SLOT BLOCKED</span>
+      <span class="badge">ACCEPTED FOR MANUAL REVIEW ONLY</span>
+      <span class="badge">NO BUYER CONTACT FROM SLOT GATE</span>
       <span class="badge">NO WHATSAPP AUTO-READ</span>
       <span class="badge">NO AUTOMATIC CLOSING</span>
       <span class="badge warn">ADMIN MUST MANUALLY OBSERVE BUYER REPLY OUTSIDE THE SYSTEM</span>
@@ -141,6 +147,11 @@
         <li>It does not start outbound traffic, paid ads, or lead form publishing.</li>
         <li>It does not contact buyers automatically.</li>
         <li>Lead-slot enforcement is required next before real lead intake counting.</li>
+        <li>Lead-slot enforcement accepts buyer-initiated inbound slots only.</li>
+        <li>The 15-lead limit is enforced before real buyer counting.</li>
+        <li>The 16th controlled lead slot must be blocked.</li>
+        <li>Slot acceptance does not contact buyers.</li>
+        <li>Every accepted slot remains pending manual review.</li>
       </ul>
     </section>
 
@@ -231,6 +242,14 @@
         <div class="metric"><h2>Manual Inbound Gates</h2><strong id="activationExecutionManualInboundGates">0</strong></div>
         <div class="metric"><h2>Outbound Started</h2><strong id="activationExecutionOutboundStarted">0</strong></div>
         <div class="metric"><h2>Auto Contact Count</h2><strong id="activationExecutionAutoContact">0</strong></div>
+        <div class="metric"><h2>Lead Slots</h2><strong id="leadSlotTotal">0</strong></div>
+        <div class="metric"><h2>Accepted Slots</h2><strong id="leadSlotAccepted">0</strong></div>
+        <div class="metric"><h2>Slot Lead Limit</h2><strong id="leadSlotLimit">15</strong></div>
+        <div class="metric"><h2>Remaining Slots</h2><strong id="leadSlotRemaining">15</strong></div>
+        <div class="metric"><h2>Slot Limit Reached</h2><strong id="leadSlotLimitReached">false</strong></div>
+        <div class="metric"><h2>Latest Slot Status</h2><strong id="leadSlotLatestStatus">NO_SLOT</strong></div>
+        <div class="metric"><h2>Latest Slot Number</h2><strong id="leadSlotLatestNumber">0</strong></div>
+        <div class="metric"><h2>Latest Slot Source</h2><strong id="leadSlotLatestSource">NONE</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -266,6 +285,8 @@
       <div class="card"><h2>Controlled Buyer-Gate Manual Activation Approval</h2><p>View manual approval records for controlled 15-lead test preparation. Approval is not activation; no live buyer gate opened, no live traffic activated, no real buyer contacted, no WhatsApp auto-send/read, no scraping, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-activation-approval">Open Manual Activation Approval</a></div>
 
       <div class="card"><h2>Controlled Buyer-Gate Activation Execution</h2><p>View controlled 15-lead manual inbound gate execution records. Read-only; no outbound traffic, no paid ads, no buyer auto-contact, no WhatsApp auto-send/read, no scraping, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-activation-execution">Open Activation Execution</a></div>
+
+      <div class="card"><h2>Controlled Buyer-Gate Lead-Slot Enforcement</h2><p>View controlled buyer-initiated inbound lead slots, accepted slots, remaining slots, and 15-lead limit status. Read-only; no buyer contact, no WhatsApp auto-send/read, no scraping, no quote, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-lead-slot-enforcement">Open Lead-Slot Enforcement</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -492,6 +513,35 @@
     }
 
     loadActivationExecutionHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadLeadSlotEnforcementHubMetrics() {
+      try {
+        const response = await fetch("/api/controlled-buyer-gate-lead-slot-enforcement/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("leadSlotTotal", summary.totalSlots || 0);
+        setText("leadSlotAccepted", summary.acceptedSlotCount || 0);
+        setText("leadSlotLimit", summary.leadLimit || 15);
+        setText("leadSlotRemaining", summary.remainingLeadSlots ?? 15);
+        setText("leadSlotLimitReached", summary.limitReached === true ? "true" : "false");
+        setText("leadSlotLatestStatus", summary.latestSlotStatus || "NO_SLOT");
+        setText("leadSlotLatestNumber", summary.latestSlotNumber || 0);
+        setText("leadSlotLatestSource", summary.latestSource || "NONE");
+      } catch (error) {
+        const element = document.getElementById("leadSlotLatestStatus");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadLeadSlotEnforcementHubMetrics();
   </script>
 
 </body>

@@ -1,35 +1,33 @@
 # LATEST STATUS
 
 Current Phase:
-Version 30B — Controlled Buyer-Gate Lead-Slot Enforcement Dashboard Display
+Version 30C — Admin Hub Link Controlled Buyer-Gate Lead-Slot Enforcement
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /controlled-buyer-gate-lead-slot-enforcement
-- GET /controlled-buyer-gate-lead-slots
-- Lead-Slot Enforcement dashboard
-- Total slots metric
-- Accepted slots metric
-- Lead limit metric
-- Remaining slots metric
-- Limit reached metric
-- Latest slot status metric
-- Latest slot number metric
-- Latest source metric
-- Slot records table
-- Status filter
-- Safety filter
+- Lead-Slot Enforcement linked inside Admin Navigation Hub
+- Lead Slots metric
+- Accepted Slots metric
+- Slot Lead Limit metric
+- Remaining Slots metric
+- Slot Limit Reached metric
+- Latest Slot Status metric
+- Latest Slot Number metric
+- Latest Slot Source metric
+- Lead-Slot Enforcement metrics inside Admin Hub metrics API
+- Lead-Slot Enforcement safety locks inside Admin Hub summary
+- Linked Lead-Slot Enforcement dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays lead-slot records only
-- Dashboard is read-only
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
 - Lead-slot enforcement only
 - Controlled inbound lead slot only
 - Buyer-initiated WhatsApp click-to-chat inbound source only
 - 15-lead limit remains enforced
-- Accepted slots are for manual review only
+- Accepted lead slots are for manual review only
 - Manual reply only
 - No outbound traffic automatically started
 - No paid ads automatically started
@@ -46,6 +44,13 @@ Safety Confirmed:
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
+- Manual review required before any buyer contact
+
+Business Readiness Confirmed:
+- Admin Hub now exposes Lead-Slot Enforcement metrics
+- Admin Hub now links directly to Lead-Slot Enforcement dashboard
+- Controlled manual inbound gate now has visible lead-slot tracking
+- Next required build is manual lead review gate before any buyer contact
 
 Next Phase:
-Version 30C — Admin Hub Link Controlled Buyer-Gate Lead-Slot Enforcement
+Version 31A — Controlled Buyer-Gate Manual Lead Review Gate Foundation

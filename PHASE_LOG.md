@@ -95,3 +95,6 @@ Controlled Buyer-Gate Lead-Slot Enforcement Foundation added.
 
 ### Version 30B
 Controlled Buyer-Gate Lead-Slot Enforcement Dashboard Display added.
+
+### Version 30C
+Admin Hub Link Controlled Buyer-Gate Lead-Slot Enforcement added.
