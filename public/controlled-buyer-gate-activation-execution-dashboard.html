@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Activation Execution Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 26px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 2800px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .approved { background: #dcfce7; color: #166534; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Activation Execution Dashboard</h1>
+    <p>Read-only dashboard for controlled 15-lead manual inbound activation. It does not contact buyers or start outbound traffic.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Executions</h2><strong id="totalExecutions">0</strong></div>
+      <div class="card"><h2>Latest Activation Status</h2><strong id="latestActivationStatus">NO_EXECUTION</strong></div>
+      <div class="card"><h2>Latest Lead Limit</h2><strong id="latestLeadLimit">0</strong></div>
+      <div class="card"><h2>Latest Test Source</h2><strong id="latestTestSource">NONE</strong></div>
+      <div class="card"><h2>Remaining Lead Slots</h2><strong id="latestRemainingLeadSlots">0</strong></div>
+      <div class="card"><h2>Manual Inbound Gates</h2><strong id="activeManualInboundGateCount">0</strong></div>
+      <div class="card"><h2>Outbound Traffic Started</h2><strong id="outboundTrafficStartedCount">0</strong></div>
+      <div class="card"><h2>Auto Contact Count</h2><strong id="autoContactCount">0</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Controlled Activation Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It displays activation execution records only. Version 29A opens only a controlled
+        15-lead manual inbound gate. It does not start outbound traffic, paid ads, lead forms, automatic buyer contact,
+        WhatsApp auto-send/read, scraping, quote sending, inventory updates, accounting entries, sale closing, or pipeline movement.
+      </p>
+      <span class="badge safe">Controlled 15-lead manual inbound gate only</span>
+      <span class="badge safe">WhatsApp click-to-chat inbound only</span>
+      <span class="badge safe">Accepted leads start at 0</span>
+      <span class="badge safe">Remaining slots start at 15</span>
+      <span class="badge safe">No outbound traffic</span>
+      <span class="badge safe">No paid ads auto-start</span>
+      <span class="badge safe">No lead form auto-publish</span>
+      <span class="badge safe">No real buyer auto-contact</span>
+      <span class="badge safe">No WhatsApp auto-send</span>
+      <span class="badge safe">No WhatsApp auto-read</span>
+      <span class="badge safe">No buyer message scraping</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden data harvesting</span>
+      <span class="badge safe">No quote before stock confirmation</span>
+      <span class="badge safe">No quote before compatibility confirmation</span>
+      <span class="badge safe">Lead-slot enforcement required next</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Activation Meaning</h2>
+      <p class="muted">
+        Active means the system may accept only inbound buyer-initiated leads up to the 15-lead limit.
+        It still requires manual review before any buyer contact.
+      </p>
+      <span class="badge safe">CONTROLLED_GATE_ACTIVE_MANUAL_INBOUND_ONLY</span>
+      <span class="badge safe">manual inbound only</span>
+      <span class="badge safe">manual review before buyer contact</span>
+      <span class="badge safe">lead-slot enforcement next</span>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled Buyer-Gate Activation Executions</h2>
+      <p class="muted">Read-only list of controlled activation execution records.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search status, source, executor, note..." />
+        <select id="statusFilter">
+          <option value="">All statuses</option>
+          <option value="CONTROLLED_GATE_ACTIVE_MANUAL_INBOUND_ONLY">CONTROLLED_GATE_ACTIVE_MANUAL_INBOUND_ONLY</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe manual-inbound only</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Activation Status</th>
+            <th>Activation Type</th>
+            <th>Lead Limit</th>
+            <th>Accepted / Remaining</th>
+            <th>Source</th>
+            <th>Approval Summary</th>
+            <th>Gate Scope</th>
+            <th>Traffic Safety</th>
+            <th>Contact Safety</th>
+            <th>Business Mutation Safety</th>
+            <th>Executed By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="executionRows">
+          <tr><td colspan="12">Loading controlled activation execution records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allExecutions = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function sourceLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function hasRisk(execution) {
+      return execution.liveTrafficActivated === true ||
+        execution.liveTrafficPushStarted === true ||
+        execution.outboundTrafficStarted === true ||
+        execution.startOutboundTraffic === true ||
+        execution.startPaidAdsAutomatically === true ||
+        execution.publishLeadFormAutomatically === true ||
+        execution.realBuyerContacted === true ||
+        execution.autoContactBuyer === true ||
+        execution.contactRealBuyerAutomatically === true ||
+        execution.autoSendWhatsApp === true ||
+        execution.sendWhatsApp === true ||
+        execution.broadcastWhatsApp === true ||
+        execution.autoReadWhatsApp === true ||
+        execution.scrapeWhatsappMessages === true ||
+        execution.privateMessageScraping === true ||
+        execution.hiddenDataHarvesting === true ||
+        execution.quoteBeforeStockConfirmation === true ||
+        execution.quoteBeforeCompatibilityConfirmation === true ||
+        execution.autoUpdateInventory === true ||
+        execution.autoCreateAccountingEntry === true ||
+        execution.autoCloseSale === true ||
+        execution.autoMovePipelineStage === true;
+    }
+
+    function getFilteredExecutions() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const statusFilter = document.getElementById("statusFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allExecutions.filter(execution => {
+        const risk = hasRisk(execution);
+        const haystack = [
+          execution.activationStatus,
+          execution.activationType,
+          execution.executedBy,
+          execution.executionNote,
+          execution.testSource,
+          execution.leadLimit,
+          execution.remainingLeadSlots
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!statusFilter || execution.activationStatus === statusFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("executionRows");
+      const executions = getFilteredExecutions();
+
+      if (!executions.length) {
+        tbody.innerHTML = '<tr><td colspan="12">No matching controlled activation execution records.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = executions.map(execution => {
+        const risk = hasRisk(execution);
+        const approvalSummary = execution.approvalSummary || {};
+
+        const approvalText = [
+          badge(`Approval: ${approvalSummary.latestApprovalStatus || "UNKNOWN"}`, approvalSummary.latestApprovalStatus === "APPROVED_NOT_ACTIVATED" ? "safe" : "danger"),
+          badge(`Limit: ${approvalSummary.latestLeadLimit || 0}`, Number(approvalSummary.latestLeadLimit || 0) === 15 ? "safe" : "danger"),
+          badge(`Source: ${sourceLabel(approvalSummary.latestTestSource || "")}`, approvalSummary.latestTestSource === "whatsapp_click_to_chat_inbound" ? "safe" : "warn")
+        ].join("<br>");
+
+        const gateScope = [
+          execution.activationExecutionGateOnly ? badge("Execution gate only", "safe") : badge("Gate scope risk", "danger"),
+          execution.controlledGateActive ? badge("Controlled gate active", "safe") : badge("Gate inactive", "warn"),
+          execution.controlledManualInboundOnly ? badge("Manual inbound only", "safe") : badge("Inbound scope risk", "danger"),
+          execution.buyerGateOpenForManualInboundOnly ? badge("Open for manual inbound only", "safe") : badge("Open scope missing", "danger"),
+          execution.requiresLeadSlotEnforcementNext ? badge("Lead-slot enforcement next", "safe") : badge("Slot enforcement missing", "danger")
+        ].join("<br>");
+
+        const trafficSafety = [
+          execution.outboundTrafficStarted ? badge("Outbound traffic risk", "danger") : badge("No outbound traffic", "safe"),
+          execution.liveTrafficPushStarted ? badge("Live traffic push risk", "danger") : badge("No live push", "safe"),
+          execution.startPaidAdsAutomatically ? badge("Paid ads risk", "danger") : badge("No paid ads auto-start", "safe"),
+          execution.publishLeadFormAutomatically ? badge("Lead form publish risk", "danger") : badge("No lead form auto-publish", "safe")
+        ].join("<br>");
+
+        const contactSafety = [
+          execution.realBuyerContacted ? badge("Buyer contacted risk", "danger") : badge("No buyer contacted", "safe"),
+          execution.autoContactBuyer ? badge("Auto-contact risk", "danger") : badge("No auto-contact", "safe"),
+          execution.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No WhatsApp auto-send", "safe"),
+          execution.autoReadWhatsApp ? badge("Auto-read risk", "danger") : badge("No WhatsApp auto-read", "safe"),
+          execution.scrapeWhatsappMessages ? badge("WhatsApp scraping risk", "danger") : badge("No WhatsApp scraping", "safe"),
+          execution.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe")
+        ].join("<br>");
+
+        const mutationSafety = risk ? badge("Risk detected", "danger") : [
+          execution.quoteBeforeStockConfirmation ? badge("Stock quote risk", "danger") : badge("No quote before stock", "safe"),
+          execution.quoteBeforeCompatibilityConfirmation ? badge("Compatibility quote risk", "danger") : badge("No quote before compatibility", "safe"),
+          execution.autoUpdateInventory ? badge("Inventory risk", "danger") : badge("No inventory update", "safe"),
+          execution.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          execution.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe"),
+          execution.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline move", "safe"),
+          execution.requiresManualReviewBeforeAnyBuyerContact ? badge("Manual review before contact", "safe") : badge("Manual review missing", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(execution.activationStatus, execution.activationStatus === "CONTROLLED_GATE_ACTIVE_MANUAL_INBOUND_ONLY" ? "approved" : "danger")}</td>
+            <td>${escapeHtml(execution.activationType)}</td>
+            <td>${badge(String(execution.leadLimit), Number(execution.leadLimit || 0) === 15 ? "safe" : "danger")}</td>
+            <td>${badge(`Accepted: ${execution.acceptedLeadCount || 0}`, "safe")}<br>${badge(`Remaining: ${execution.remainingLeadSlots || 0}`, Number(execution.remainingLeadSlots || 0) >= 0 ? "safe" : "danger")}</td>
+            <td>${badge(sourceLabel(execution.testSource), execution.testSource === "whatsapp_click_to_chat_inbound" ? "safe" : "warn")}</td>
+            <td>${approvalText}</td>
+            <td>${gateScope}</td>
+            <td>${trafficSafety}</td>
+            <td>${contactSafety}</td>
+            <td>${mutationSafety}</td>
+            <td>${escapeHtml(execution.executedBy)}</td>
+            <td>${formatDate(execution.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-activation-execution/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalExecutions").textContent = summary.totalExecutions || 0;
+      document.getElementById("latestActivationStatus").textContent = summary.latestActivationStatus || "NO_EXECUTION";
+      document.getElementById("latestLeadLimit").textContent = summary.latestLeadLimit || 0;
+      document.getElementById("latestTestSource").textContent = summary.latestTestSource || "NONE";
+      document.getElementById("latestRemainingLeadSlots").textContent = summary.latestRemainingLeadSlots || 0;
+      document.getElementById("activeManualInboundGateCount").textContent = summary.activeManualInboundGateCount || 0;
+      document.getElementById("outboundTrafficStartedCount").textContent = summary.outboundTrafficStartedCount || 0;
+      document.getElementById("autoContactCount").textContent = summary.autoContactCount || 0;
+
+      const executionsResponse = await fetch("/api/controlled-buyer-gate-activation-executions");
+      const executionsData = await executionsResponse.json();
+      allExecutions = Array.isArray(executionsData.executions) ? executionsData.executions : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("statusFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("executionRows").innerHTML =
+        `<tr><td colspan="12">Controlled Activation Execution dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

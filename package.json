@@ -91,7 +91,8 @@
     "version:28a": "node tools/version28a-controlled-buyer-gate-manual-activation-approval-smoke-test.js",
     "version:28b": "node tools/version28b-controlled-buyer-gate-manual-activation-approval-dashboard-smoke-test.js",
     "version:28c": "node tools/version28c-admin-hub-link-controlled-buyer-gate-manual-activation-approval-smoke-test.js",
-    "version:29a": "node tools/version29a-controlled-buyer-gate-activation-execution-smoke-test.js"
+    "version:29a": "node tools/version29a-controlled-buyer-gate-activation-execution-smoke-test.js",
+    "version:29b": "node tools/version29b-controlled-buyer-gate-activation-execution-dashboard-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

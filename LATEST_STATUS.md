@@ -1,26 +1,34 @@
 # LATEST STATUS
 
 Current Phase:
-Version 29A — Controlled Buyer-Gate Activation Execution Gate Foundation
+Version 29B — Controlled Buyer-Gate Activation Execution Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Controlled Buyer-Gate Activation Execution Gate foundation
-- Activation execution phrase requirement
-- Manual Activation Approval prerequisite
-- 15-lead limit preserved
-- WhatsApp click-to-chat inbound source preserved
-- Manual inbound gate only
-- Accepted lead count starts at 0
-- Remaining lead slots start at 15
-- Unsafe outbound/contact/send/read/scrape request blocking
-- Activation execution list API
-- Activation execution summary API
+- GET /controlled-buyer-gate-activation-execution
+- GET /controlled-buyer-gate-activation-executions
+- Activation Execution dashboard
+- Total executions metric
+- Latest activation status metric
+- Latest lead limit metric
+- Latest test source metric
+- Remaining lead slots metric
+- Manual inbound gate count metric
+- Outbound traffic started count metric
+- Auto contact count metric
+- Activation execution records table
+- Activation status filter
+- Safety filter
 
 Safety Confirmed:
+- Dashboard displays activation execution records only
+- Dashboard is read-only
 - Controlled 15-lead manual inbound gate only
+- Source remains WhatsApp click-to-chat inbound
+- Accepted lead count starts at 0
+- Remaining lead slots start at 15
 - No outbound traffic automatically started
 - No paid ads automatically started
 - No lead form automatically published
@@ -36,8 +44,7 @@ Safety Confirmed:
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
-- Lead-slot enforcement gate required next
-- Manual review required before any buyer contact
+- Lead-slot enforcement gate remains required next
 
 Next Phase:
-Version 29B — Controlled Buyer-Gate Activation Execution Dashboard Display
+Version 29C — Admin Hub Link Controlled Buyer-Gate Activation Execution
