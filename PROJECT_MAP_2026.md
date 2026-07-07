@@ -1438,3 +1438,56 @@ Create the safe controlled 15-lead buyer-gate test plan foundation. This creates
 
 ## Next Phase After Approval
 Version 27B — Controlled Buyer-Gate Test Plan Dashboard Display
+
+# Version 27C — Admin Hub Link Controlled Buyer-Gate Test Plan
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect the Controlled Buyer-Gate Test Plan into the Admin Navigation Hub so the 15-lead controlled plan is visible before any manual activation approval phase.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /controlled-buyer-gate-test-plan
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/controlled-buyer-gate-test-plan/summary
+
+## Features
+- Controlled Buyer-Gate Test Plan card in Admin Hub
+- Controlled Plans metric
+- Latest Plan Status metric
+- Latest Lead Limit metric
+- Latest Test Source metric
+- Activated Plans metric
+- Safe Plans metric
+- Controlled Buyer-Gate Test Plan metrics inside Admin Hub metrics API
+- Controlled Buyer-Gate Test Plan safety locks inside Admin Hub summary
+- Linked Controlled Buyer-Gate Test Plan dashboard reachable
+
+## Safety Rules
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
+- Controlled Buyer-Gate Test Plan remains plan-only
+- 15-lead limit only
+- First source remains WhatsApp click-to-chat inbound
+- Buyer gate remains closed
+- Live traffic not activated
+- No real buyer contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Manual approval required before activation
+
+## Next Phase After Approval
+Version 28A — Controlled Buyer-Gate Manual Activation Approval Gate Foundation

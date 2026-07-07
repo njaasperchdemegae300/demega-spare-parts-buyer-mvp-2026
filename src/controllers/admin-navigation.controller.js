@@ -22,6 +22,7 @@ const manualAccountingReviewService = require("../services/manual-accounting-rev
 const manualFinalBusinessReviewService = require("../services/manual-final-business-review.service");
 const assistantSalesAgentTestLabService = require("../services/assistant-sales-agent-test-lab.service");
 const internalBuyerGateReadinessGuardianService = require("../services/internal-buyer-gate-readiness-guardian.service");
+const controlledBuyerGateTestPlanService = require("../services/controlled-buyer-gate-test-plan.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -46,7 +47,8 @@ const modules = [
   { name: "Manual Accounting Review Gate", path: "/manual-accounting-review", purpose: "Manual accounting review visibility. Review-only; system does not create accounting entries, financial ledger, verify payment, generate receipts, create invoices, record revenue, move pipeline, update inventory, send, read messages, scrape, or harvest data." },
   { name: "Manual Final Business Review Gate", path: "/manual-final-business-review", purpose: "Manual final business review visibility. Review-only; system does not create final business records, close sales, move pipeline, create accounting entries, record revenue, update inventory, send, read messages, scrape, or harvest data." },
   { name: "Assistant Sales Agent Test Lab", path: "/assistant-sales-agent-test-lab", purpose: "Internal simulation-only sales-agent behavior testing before live buyer traffic. No live buyer contact, no WhatsApp auto-send, no WhatsApp auto-read, no scraping, no hidden harvesting, no quote before stock and compatibility gates." },
-  { name: "Internal Buyer-Gate Readiness Guardian", path: "/internal-buyer-gate-readiness", purpose: "Read-only readiness guardian before live buyer traffic. Checks source-of-truth readiness and Assistant Sales Agent readiness. Does not open buyer gate, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." }];
+  { name: "Internal Buyer-Gate Readiness Guardian", path: "/internal-buyer-gate-readiness", purpose: "Read-only readiness guardian before live buyer traffic. Checks source-of-truth readiness and Assistant Sales Agent readiness. Does not open buyer gate, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." },
+  { name: "Controlled Buyer-Gate Test Plan", path: "/controlled-buyer-gate-test-plan", purpose: "Read-only controlled 15-lead buyer-gate test plan display. Shows plan readiness only; does not open buyer gate, activate live traffic, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -83,11 +85,24 @@ function getSafety() {
     internalBuyerGateReadinessGuardianOnly: true,
     internalReadinessCheckOnly: true,
     readinessGuardianOnly: true,
+    controlledBuyerGateTestPlanOnly: true,
+    controlledPlanOnly: true,
+    controlled15LeadPlanOnly: true,
     simulationOnly: true,
+
     noLiveBuyerGateOpened: true,
     liveBuyerGateOpened: false,
+    buyerGateOpened: false,
+    openLiveBuyerGate: false,
+    activateBuyerGate: false,
+    enableLiveTraffic: false,
+    startLiveBuyerTraffic: false,
+    liveTrafficActivated: false,
+
     noRealBuyerContacted: true,
     realBuyerContacted: false,
+    contactRealBuyerAutomatically: false,
+    contactBuyerAutomatically: false,
 
     hotBuyerRankingReadOnly: true,
     whatsappManualOpenOnly: true,
@@ -137,6 +152,15 @@ function getSafety() {
     requiresManualFinalBusinessReviewApproval: true,
     adminObservedReplyRequired: true,
 
+    leadLimitOnly: true,
+    leadLimit: 15,
+    manualReviewRequired: true,
+    manualReplyOnly: true,
+    noAutoSend: true,
+    noSpam: true,
+    noUnsolicitedWhatsApp: true,
+    chosenFirstSource: "whatsapp_click_to_chat_inbound",
+
     preparesCopyTextOnly: true,
     confirmationRecordOnly: true,
     draftOnly: true,
@@ -169,6 +193,7 @@ function getSafety() {
     systemDoesNotRecordRevenue: true,
     systemDoesNotCreateFinalBusinessRecord: true,
     systemDoesNotOpenLiveBuyerGate: true,
+    systemDoesNotActivateLiveTraffic: true,
     systemDoesNotContactRealBuyer: true,
 
     serverDoesNotAccessClipboard: true,
@@ -185,12 +210,6 @@ function getSafety() {
     priceIncluded: false,
     quoteAmountIncluded: false,
 
-    openLiveBuyerGate: false,
-    activateBuyerGate: false,
-    enableLiveTraffic: false,
-    startLiveBuyerTraffic: false,
-    contactRealBuyerAutomatically: false,
-    contactBuyerAutomatically: false,
     autoReadWhatsApp: false,
     readBuyerMessagesAutomatically: false,
     scrapeWhatsappMessages: false,
@@ -263,10 +282,10 @@ function getSafety() {
     autoCreateFinalBusinessRecord: false,
     finalBusinessRecordCreatedBySystem: false,
 
-    manualReviewRequired: true,
     manualReviewRequiredForNextStep: true,
     manualReviewRequiredBeforeExecution: true,
     manualReviewRequiredBeforeLiveBuyerGate: true,
+    manualApprovalRequiredBeforeActivation: true,
     manualApprovalRequiredToOpenBuyerGateLater: true,
     manualReviewRequiredForAccounting: true,
     manualReviewRequiredForPipelineUpdate: true,
@@ -321,6 +340,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const manualFinalBusinessReview = safeRead(() => manualFinalBusinessReviewService.getManualFinalBusinessReviewSummary(), {});
   const assistantSalesAgentTestLab = safeRead(() => assistantSalesAgentTestLabService.getAssistantSalesAgentTestLabSummary(), {});
   const internalBuyerGateReadiness = safeRead(() => internalBuyerGateReadinessGuardianService.getInternalBuyerGateReadinessSummary(), {});
+  const controlledBuyerGateTestPlan = safeRead(() => controlledBuyerGateTestPlanService.getControlledBuyerGateTestPlanSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -351,7 +371,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       manualAccountingReview,
       manualFinalBusinessReview,
       assistantSalesAgentTestLab,
-      internalBuyerGateReadiness
+      internalBuyerGateReadiness,
+      controlledBuyerGateTestPlan
     },
     safety: getSafety()
   });

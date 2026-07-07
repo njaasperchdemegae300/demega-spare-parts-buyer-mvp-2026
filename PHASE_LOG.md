@@ -68,3 +68,6 @@ Controlled Buyer-Gate Test Plan Foundation added.
 
 ### Version 27B
 Controlled Buyer-Gate Test Plan Dashboard Display added.
+
+### Version 27C
+Admin Hub Link Controlled Buyer-Gate Test Plan added.
