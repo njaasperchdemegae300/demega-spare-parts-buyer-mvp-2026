@@ -71,3 +71,6 @@ Controlled Buyer-Gate Test Plan Dashboard Display added.
 
 ### Version 27C
 Admin Hub Link Controlled Buyer-Gate Test Plan added.
+
+### Version 28A
+Controlled Buyer-Gate Manual Activation Approval Gate Foundation added.

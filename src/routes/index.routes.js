@@ -29,6 +29,7 @@ const projectSourceOfTruthController = require("../controllers/project-source-of
 const assistantSalesAgentTestLabController = require("../controllers/assistant-sales-agent-test-lab.controller");
 const internalBuyerGateReadinessGuardianController = require("../controllers/internal-buyer-gate-readiness-guardian.controller");
 const controlledBuyerGateTestPlanController = require("../controllers/controlled-buyer-gate-test-plan.controller");
+const controlledBuyerGateManualActivationApprovalController = require("../controllers/controlled-buyer-gate-manual-activation-approval.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -268,6 +269,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/controlled-buyer-gate-test-plan" || url.pathname === "/controlled-buyer-gate-test-plans")) {
     return controlledBuyerGateTestPlanController.dashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-activation-approval/preview") {
+    return controlledBuyerGateManualActivationApprovalController.previewController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/controlled-buyer-gate-manual-activation-approval/create") {
+    return controlledBuyerGateManualActivationApprovalController.createController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-activation-approvals") {
+    return controlledBuyerGateManualActivationApprovalController.listController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-activation-approval/summary") {
+    return controlledBuyerGateManualActivationApprovalController.summaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-test-plan/preview") {

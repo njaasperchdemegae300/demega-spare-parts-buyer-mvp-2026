@@ -1,31 +1,35 @@
 # LATEST STATUS
 
 Current Phase:
-Version 27C — Admin Hub Link Controlled Buyer-Gate Test Plan
+Version 28A — Controlled Buyer-Gate Manual Activation Approval Gate Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Controlled Buyer-Gate Test Plan linked inside Admin Navigation Hub
-- Controlled Plans metric
-- Latest Plan Status metric
-- Latest Lead Limit metric
-- Latest Test Source metric
-- Activated Plans metric
-- Safe Plans metric
-- Controlled Buyer-Gate Test Plan metrics inside Admin Hub metrics API
-- Controlled Buyer-Gate Test Plan safety locks inside Admin Hub summary
-- Linked Controlled Buyer-Gate Test Plan dashboard reachable
+- Manual activation approval gate foundation
+- Manual approval phrase requirement
+- Manual plan review confirmation
+- Manual safety review confirmation
+- 15-lead limit confirmation
+- WhatsApp click-to-chat inbound confirmation
+- Manual reply only confirmation
+- No auto-send confirmation
+- No spam confirmation
+- No private scraping confirmation
+- No hidden harvesting confirmation
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- Unsafe live activation blocking
+- Approved-not-activated approval status
+- Approval list API
+- Approval summary API
 
 Safety Confirmed:
-- Admin Hub remains navigation and visibility only
-- Metrics API remains read-only
-- Controlled Buyer-Gate Test Plan remains plan-only
-- 15-lead limit only
-- First source remains WhatsApp click-to-chat inbound
-- Buyer gate remains closed
-- Live traffic not activated
+- Manual activation approval gate only
+- Manual approval is recorded only
+- Buyer gate is not opened
+- Live traffic is not activated
 - No real buyer contacted
 - No WhatsApp auto-send
 - No WhatsApp auto-read
@@ -38,12 +42,8 @@ Safety Confirmed:
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
-- Manual approval required before activation
-
-Business Readiness Confirmed:
-- Admin Hub now exposes Controlled Buyer-Gate Test Plan metrics
-- Admin Hub now links directly to Controlled Buyer-Gate Test Plan dashboard
-- Buyer gate remains closed until a later manual activation approval phase
+- Separate activation execution gate required later
+- Manual review required before any buyer contact
 
 Next Phase:
-Version 28A — Controlled Buyer-Gate Manual Activation Approval Gate Foundation
+Version 28B — Controlled Buyer-Gate Manual Activation Approval Dashboard Display

@@ -29,3 +29,6 @@ Before opening real buyer traffic, the project must internally test Assistant Sa
 
 ## Decision 10 — Buyer Gate Must Stay Closed Until Guardian Approval
 The system must not open real buyer traffic until the Internal Buyer-Gate Readiness Guardian confirms source-of-truth readiness, Assistant Sales Agent readiness, zero failed agent tests, and all core safety locks.
+
+## Decision 11 — Manual Approval Does Not Equal Activation
+The Controlled Buyer-Gate Manual Activation Approval Gate records approval for controlled 15-lead test preparation only. It must not open buyer gate, activate live traffic, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline. A separate activation execution gate is required later.
