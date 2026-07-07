@@ -128,3 +128,6 @@ Controlled Buyer-Gate Manual Compatibility Check Gate Foundation added.
 
 ### Version 33B
 Controlled Buyer-Gate Manual Compatibility Check Dashboard Display added.
+
+### Version 33C
+Admin Hub Link Controlled Buyer-Gate Manual Compatibility Check added.

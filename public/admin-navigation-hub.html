@@ -99,6 +99,12 @@
       <span class="badge">STOCK CHECK RECORD ONLY</span>
       <span class="badge">NO BUYER CONTACT FROM STOCK GATE</span>
       <span class="badge">NO QUOTE PREPARED AT STOCK GATE</span>
+      <span class="badge">MANUAL COMPATIBILITY CHECK DASHBOARD ONLY</span>
+      <span class="badge">COMPATIBILITY CHECK RECORD ONLY</span>
+      <span class="badge">NO BUYER CONTACT FROM COMPATIBILITY GATE</span>
+      <span class="badge">NO QUOTE PREPARED AT COMPATIBILITY GATE</span>
+      <span class="badge">NO PRICE INCLUDED</span>
+      <span class="badge">QUOTE BLOCKED UNTIL FINAL ELIGIBILITY</span>
       <span class="badge">NO INVENTORY MUTATION</span>
       <span class="badge">QUOTE BLOCKED UNTIL COMPATIBILITY</span>
       <span class="badge">ACCEPT MOVES TO MANUAL STOCK CHECK ONLY</span>
@@ -170,6 +176,12 @@
         <li>Manual stock check records stock status only.</li>
         <li>Manual stock check does not contact buyers.</li>
         <li>Manual stock check does not prepare quote.</li>
+        <li>Manual compatibility check records compatibility status only.</li>
+        <li>Manual compatibility check does not contact buyers.</li>
+        <li>Manual compatibility check does not prepare quote.</li>
+        <li>Manual compatibility check does not include price.</li>
+        <li>Quote remains blocked until final quote eligibility.</li>
+        <li>Final quote eligibility is required next.</li>
         <li>Manual stock check does not update, reserve, or reduce stock.</li>
         <li>Quote remains blocked until compatibility confirmation.</li>
         <li>Manual compatibility check is required next.</li>
@@ -289,6 +301,14 @@
         <div class="metric"><h2>Latest Stock Status</h2><strong id="manualStockLatestStatus">NO_STOCK_CHECK</strong></div>
         <div class="metric"><h2>Latest Stock Decision</h2><strong id="manualStockLatestDecision">NONE</strong></div>
         <div class="metric"><h2>Latest Stock Source</h2><strong id="manualStockLatestSource">NONE</strong></div>
+        <div class="metric"><h2>Manual Compatibility Checks</h2><strong id="manualCompatibilityCheckTotal">0</strong></div>
+        <div class="metric"><h2>Completed Compatibility Checks</h2><strong id="manualCompatibilityCheckCompleted">0</strong></div>
+        <div class="metric"><h2>Compatibility Confirmed</h2><strong id="manualCompatibilityConfirmed">0</strong></div>
+        <div class="metric"><h2>Compatibility Not Confirmed</h2><strong id="manualCompatibilityNotConfirmed">0</strong></div>
+        <div class="metric"><h2>Compatibility Needs More Info</h2><strong id="manualCompatibilityNeedsInfo">0</strong></div>
+        <div class="metric"><h2>Latest Compatibility Status</h2><strong id="manualCompatibilityLatestStatus">NO_COMPATIBILITY_CHECK</strong></div>
+        <div class="metric"><h2>Latest Compatibility Decision</h2><strong id="manualCompatibilityLatestDecision">NONE</strong></div>
+        <div class="metric"><h2>Latest Compatibility Source</h2><strong id="manualCompatibilityLatestSource">NONE</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -330,6 +350,8 @@
       <div class="card"><h2>Controlled Buyer-Gate Manual Lead Review</h2><p>View controlled manual lead review decisions before buyer contact. Read-only; no buyer contact, no WhatsApp auto-send/read, no scraping, no quote preparation, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-lead-review">Open Manual Lead Review</a></div>
 
       <div class="card"><h2>Controlled Buyer-Gate Manual Stock Check</h2><p>View controlled manual stock check decisions before compatibility check or quote preparation. Read-only; no buyer contact, no quote, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-stock-check">Open Manual Stock Check</a></div>
+
+      <div class="card"><h2>Controlled Buyer-Gate Manual Compatibility Check</h2><p>View controlled manual compatibility check decisions before final quote eligibility or quote preparation. Read-only; no buyer contact, no quote, no price, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-compatibility-check">Open Manual Compatibility Check</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -643,6 +665,35 @@
     }
 
     loadManualStockCheckHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadManualCompatibilityCheckHubMetrics() {
+      try {
+        const response = await fetch("/api/controlled-buyer-gate-manual-compatibility-check/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("manualCompatibilityCheckTotal", summary.totalCompatibilityChecks || 0);
+        setText("manualCompatibilityCheckCompleted", summary.completedCompatibilityCheckCount || 0);
+        setText("manualCompatibilityConfirmed", summary.compatibilityConfirmedCount || 0);
+        setText("manualCompatibilityNotConfirmed", summary.compatibilityNotConfirmedCount || 0);
+        setText("manualCompatibilityNeedsInfo", summary.compatibilityNeedsMoreInfoCount || 0);
+        setText("manualCompatibilityLatestStatus", summary.latestCompatibilityCheckStatus || "NO_COMPATIBILITY_CHECK");
+        setText("manualCompatibilityLatestDecision", summary.latestCompatibilityDecision || "NONE");
+        setText("manualCompatibilityLatestSource", summary.latestSource || "NONE");
+      } catch (error) {
+        const element = document.getElementById("manualCompatibilityLatestStatus");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadManualCompatibilityCheckHubMetrics();
   </script>
 
 </body>
