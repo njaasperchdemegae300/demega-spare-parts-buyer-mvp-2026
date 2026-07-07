@@ -34,6 +34,7 @@ const controlledBuyerGateActivationExecutionController = require("../controllers
 const controlledBuyerGateLeadSlotEnforcementController = require("../controllers/controlled-buyer-gate-lead-slot-enforcement.controller");
 const controlledBuyerGateManualLeadReviewController = require("../controllers/controlled-buyer-gate-manual-lead-review.controller");
 const controlledBuyerGateManualStockCheckController = require("../controllers/controlled-buyer-gate-manual-stock-check.controller");
+const controlledBuyerGateManualCompatibilityCheckController = require("../controllers/controlled-buyer-gate-manual-compatibility-check.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -303,6 +304,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/controlled-buyer-gate-manual-stock-check" || url.pathname === "/controlled-buyer-gate-manual-stock-checks")) {
     return controlledBuyerGateManualStockCheckController.dashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-compatibility-check/preview") {
+    return controlledBuyerGateManualCompatibilityCheckController.previewController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/controlled-buyer-gate-manual-compatibility-check/create") {
+    return controlledBuyerGateManualCompatibilityCheckController.createController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-compatibility-checks") {
+    return controlledBuyerGateManualCompatibilityCheckController.listController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-compatibility-check/summary") {
+    return controlledBuyerGateManualCompatibilityCheckController.summaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-stock-check/preview") {
