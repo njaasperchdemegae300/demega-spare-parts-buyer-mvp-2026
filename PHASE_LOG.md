@@ -59,3 +59,6 @@ Admin Hub Link Assistant Sales Agent Test Lab added.
 
 ### Version 26B-FIX1
 Fixed Internal Buyer-Gate Readiness Guardian dashboard smoke test request options and re-ran Version 26B dashboard validation.
+
+### Version 26C
+Admin Hub Link Internal Buyer-Gate Readiness Guardian added.

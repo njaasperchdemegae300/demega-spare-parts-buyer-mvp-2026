@@ -65,6 +65,10 @@
       <span class="badge">ASSISTANT SALES AGENT TEST LAB IS SIMULATION ONLY</span>
       <span class="badge">NO LIVE BUYER GATE OPENED</span>
       <span class="badge">NO REAL BUYER CONTACTED</span>
+      <span class="badge">INTERNAL BUYER-GATE READINESS GUARDIAN IS READ-ONLY</span>
+      <span class="badge">BUYER GATE REMAINS CLOSED</span>
+      <span class="badge">MANUAL APPROVAL REQUIRED BEFORE BUYER GATE</span>
+      <span class="badge">NO LIVE TRAFFIC ACTIVATION</span>
       <span class="badge">NO WHATSAPP AUTO-READ</span>
       <span class="badge">NO AUTOMATIC CLOSING</span>
       <span class="badge warn">ADMIN MUST MANUALLY OBSERVE BUYER REPLY OUTSIDE THE SYSTEM</span>
@@ -102,6 +106,10 @@
         <li>It does not contact real buyers automatically.</li>
         <li>It does not send or read WhatsApp automatically.</li>
         <li>It does not scrape private messages or harvest hidden data.</li>
+        <li>Internal Buyer-Gate Readiness Guardian is read-only and readiness-check-only.</li>
+        <li>It does not open live buyer gate automatically.</li>
+        <li>It does not activate live traffic automatically.</li>
+        <li>It requires manual approval before any controlled buyer gate later.</li>
       </ul>
     </section>
 
@@ -166,6 +174,12 @@
         <div class="metric"><h2>Sales Agent Failed</h2><strong id="assistantSalesAgentFailed">0</strong></div>
         <div class="metric"><h2>Sales Agent Scenarios</h2><strong id="assistantSalesAgentScenarios">0</strong></div>
         <div class="metric"><h2>Approved Agent Runs</h2><strong id="assistantSalesAgentApprovedRuns">0</strong></div>
+        <div class="metric"><h2>Buyer-Gate Guardian Runs</h2><strong id="buyerGateGuardianRuns">0</strong></div>
+        <div class="metric"><h2>Buyer-Gate Verdict</h2><strong id="buyerGateLatestVerdict">NOT_RUN</strong></div>
+        <div class="metric"><h2>Buyer-Gate Checks</h2><strong id="buyerGateCheckCount">0</strong></div>
+        <div class="metric"><h2>Buyer-Gate Failed Checks</h2><strong id="buyerGateFailedChecks">0</strong></div>
+        <div class="metric"><h2>Source Truth Ready</h2><strong id="buyerGateSourceTruthReady">false</strong></div>
+        <div class="metric"><h2>Gate Candidate</h2><strong id="buyerGateCandidate">false</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -193,6 +207,8 @@
       <div class="card"><h2>Manual Final Business Review Gate</h2><p>View manual final business reviews after accounting reviews. No automatic final business record, sale closing, pipeline movement, accounting entry, revenue recording, inventory update, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-final-business-review">Open Final Business Review Gate</a></div>
 
       <div class="card"><h2>Assistant Sales Agent Test Lab</h2><p>View internal sales-agent readiness tests before opening real buyer traffic. Simulation-only; no live buyer contact, no WhatsApp auto-send, no WhatsApp auto-read, no scraping, no hidden harvesting, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/assistant-sales-agent-test-lab">Open Assistant Sales Agent Test Lab</a></div>
+
+      <div class="card"><h2>Internal Buyer-Gate Readiness Guardian</h2><p>View internal readiness checks before opening real buyer traffic. Readiness-check-only; no live buyer gate opened, no real buyer contacted, no WhatsApp send/read, no scraping, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/internal-buyer-gate-readiness">Open Buyer-Gate Readiness Guardian</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -309,6 +325,33 @@
     }
 
     loadAssistantSalesAgentHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadInternalBuyerGateReadinessHubMetrics() {
+      try {
+        const response = await fetch("/api/internal-buyer-gate-readiness/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("buyerGateGuardianRuns", summary.totalRuns || 0);
+        setText("buyerGateLatestVerdict", summary.latestVerdict || "NOT_RUN");
+        setText("buyerGateCheckCount", summary.latestCheckCount || 0);
+        setText("buyerGateFailedChecks", summary.latestFailedCheckCount || 0);
+        setText("buyerGateSourceTruthReady", summary.latestSourceOfTruthReady ? "true" : "false");
+        setText("buyerGateCandidate", summary.liveGateCandidateOnlyAfterApproval ? "true" : "false");
+      } catch (error) {
+        const element = document.getElementById("buyerGateLatestVerdict");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadInternalBuyerGateReadinessHubMetrics();
   </script>
 
 </body>

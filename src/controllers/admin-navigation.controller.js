@@ -21,6 +21,7 @@ const manualStockMovementReviewService = require("../services/manual-stock-movem
 const manualAccountingReviewService = require("../services/manual-accounting-review.service");
 const manualFinalBusinessReviewService = require("../services/manual-final-business-review.service");
 const assistantSalesAgentTestLabService = require("../services/assistant-sales-agent-test-lab.service");
+const internalBuyerGateReadinessGuardianService = require("../services/internal-buyer-gate-readiness-guardian.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -44,7 +45,8 @@ const modules = [
   { name: "Manual Stock Movement Review Gate", path: "/manual-stock-movement-review", purpose: "Manual stock movement review visibility. Review-only; system does not update inventory, reduce stock, reserve stock, release stock, create stock ledger, handle payment, send, read messages, scrape, or harvest data." },
   { name: "Manual Accounting Review Gate", path: "/manual-accounting-review", purpose: "Manual accounting review visibility. Review-only; system does not create accounting entries, financial ledger, verify payment, generate receipts, create invoices, record revenue, move pipeline, update inventory, send, read messages, scrape, or harvest data." },
   { name: "Manual Final Business Review Gate", path: "/manual-final-business-review", purpose: "Manual final business review visibility. Review-only; system does not create final business records, close sales, move pipeline, create accounting entries, record revenue, update inventory, send, read messages, scrape, or harvest data." },
-  { name: "Assistant Sales Agent Test Lab", path: "/assistant-sales-agent-test-lab", purpose: "Internal simulation-only sales-agent behavior testing before live buyer traffic. No live buyer contact, no WhatsApp auto-send, no WhatsApp auto-read, no scraping, no hidden harvesting, no quote before stock and compatibility gates." }];
+  { name: "Assistant Sales Agent Test Lab", path: "/assistant-sales-agent-test-lab", purpose: "Internal simulation-only sales-agent behavior testing before live buyer traffic. No live buyer contact, no WhatsApp auto-send, no WhatsApp auto-read, no scraping, no hidden harvesting, no quote before stock and compatibility gates." },
+  { name: "Internal Buyer-Gate Readiness Guardian", path: "/internal-buyer-gate-readiness", purpose: "Read-only readiness guardian before live buyer traffic. Checks source-of-truth readiness and Assistant Sales Agent readiness. Does not open buyer gate, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -78,9 +80,14 @@ function getSafety() {
     handoverSystemOnly: true,
     assistantSalesAgentReadinessTestOnly: true,
     assistantSalesAgentTestLabOnly: true,
+    internalBuyerGateReadinessGuardianOnly: true,
+    internalReadinessCheckOnly: true,
+    readinessGuardianOnly: true,
     simulationOnly: true,
     noLiveBuyerGateOpened: true,
+    liveBuyerGateOpened: false,
     noRealBuyerContacted: true,
+    realBuyerContacted: false,
 
     hotBuyerRankingReadOnly: true,
     whatsappManualOpenOnly: true,
@@ -179,7 +186,11 @@ function getSafety() {
     quoteAmountIncluded: false,
 
     openLiveBuyerGate: false,
+    activateBuyerGate: false,
+    enableLiveTraffic: false,
+    startLiveBuyerTraffic: false,
     contactRealBuyerAutomatically: false,
+    contactBuyerAutomatically: false,
     autoReadWhatsApp: false,
     readBuyerMessagesAutomatically: false,
     scrapeWhatsappMessages: false,
@@ -256,6 +267,7 @@ function getSafety() {
     manualReviewRequiredForNextStep: true,
     manualReviewRequiredBeforeExecution: true,
     manualReviewRequiredBeforeLiveBuyerGate: true,
+    manualApprovalRequiredToOpenBuyerGateLater: true,
     manualReviewRequiredForAccounting: true,
     manualReviewRequiredForPipelineUpdate: true,
     manualReviewRequiredForStockUpdate: true,
@@ -308,6 +320,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const manualAccountingReview = safeRead(() => manualAccountingReviewService.getManualAccountingReviewSummary(), {});
   const manualFinalBusinessReview = safeRead(() => manualFinalBusinessReviewService.getManualFinalBusinessReviewSummary(), {});
   const assistantSalesAgentTestLab = safeRead(() => assistantSalesAgentTestLabService.getAssistantSalesAgentTestLabSummary(), {});
+  const internalBuyerGateReadiness = safeRead(() => internalBuyerGateReadinessGuardianService.getInternalBuyerGateReadinessSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -337,7 +350,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       manualStockMovementReview,
       manualAccountingReview,
       manualFinalBusinessReview,
-      assistantSalesAgentTestLab
+      assistantSalesAgentTestLab,
+      internalBuyerGateReadiness
     },
     safety: getSafety()
   });
