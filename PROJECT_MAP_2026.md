@@ -1816,3 +1816,57 @@ Connect Controlled Buyer-Gate Manual Lead Review into Admin Navigation Hub so ac
 
 ## Next Phase After Approval
 Version 32A — Controlled Buyer-Gate Manual Stock Check Gate Foundation
+
+# Version 32B — Controlled Buyer-Gate Manual Stock Check Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display controlled buyer-gate manual stock check records in a read-only dashboard. This shows manual stock status decisions before compatibility check or quote preparation.
+
+## Routes
+- GET /controlled-buyer-gate-manual-stock-check
+- GET /controlled-buyer-gate-manual-stock-checks
+- GET /api/controlled-buyer-gate-manual-stock-checks
+- GET /api/controlled-buyer-gate-manual-stock-check/summary
+
+## Features
+- Manual Stock Check dashboard
+- Total stock checks metric
+- Completed checks metric
+- Stock available metric
+- Stock not available metric
+- Supplier confirmation metric
+- Latest stock check status metric
+- Latest stock decision metric
+- Latest source metric
+- Manual stock check table
+- Decision filter
+- Safety filter
+
+## Safety
+- Read-only dashboard
+- Manual stock check records display only
+- Manual stock check does not contact buyer
+- Manual stock check does not prepare quote
+- Quote remains blocked until compatibility confirmation
+- No outbound traffic automatically started
+- No paid ads automatically started
+- No lead form automatically published
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No inventory update
+- No stock reservation
+- No stock reduction
+- No stock ledger entry
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Manual compatibility check required next
+
+## Next Phase After Approval
+Version 32C — Admin Hub Link Controlled Buyer-Gate Manual Stock Check

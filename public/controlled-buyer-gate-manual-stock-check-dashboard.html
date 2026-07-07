@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Manual Stock Check Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 26px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 3200px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .approved { background: #dcfce7; color: #166534; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Manual Stock Check Dashboard</h1>
+    <p>Read-only dashboard for manual stock check records. It does not contact buyers, prepare quotes, or change inventory.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Stock Checks</h2><strong id="totalStockChecks">0</strong></div>
+      <div class="card"><h2>Completed Checks</h2><strong id="completedStockCheckCount">0</strong></div>
+      <div class="card"><h2>Stock Available</h2><strong id="stockConfirmedAvailableCount">0</strong></div>
+      <div class="card"><h2>Stock Not Available</h2><strong id="stockNotAvailableCount">0</strong></div>
+      <div class="card"><h2>Supplier Confirmation</h2><strong id="stockNeedsSupplierConfirmationCount">0</strong></div>
+      <div class="card"><h2>Latest Status</h2><strong id="latestStockCheckStatus">NO_STOCK_CHECK</strong></div>
+      <div class="card"><h2>Latest Decision</h2><strong id="latestStockDecision">NONE</strong></div>
+      <div class="card"><h2>Latest Source</h2><strong id="latestSource">NONE</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Stock Check Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It displays manual stock status only.
+        Manual stock check does not contact the buyer, send WhatsApp, read WhatsApp, scrape messages, prepare quotes,
+        update inventory, reserve stock, reduce stock, create accounting entries, close sales, or move pipeline.
+      </p>
+      <span class="badge safe">Manual stock check gate only</span>
+      <span class="badge safe">Manual stock check record only</span>
+      <span class="badge safe">Controlled stock check only</span>
+      <span class="badge safe">Stock status confirmed manually</span>
+      <span class="badge safe">No buyer contact from stock gate</span>
+      <span class="badge safe">No quote prepared at stock gate</span>
+      <span class="badge safe">Quote blocked until compatibility confirmation</span>
+      <span class="badge safe">No WhatsApp auto-send</span>
+      <span class="badge safe">No WhatsApp auto-read</span>
+      <span class="badge safe">No buyer message scraping</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden data harvesting</span>
+      <span class="badge safe">No inventory update</span>
+      <span class="badge safe">No stock reservation</span>
+      <span class="badge safe">No stock reduction</span>
+      <span class="badge safe">No stock ledger entry</span>
+      <span class="badge safe">No accounting entry</span>
+      <span class="badge safe">Manual compatibility check required next</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Allowed Stock Decisions</h2>
+      <p class="muted">
+        A stock decision only records what the admin manually checked. It does not quote or reserve the product.
+      </p>
+      <span class="badge safe">STOCK_CONFIRMED_AVAILABLE</span>
+      <span class="badge warn">STOCK_NOT_AVAILABLE</span>
+      <span class="badge warn">STOCK_NEEDS_SUPPLIER_CONFIRMATION</span>
+      <span class="badge safe">MANUAL_STOCK_CHECK_COMPLETED</span>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled Buyer-Gate Manual Stock Checks</h2>
+      <p class="muted">Read-only list of manual stock check records after accepted manual lead review.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search decision, part, vehicle, stock location, checker..." />
+        <select id="decisionFilter">
+          <option value="">All stock decisions</option>
+          <option value="STOCK_CONFIRMED_AVAILABLE">STOCK_CONFIRMED_AVAILABLE</option>
+          <option value="STOCK_NOT_AVAILABLE">STOCK_NOT_AVAILABLE</option>
+          <option value="STOCK_NEEDS_SUPPLIER_CONFIRMATION">STOCK_NEEDS_SUPPLIER_CONFIRMATION</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe stock checks</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Stock Check Status</th>
+            <th>Stock Decision</th>
+            <th>Slot</th>
+            <th>Source</th>
+            <th>Lead Reference</th>
+            <th>Buyer Request</th>
+            <th>Stock Details</th>
+            <th>Stock Scope</th>
+            <th>Contact Safety</th>
+            <th>Quote Safety</th>
+            <th>Inventory Safety</th>
+            <th>Business Mutation Safety</th>
+            <th>Checked By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="stockCheckRows">
+          <tr><td colspan="14">Loading manual stock check records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allStockChecks = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function sourceLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function hasRisk(check) {
+      return check.buyerContacted === true ||
+        check.realBuyerContacted === true ||
+        check.autoContactBuyer === true ||
+        check.contactRealBuyerAutomatically === true ||
+        check.startOutboundTraffic === true ||
+        check.startPaidAdsAutomatically === true ||
+        check.publishLeadFormAutomatically === true ||
+        check.autoSendWhatsApp === true ||
+        check.sendWhatsApp === true ||
+        check.broadcastWhatsApp === true ||
+        check.autoReadWhatsApp === true ||
+        check.scrapeWhatsappMessages === true ||
+        check.privateMessageScraping === true ||
+        check.hiddenDataHarvesting === true ||
+        check.quotePrepared === true ||
+        check.autoCreateQuote === true ||
+        check.autoCreateQuoteAndSend === true ||
+        check.quoteBeforeStockConfirmation === true ||
+        check.quoteBeforeCompatibilityConfirmation === true ||
+        check.inventoryUpdated === true ||
+        check.stockReserved === true ||
+        check.stockReduced === true ||
+        check.autoUpdateInventory === true ||
+        check.reserveStockAutomatically === true ||
+        check.reduceStockAutomatically === true ||
+        check.autoCreateInventoryEvent === true ||
+        check.autoCreateStockLedgerEntry === true ||
+        check.autoCreateAccountingEntry === true ||
+        check.autoCloseSale === true ||
+        check.autoMovePipelineStage === true;
+    }
+
+    function getFilteredChecks() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const decisionFilter = document.getElementById("decisionFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allStockChecks.filter(check => {
+        const risk = hasRisk(check);
+        const haystack = [
+          check.stockCheckStatus,
+          check.stockDecision,
+          check.source,
+          check.leadReference,
+          check.partNeeded,
+          check.vehicleDetail,
+          check.buyerLocation,
+          check.stockLocation,
+          check.stockCondition,
+          check.stockNote,
+          check.checkedBy
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!decisionFilter || check.stockDecision === decisionFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("stockCheckRows");
+      const checks = getFilteredChecks();
+
+      if (!checks.length) {
+        tbody.innerHTML = '<tr><td colspan="14">No matching manual stock checks.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = checks.map(check => {
+        const risk = hasRisk(check);
+
+        const requestText = [
+          badge(`Part: ${check.partNeeded || "Not recorded"}`, "safe"),
+          badge(`Vehicle: ${check.vehicleDetail || "Not recorded"}`, "safe"),
+          badge(`Location: ${check.buyerLocation || "Not recorded"}`, "safe")
+        ].join("<br>");
+
+        const stockDetails = [
+          badge(`Location: ${check.stockLocation || "Not recorded"}`, "safe"),
+          badge(`Condition: ${check.stockCondition || "Not recorded"}`, "safe"),
+          badge(`Note: ${check.stockNote || "No note"}`, "warn")
+        ].join("<br>");
+
+        const stockScope = [
+          check.manualStockCheckGateOnly ? badge("Stock gate only", "safe") : badge("Stock scope risk", "danger"),
+          check.stockCheckRecordOnly ? badge("Record only", "safe") : badge("Record scope risk", "danger"),
+          check.controlledStockCheckOnly ? badge("Controlled stock check", "safe") : badge("Control scope risk", "danger"),
+          check.manualStockStatusOnly ? badge("Manual stock status only", "safe") : badge("Manual status missing", "danger"),
+          check.stockConfirmedAvailableOnly ? badge("Stock available", "safe") : "",
+          check.stockNotAvailableOnly ? badge("Stock not available", "warn") : "",
+          check.stockNeedsSupplierConfirmationOnly ? badge("Supplier confirmation needed", "warn") : ""
+        ].filter(Boolean).join("<br>");
+
+        const contactSafety = [
+          check.buyerContacted ? badge("Buyer contacted risk", "danger") : badge("Buyer not contacted", "safe"),
+          check.autoContactBuyer ? badge("Auto-contact risk", "danger") : badge("No auto-contact", "safe"),
+          check.autoSendWhatsApp ? badge("WhatsApp auto-send risk", "danger") : badge("No WhatsApp auto-send", "safe"),
+          check.autoReadWhatsApp ? badge("WhatsApp auto-read risk", "danger") : badge("No WhatsApp auto-read", "safe"),
+          check.scrapeWhatsappMessages ? badge("WhatsApp scraping risk", "danger") : badge("No WhatsApp scraping", "safe")
+        ].join("<br>");
+
+        const quoteSafety = [
+          check.quotePrepared ? badge("Quote prepared risk", "danger") : badge("No quote prepared", "safe"),
+          check.autoCreateQuote ? badge("Auto quote risk", "danger") : badge("No auto quote", "safe"),
+          check.quoteBeforeStockConfirmation ? badge("Stock quote risk", "danger") : badge("No quote before stock", "safe"),
+          check.quoteBeforeCompatibilityConfirmation ? badge("Compatibility quote risk", "danger") : badge("No quote before compatibility", "safe"),
+          check.quoteBlockedUntilCompatibility ? badge("Quote blocked until compatibility", "safe") : badge("Quote block missing", "danger"),
+          check.manualCompatibilityCheckRequiredNext ? badge("Compatibility check next", "safe") : badge("Compatibility next missing", "danger")
+        ].join("<br>");
+
+        const inventorySafety = [
+          check.inventoryUpdated ? badge("Inventory update risk", "danger") : badge("No inventory update", "safe"),
+          check.stockReserved ? badge("Stock reservation risk", "danger") : badge("No stock reservation", "safe"),
+          check.stockReduced ? badge("Stock reduction risk", "danger") : badge("No stock reduction", "safe"),
+          check.autoCreateInventoryEvent ? badge("Inventory event risk", "danger") : badge("No inventory event", "safe"),
+          check.autoCreateStockLedgerEntry ? badge("Stock ledger risk", "danger") : badge("No stock ledger", "safe")
+        ].join("<br>");
+
+        const mutationSafety = risk ? badge("Risk detected", "danger") : [
+          check.startOutboundTraffic ? badge("Outbound risk", "danger") : badge("No outbound traffic", "safe"),
+          check.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          check.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe"),
+          check.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline move", "safe"),
+          check.noPrivateDataScraping ? badge("No private scraping", "safe") : badge("Private scraping rule missing", "danger"),
+          check.noHiddenDataHarvesting ? badge("No hidden harvesting", "safe") : badge("Hidden harvesting rule missing", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(check.stockCheckStatus, check.stockCheckStatus === "MANUAL_STOCK_CHECK_COMPLETED" ? "approved" : "danger")}</td>
+            <td>${badge(check.stockDecision, check.stockDecision === "STOCK_CONFIRMED_AVAILABLE" ? "safe" : "warn")}</td>
+            <td>${badge(`#${check.slotNumber}`, Number(check.slotNumber || 0) >= 1 && Number(check.slotNumber || 0) <= 15 ? "safe" : "danger")}</td>
+            <td>${badge(sourceLabel(check.source), check.source === "whatsapp_click_to_chat_inbound" ? "safe" : "warn")}</td>
+            <td>${escapeHtml(check.leadReference)}</td>
+            <td>${requestText}</td>
+            <td>${stockDetails}</td>
+            <td>${stockScope}</td>
+            <td>${contactSafety}</td>
+            <td>${quoteSafety}</td>
+            <td>${inventorySafety}</td>
+            <td>${mutationSafety}</td>
+            <td>${escapeHtml(check.checkedBy)}</td>
+            <td>${formatDate(check.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-manual-stock-check/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalStockChecks").textContent = summary.totalStockChecks || 0;
+      document.getElementById("completedStockCheckCount").textContent = summary.completedStockCheckCount || 0;
+      document.getElementById("stockConfirmedAvailableCount").textContent = summary.stockConfirmedAvailableCount || 0;
+      document.getElementById("stockNotAvailableCount").textContent = summary.stockNotAvailableCount || 0;
+      document.getElementById("stockNeedsSupplierConfirmationCount").textContent = summary.stockNeedsSupplierConfirmationCount || 0;
+      document.getElementById("latestStockCheckStatus").textContent = summary.latestStockCheckStatus || "NO_STOCK_CHECK";
+      document.getElementById("latestStockDecision").textContent = summary.latestStockDecision || "NONE";
+      document.getElementById("latestSource").textContent = summary.latestSource || "NONE";
+
+      const checksResponse = await fetch("/api/controlled-buyer-gate-manual-stock-checks");
+      const checksData = await checksResponse.json();
+      allStockChecks = Array.isArray(checksData.stockChecks) ? checksData.stockChecks : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("decisionFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("stockCheckRows").innerHTML =
+        `<tr><td colspan="14">Manual Stock Check dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>
