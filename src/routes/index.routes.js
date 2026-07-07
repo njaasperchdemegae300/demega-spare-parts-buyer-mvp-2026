@@ -27,6 +27,7 @@ const manualAccountingReviewController = require("../controllers/manual-accounti
 const manualFinalBusinessReviewController = require("../controllers/manual-final-business-review.controller");
 const projectSourceOfTruthController = require("../controllers/project-source-of-truth.controller");
 const assistantSalesAgentTestLabController = require("../controllers/assistant-sales-agent-test-lab.controller");
+const internalBuyerGateReadinessGuardianController = require("../controllers/internal-buyer-gate-readiness-guardian.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -134,6 +135,9 @@ function routeRequest(req, res, sendJson) {
         "/api/assistant-sales-agent-test-lab/preview",
         "/api/assistant-sales-agent-test-lab/runs",
         "/api/assistant-sales-agent-test-lab/summary",
+        "/api/internal-buyer-gate-readiness/preview",
+        "/api/internal-buyer-gate-readiness/runs",
+        "/api/internal-buyer-gate-readiness/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -179,6 +183,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/manual-accounting-review/record",
         "POST /api/manual-final-business-review/record",
         "POST /api/assistant-sales-agent-test-lab/run",
+        "POST /api/internal-buyer-gate-readiness/run",
         "GET /api/leads"
       ]
     });
@@ -250,6 +255,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/assistant-sales-agent-test-lab" || url.pathname === "/assistant-sales-agent-test-runs")) {
     return assistantSalesAgentTestLabController.assistantSalesAgentTestLabDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/internal-buyer-gate-readiness/preview") {
+    return internalBuyerGateReadinessGuardianController.internalBuyerGateReadinessPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/internal-buyer-gate-readiness/runs") {
+    return internalBuyerGateReadinessGuardianController.listInternalBuyerGateReadinessRunsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/internal-buyer-gate-readiness/summary") {
+    return internalBuyerGateReadinessGuardianController.internalBuyerGateReadinessSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/internal-buyer-gate-readiness/run") {
+    return internalBuyerGateReadinessGuardianController.runInternalBuyerGateReadinessController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/assistant-sales-agent-test-lab/preview") {

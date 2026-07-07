@@ -26,3 +26,6 @@ No version can be called approved unless a smoke test report returns APPROVED an
 
 ## Decision 9 — Test Sales Agents Before Live Buyer Gate
 Before opening real buyer traffic, the project must internally test Assistant Sales Agent behavior using simulated buyer scenarios. The agent must prove safe replies, correct next actions, and no auto-send behavior before live buyer gate activation.
+
+## Decision 10 — Buyer Gate Must Stay Closed Until Guardian Approval
+The system must not open real buyer traffic until the Internal Buyer-Gate Readiness Guardian confirms source-of-truth readiness, Assistant Sales Agent readiness, zero failed agent tests, and all core safety locks.

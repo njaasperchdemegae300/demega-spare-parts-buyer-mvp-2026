@@ -47,3 +47,6 @@ Assistant Sales Agent Test Lab Dashboard Display added.
 
 ### Version 25D
 Admin Hub Link Assistant Sales Agent Test Lab added.
+
+### Version 26A
+Internal Buyer-Gate Readiness Guardian Foundation added.
