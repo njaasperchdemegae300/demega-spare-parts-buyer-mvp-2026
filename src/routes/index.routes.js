@@ -94,6 +94,8 @@ function routeRequest(req, res, sendJson) {
         "/internal-buyer-gate-readiness-runs",
         "/controlled-buyer-gate-test-plan",
         "/controlled-buyer-gate-test-plans",
+        "/controlled-buyer-gate-manual-activation-approval",
+        "/controlled-buyer-gate-manual-activation-approvals",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -269,6 +271,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/controlled-buyer-gate-test-plan" || url.pathname === "/controlled-buyer-gate-test-plans")) {
     return controlledBuyerGateTestPlanController.dashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/controlled-buyer-gate-manual-activation-approval" || url.pathname === "/controlled-buyer-gate-manual-activation-approvals")) {
+    return controlledBuyerGateManualActivationApprovalController.dashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-activation-approval/preview") {

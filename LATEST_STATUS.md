@@ -1,36 +1,33 @@
 # LATEST STATUS
 
 Current Phase:
-Version 28A — Controlled Buyer-Gate Manual Activation Approval Gate Foundation
+Version 28B — Controlled Buyer-Gate Manual Activation Approval Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Manual activation approval gate foundation
-- Manual approval phrase requirement
-- Manual plan review confirmation
-- Manual safety review confirmation
-- 15-lead limit confirmation
-- WhatsApp click-to-chat inbound confirmation
-- Manual reply only confirmation
-- No auto-send confirmation
-- No spam confirmation
-- No private scraping confirmation
-- No hidden harvesting confirmation
-- No quote before stock confirmation
-- No quote before compatibility confirmation
-- Unsafe live activation blocking
-- Approved-not-activated approval status
-- Approval list API
-- Approval summary API
+- GET /controlled-buyer-gate-manual-activation-approval
+- GET /controlled-buyer-gate-manual-activation-approvals
+- Manual activation approval dashboard
+- Total approvals metric
+- Latest approval status metric
+- Latest lead limit metric
+- Latest source metric
+- Approved-not-activated count metric
+- Activated count metric
+- Approval records table
+- Approval status filter
+- Safety filter
+- Required approval phrase display
 
 Safety Confirmed:
-- Manual activation approval gate only
-- Manual approval is recorded only
+- Dashboard displays manual activation approval records only
+- Dashboard is read-only
+- Manual approval does not equal activation
 - Buyer gate is not opened
 - Live traffic is not activated
-- No real buyer contacted
+- No real buyer is contacted
 - No WhatsApp auto-send
 - No WhatsApp auto-read
 - No buyer message scraping
@@ -42,8 +39,7 @@ Safety Confirmed:
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
-- Separate activation execution gate required later
-- Manual review required before any buyer contact
+- Separate activation execution gate remains required later
 
 Next Phase:
-Version 28B — Controlled Buyer-Gate Manual Activation Approval Dashboard Display
+Version 28C — Admin Hub Link Controlled Buyer-Gate Manual Activation Approval

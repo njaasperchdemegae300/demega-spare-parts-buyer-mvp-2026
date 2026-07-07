@@ -1491,3 +1491,53 @@ Connect the Controlled Buyer-Gate Test Plan into the Admin Navigation Hub so the
 
 ## Next Phase After Approval
 Version 28A — Controlled Buyer-Gate Manual Activation Approval Gate Foundation
+
+# Version 28B — Controlled Buyer-Gate Manual Activation Approval Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display controlled buyer-gate manual activation approval records in a read-only dashboard. Manual approval is not activation.
+
+## Routes
+- GET /controlled-buyer-gate-manual-activation-approval
+- GET /controlled-buyer-gate-manual-activation-approvals
+- GET /api/controlled-buyer-gate-manual-activation-approvals
+- GET /api/controlled-buyer-gate-manual-activation-approval/summary
+
+## Features
+- Manual activation approval dashboard
+- Total approvals metric
+- Latest approval status metric
+- Latest lead limit metric
+- Latest source metric
+- Approved-not-activated count metric
+- Activated count metric
+- Approval records table
+- Approval status filter
+- Safety filter
+- Required approval phrase display
+
+## Safety
+- Read-only dashboard
+- Manual approval record display only
+- Manual approval does not equal activation
+- Buyer gate remains closed
+- Live traffic not activated
+- No real buyer contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Separate activation execution gate required later
+
+## Next Phase After Approval
+Version 28C — Admin Hub Link Controlled Buyer-Gate Manual Activation Approval

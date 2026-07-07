@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Manual Activation Approval Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 2600px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    pre { white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; max-width: 520px; max-height: 230px; overflow: auto; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .approved { background: #dcfce7; color: #166534; }
+    .blocked { background: #fee2e2; color: #991b1b; }
+    .neutral { background: #e5e7eb; color: #374151; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Manual Activation Approval Dashboard</h1>
+    <p>Read-only dashboard for manual approval records. Approval is not activation. Buyer gate remains closed.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Approvals</h2><strong id="totalApprovals">0</strong></div>
+      <div class="card"><h2>Latest Approval Status</h2><strong id="latestApprovalStatus">NO_APPROVAL</strong></div>
+      <div class="card"><h2>Latest Lead Limit</h2><strong id="latestLeadLimit">0</strong></div>
+      <div class="card"><h2>Latest Test Source</h2><strong id="latestTestSource">NONE</strong></div>
+      <div class="card"><h2>Approved Not Activated</h2><strong id="approvedNotActivatedCount">0</strong></div>
+      <div class="card"><h2>Activated Count</h2><strong id="activatedCount">0</strong></div>
+      <div class="card"><h2>Buyer Gate Status</h2><strong class="badge safe">CLOSED</strong></div>
+      <div class="card"><h2>Traffic Status</h2><strong class="badge safe">NOT ACTIVATED</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Approval Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It displays manual activation approval records only.
+        Manual approval does not open buyer gate, activate live traffic, contact real buyers, send WhatsApp,
+        read WhatsApp, scrape private data, harvest hidden data, update inventory, create accounting entries,
+        close sales, or move pipeline.
+      </p>
+      <span class="badge safe">Manual approval record only</span>
+      <span class="badge safe">Approval is not activation</span>
+      <span class="badge safe">Buyer gate remains closed</span>
+      <span class="badge safe">Live traffic not activated</span>
+      <span class="badge safe">No real buyer contacted</span>
+      <span class="badge safe">No WhatsApp auto-send</span>
+      <span class="badge safe">No WhatsApp auto-read</span>
+      <span class="badge safe">No buyer message scraping</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden data harvesting</span>
+      <span class="badge safe">No quote before stock confirmation</span>
+      <span class="badge safe">No quote before compatibility confirmation</span>
+      <span class="badge safe">Separate activation execution gate required later</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Required Approval Phrase</h2>
+      <p class="muted">The approval phrase confirms preparation only. It does not execute live activation.</p>
+      <span class="badge safe">I_APPROVE_CONTROLLED_15_LEAD_MANUAL_TEST_PREPARATION_ONLY</span>
+      <span class="badge safe">15-lead limit</span>
+      <span class="badge safe">whatsapp_click_to_chat_inbound</span>
+      <span class="badge safe">manual reply only</span>
+    </section>
+
+    <section class="panel">
+      <h2>Manual Activation Approval Records</h2>
+      <p class="muted">Read-only list of manual approval records.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search approval status, source, approver, note..." />
+        <select id="statusFilter">
+          <option value="">All statuses</option>
+          <option value="APPROVED_NOT_ACTIVATED">APPROVED_NOT_ACTIVATED</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe not-activated approvals</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Approval Status</th>
+            <th>Approval Type</th>
+            <th>Lead Limit</th>
+            <th>Source</th>
+            <th>Plan Summary</th>
+            <th>Approval Checks</th>
+            <th>Gate Status</th>
+            <th>Traffic Status</th>
+            <th>Safety</th>
+            <th>Approved By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="approvalRows">
+          <tr><td colspan="11">Loading manual activation approval records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allApprovals = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function sourceLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function hasRisk(approval) {
+      return approval.approvedForLiveActivationExecution === true ||
+        approval.activationExecuted === true ||
+        approval.buyerGateOpened === true ||
+        approval.openLiveBuyerGate === true ||
+        approval.activateBuyerGate === true ||
+        approval.enableLiveTraffic === true ||
+        approval.startLiveBuyerTraffic === true ||
+        approval.liveTrafficActivated === true ||
+        approval.realBuyerContacted === true ||
+        approval.contactRealBuyerAutomatically === true ||
+        approval.autoSendWhatsApp === true ||
+        approval.autoReadWhatsApp === true ||
+        approval.scrapeWhatsappMessages === true ||
+        approval.privateMessageScraping === true ||
+        approval.hiddenDataHarvesting === true ||
+        approval.autoUpdateInventory === true ||
+        approval.autoCreateAccountingEntry === true ||
+        approval.autoCloseSale === true ||
+        approval.autoMovePipelineStage === true;
+    }
+
+    function getFilteredApprovals() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const statusFilter = document.getElementById("statusFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allApprovals.filter(approval => {
+        const risk = hasRisk(approval);
+        const haystack = [
+          approval.approvalStatus,
+          approval.approvalType,
+          approval.approvedBy,
+          approval.approvalNote,
+          approval.testSource,
+          approval.leadLimit,
+          approval.buyerGateOpened ? "opened" : "closed",
+          approval.liveTrafficActivated ? "activated" : "not activated"
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!statusFilter || approval.approvalStatus === statusFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("approvalRows");
+      const approvals = getFilteredApprovals();
+
+      if (!approvals.length) {
+        tbody.innerHTML = '<tr><td colspan="11">No matching manual activation approval records.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = approvals.map(approval => {
+        const risk = hasRisk(approval);
+        const planSummary = approval.planSummary || {};
+
+        const planText = [
+          badge(`Plan status: ${planSummary.latestPlanStatus || "UNKNOWN"}`, planSummary.latestPlanStatus === "PLAN_READY_NOT_ACTIVATED" ? "safe" : "danger"),
+          badge(`Plan source: ${sourceLabel(planSummary.latestTestSource || "")}`, planSummary.latestTestSource === "whatsapp_click_to_chat_inbound" ? "safe" : "warn"),
+          badge(`Plan limit: ${planSummary.latestLeadLimit || 0}`, Number(planSummary.latestLeadLimit || 0) === 15 ? "safe" : "danger")
+        ].join("<br>");
+
+        const approvalChecks = [
+          approval.adminReviewedPlan ? badge("Plan reviewed", "safe") : badge("Plan review missing", "danger"),
+          approval.adminReviewedSafety ? badge("Safety reviewed", "safe") : badge("Safety review missing", "danger"),
+          approval.adminConfirmedLeadLimit15 ? badge("15-lead confirmed", "safe") : badge("Lead limit missing", "danger"),
+          approval.adminConfirmedWhatsAppInboundOnly ? badge("WhatsApp inbound confirmed", "safe") : badge("Source confirmation missing", "danger"),
+          approval.adminConfirmedManualReplyOnly ? badge("Manual reply confirmed", "safe") : badge("Manual reply missing", "danger"),
+          approval.adminConfirmedNoAutoSend ? badge("No auto-send confirmed", "safe") : badge("Auto-send check missing", "danger")
+        ].join("<br>");
+
+        const gateStatus = [
+          approval.buyerGateOpened ? badge("Gate opened risk", "danger") : badge("Gate closed", "safe"),
+          approval.openLiveBuyerGate ? badge("Open gate risk", "danger") : badge("No open-gate execution", "safe"),
+          approval.activateBuyerGate ? badge("Activate gate risk", "danger") : badge("No activation execution", "safe"),
+          approval.requiresSeparateActivationExecutionGateLater ? badge("Separate activation gate required", "safe") : badge("Activation gate missing", "danger")
+        ].join("<br>");
+
+        const trafficStatus = [
+          approval.liveTrafficActivated ? badge("Live traffic activated risk", "danger") : badge("Live traffic not activated", "safe"),
+          approval.realBuyerContacted ? badge("Buyer contacted risk", "danger") : badge("No buyer contacted", "safe"),
+          approval.approvedForLiveActivationExecution ? badge("Live activation execution risk", "danger") : badge("Not approved for execution", "safe")
+        ].join("<br>");
+
+        const safety = risk ? badge("Risk detected", "danger") : [
+          approval.manualActivationApprovalGateOnly ? badge("Approval gate only", "safe") : badge("Gate scope risk", "danger"),
+          approval.manualApprovalRecorded ? badge("Approval recorded", "safe") : badge("Approval missing", "danger"),
+          approval.approvedForControlledPreparationOnly ? badge("Preparation only", "safe") : badge("Preparation scope risk", "danger"),
+          approval.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          approval.autoReadWhatsApp ? badge("Auto-read risk", "danger") : badge("No auto-read", "safe"),
+          approval.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe"),
+          approval.autoUpdateInventory ? badge("Inventory risk", "danger") : badge("No inventory update", "safe"),
+          approval.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          approval.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe"),
+          approval.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline move", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(approval.approvalStatus, approval.approvalStatus === "APPROVED_NOT_ACTIVATED" ? "approved" : "blocked")}</td>
+            <td>${escapeHtml(approval.approvalType)}</td>
+            <td>${badge(String(approval.leadLimit), Number(approval.leadLimit || 0) === 15 ? "safe" : "danger")}</td>
+            <td>${badge(sourceLabel(approval.testSource), approval.testSource === "whatsapp_click_to_chat_inbound" ? "safe" : "warn")}</td>
+            <td>${planText}</td>
+            <td>${approvalChecks}</td>
+            <td>${gateStatus}</td>
+            <td>${trafficStatus}</td>
+            <td>${safety}</td>
+            <td>${escapeHtml(approval.approvedBy)}</td>
+            <td>${formatDate(approval.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-manual-activation-approval/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalApprovals").textContent = summary.totalApprovals || 0;
+      document.getElementById("latestApprovalStatus").textContent = summary.latestApprovalStatus || "NO_APPROVAL";
+      document.getElementById("latestLeadLimit").textContent = summary.latestLeadLimit || 0;
+      document.getElementById("latestTestSource").textContent = summary.latestTestSource || "NONE";
+      document.getElementById("approvedNotActivatedCount").textContent = summary.approvedNotActivatedCount || 0;
+      document.getElementById("activatedCount").textContent = summary.activatedCount || 0;
+
+      const approvalsResponse = await fetch("/api/controlled-buyer-gate-manual-activation-approvals");
+      const approvalsData = await approvalsResponse.json();
+      allApprovals = Array.isArray(approvalsData.approvals) ? approvalsData.approvals : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("statusFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("approvalRows").innerHTML =
+        `<tr><td colspan="11">Manual Activation Approval dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>
