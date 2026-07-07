@@ -62,6 +62,10 @@
       <span class="badge">NO AUTOMATIC FINAL BUSINESS RECORD</span>
       <span class="badge">NO AUTOMATIC SALE CLOSING</span>
       <span class="badge">NO AUTOMATIC PIPELINE MOVEMENT</span>
+      <span class="badge">ASSISTANT SALES AGENT TEST LAB IS SIMULATION ONLY</span>
+      <span class="badge">NO LIVE BUYER GATE OPENED</span>
+      <span class="badge">NO REAL BUYER CONTACTED</span>
+      <span class="badge">NO WHATSAPP AUTO-READ</span>
       <span class="badge">NO AUTOMATIC CLOSING</span>
       <span class="badge warn">ADMIN MUST MANUALLY OBSERVE BUYER REPLY OUTSIDE THE SYSTEM</span>
       <ul>
@@ -93,6 +97,11 @@
         <li>It does not create final business records automatically.</li>
         <li>It does not close sales automatically.</li>
         <li>It does not move pipeline automatically.</li>
+        <li>Assistant Sales Agent Test Lab is simulation-only before live buyer traffic.</li>
+        <li>It does not open live buyer gate automatically.</li>
+        <li>It does not contact real buyers automatically.</li>
+        <li>It does not send or read WhatsApp automatically.</li>
+        <li>It does not scrape private messages or harvest hidden data.</li>
       </ul>
     </section>
 
@@ -151,6 +160,12 @@
         <div class="metric"><h2>System Final Records</h2><strong id="systemFinalRecords">0</strong></div>
         <div class="metric"><h2>Auto Final Close</h2><strong id="autoFinalClose">0</strong></div>
         <div class="metric"><h2>Auto Final Pipeline</h2><strong id="autoFinalPipeline">0</strong></div>
+        <div class="metric"><h2>Sales Agent Test Runs</h2><strong id="assistantSalesAgentTestRuns">0</strong></div>
+        <div class="metric"><h2>Sales Agent Verdict</h2><strong id="assistantSalesAgentLatestVerdict">NOT_RUN</strong></div>
+        <div class="metric"><h2>Sales Agent Passed</h2><strong id="assistantSalesAgentPassed">0</strong></div>
+        <div class="metric"><h2>Sales Agent Failed</h2><strong id="assistantSalesAgentFailed">0</strong></div>
+        <div class="metric"><h2>Sales Agent Scenarios</h2><strong id="assistantSalesAgentScenarios">0</strong></div>
+        <div class="metric"><h2>Approved Agent Runs</h2><strong id="assistantSalesAgentApprovedRuns">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -176,6 +191,8 @@
       <div class="card"><h2>Manual Stock Movement Review Gate</h2><p>View manual stock movement reviews after deal outcomes. No automatic inventory update, stock reduction, stock reservation, stock release, stock ledger, payment handling, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-stock-movement-review">Open Stock Movement Review Gate</a></div>
       <div class="card"><h2>Manual Accounting Review Gate</h2><p>View manual accounting reviews after stock movement reviews. No automatic accounting entry, financial ledger, payment verification, receipt, invoice, revenue recording, pipeline movement, inventory update, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-accounting-review">Open Accounting Review Gate</a></div>
       <div class="card"><h2>Manual Final Business Review Gate</h2><p>View manual final business reviews after accounting reviews. No automatic final business record, sale closing, pipeline movement, accounting entry, revenue recording, inventory update, WhatsApp sending, message reading, scraping, or hidden harvesting.</p><a href="/manual-final-business-review">Open Final Business Review Gate</a></div>
+
+      <div class="card"><h2>Assistant Sales Agent Test Lab</h2><p>View internal sales-agent readiness tests before opening real buyer traffic. Simulation-only; no live buyer contact, no WhatsApp auto-send, no WhatsApp auto-read, no scraping, no hidden harvesting, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/assistant-sales-agent-test-lab">Open Assistant Sales Agent Test Lab</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -267,5 +284,32 @@
       document.getElementById("buyerLeads").textContent = "Check API";
     });
   </script>
+
+  <script>
+    async function loadAssistantSalesAgentHubMetrics() {
+      try {
+        const response = await fetch("/api/assistant-sales-agent-test-lab/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("assistantSalesAgentTestRuns", summary.totalRuns || 0);
+        setText("assistantSalesAgentLatestVerdict", summary.latestVerdict || "NOT_RUN");
+        setText("assistantSalesAgentPassed", summary.latestPassedCount || 0);
+        setText("assistantSalesAgentFailed", summary.latestFailedCount || 0);
+        setText("assistantSalesAgentScenarios", summary.defaultTestCaseCount || 0);
+        setText("assistantSalesAgentApprovedRuns", summary.approvedRuns || 0);
+      } catch (error) {
+        const element = document.getElementById("assistantSalesAgentLatestVerdict");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadAssistantSalesAgentHubMetrics();
+  </script>
+
 </body>
 </html>

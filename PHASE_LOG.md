@@ -44,3 +44,6 @@ Assistant Sales Agent Readiness Test Lab Foundation added.
 
 ### Version 25C
 Assistant Sales Agent Test Lab Dashboard Display added.
+
+### Version 25D
+Admin Hub Link Assistant Sales Agent Test Lab added.

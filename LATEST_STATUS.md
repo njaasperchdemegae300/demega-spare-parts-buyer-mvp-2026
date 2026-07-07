@@ -1,50 +1,46 @@
 # LATEST STATUS
 
 Current Phase:
-Version 25C — Assistant Sales Agent Test Lab Dashboard Display
+Version 25D — Admin Hub Link Assistant Sales Agent Test Lab
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /assistant-sales-agent-test-lab
-- GET /assistant-sales-agent-test-runs
-- Assistant Sales Agent Test Lab dashboard
-- Test run metric cards
-- Latest verdict display
-- Passed/failed count display
-- Scenario table
-- Buyer type filter
-- Verdict filter
-- Safety status filter
-- Reply draft display
-- Test failure display
-- Safety labels
+- Assistant Sales Agent Test Lab linked inside Admin Navigation Hub
+- Sales Agent Test Runs metric
+- Sales Agent Verdict metric
+- Sales Agent Passed metric
+- Sales Agent Failed metric
+- Sales Agent Scenarios metric
+- Approved Agent Runs metric
+- Assistant Sales Agent Test Lab metrics inside Admin Hub metrics API
+- Assistant Sales Agent safety locks inside Admin Hub summary
+- Linked Assistant Sales Agent Test Lab dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays Assistant Sales Agent readiness runs only
-- Dashboard is read-only
-- Dashboard does not open live buyer gate
-- Dashboard does not contact real buyers
-- Dashboard does not send WhatsApp
-- Dashboard does not read WhatsApp
-- Dashboard does not scrape private messages
-- Dashboard does not harvest hidden data
-- Dashboard does not quote before stock confirmation
-- Dashboard does not quote before compatibility confirmation
-- Dashboard does not update inventory
-- Dashboard does not create accounting entries
-- Dashboard does not close sales
-- Dashboard does not move pipeline
-- Manual review remains required before real buyer traffic
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
+- Assistant Sales Agent Test Lab remains simulation-only
+- No live buyer gate opened
+- No real buyer contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Manual review required before live buyer traffic
 
-Business Readiness Display Confirmed:
-- Dashboard displays readiness verdict
-- Dashboard displays passed and failed counts
-- Dashboard displays buyer type and next action
-- Dashboard displays safe reply draft
-- Dashboard displays stock, compatibility, and price eligibility status
-- Dashboard displays scenario safety labels
+Business Readiness Confirmed:
+- Admin Hub now exposes Assistant Sales Agent readiness metrics
+- Admin Hub now links directly to Assistant Sales Agent Test Lab dashboard
+- Assistant readiness remains internal until the live buyer gate is approved later
 
 Next Phase:
-Version 25D — Admin Hub Link Assistant Sales Agent Test Lab
+Version 26A — Internal Buyer-Gate Readiness Guardian Foundation

@@ -20,6 +20,7 @@ const manualDealOutcomeService = require("../services/manual-deal-outcome.servic
 const manualStockMovementReviewService = require("../services/manual-stock-movement-review.service");
 const manualAccountingReviewService = require("../services/manual-accounting-review.service");
 const manualFinalBusinessReviewService = require("../services/manual-final-business-review.service");
+const assistantSalesAgentTestLabService = require("../services/assistant-sales-agent-test-lab.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -42,7 +43,8 @@ const modules = [
   { name: "Manual Deal Outcome Gate", path: "/manual-deal-outcome", purpose: "Manual deal outcome visibility. Outcome record only; system does not close sale, move pipeline, send, auto-reply, handle payment, change stock, read messages, scrape, or harvest data." },
   { name: "Manual Stock Movement Review Gate", path: "/manual-stock-movement-review", purpose: "Manual stock movement review visibility. Review-only; system does not update inventory, reduce stock, reserve stock, release stock, create stock ledger, handle payment, send, read messages, scrape, or harvest data." },
   { name: "Manual Accounting Review Gate", path: "/manual-accounting-review", purpose: "Manual accounting review visibility. Review-only; system does not create accounting entries, financial ledger, verify payment, generate receipts, create invoices, record revenue, move pipeline, update inventory, send, read messages, scrape, or harvest data." },
-  { name: "Manual Final Business Review Gate", path: "/manual-final-business-review", purpose: "Manual final business review visibility. Review-only; system does not create final business records, close sales, move pipeline, create accounting entries, record revenue, update inventory, send, read messages, scrape, or harvest data." }];
+  { name: "Manual Final Business Review Gate", path: "/manual-final-business-review", purpose: "Manual final business review visibility. Review-only; system does not create final business records, close sales, move pipeline, create accounting entries, record revenue, update inventory, send, read messages, scrape, or harvest data." },
+  { name: "Assistant Sales Agent Test Lab", path: "/assistant-sales-agent-test-lab", purpose: "Internal simulation-only sales-agent behavior testing before live buyer traffic. No live buyer contact, no WhatsApp auto-send, no WhatsApp auto-read, no scraping, no hidden harvesting, no quote before stock and compatibility gates." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -71,6 +73,14 @@ function getSafety() {
     navigationOnly: true,
     visibilityOnly: true,
     metricsReadOnly: true,
+
+    sourceOfTruthOnly: true,
+    handoverSystemOnly: true,
+    assistantSalesAgentReadinessTestOnly: true,
+    assistantSalesAgentTestLabOnly: true,
+    simulationOnly: true,
+    noLiveBuyerGateOpened: true,
+    noRealBuyerContacted: true,
 
     hotBuyerRankingReadOnly: true,
     whatsappManualOpenOnly: true,
@@ -123,7 +133,6 @@ function getSafety() {
     preparesCopyTextOnly: true,
     confirmationRecordOnly: true,
     draftOnly: true,
-    quoteEligibilityOnly: true,
     stockAndCompatibilityRequiredBeforeQuote: true,
     manualQuoteDraftAllowedOnlyAfterBothGates: true,
     requiresFinalQuoteEligibility: true,
@@ -152,6 +161,8 @@ function getSafety() {
     systemDoesNotCreateInvoice: true,
     systemDoesNotRecordRevenue: true,
     systemDoesNotCreateFinalBusinessRecord: true,
+    systemDoesNotOpenLiveBuyerGate: true,
+    systemDoesNotContactRealBuyer: true,
 
     serverDoesNotAccessClipboard: true,
     browserAutoCopy: false,
@@ -167,17 +178,22 @@ function getSafety() {
     priceIncluded: false,
     quoteAmountIncluded: false,
 
+    openLiveBuyerGate: false,
+    contactRealBuyerAutomatically: false,
     autoReadWhatsApp: false,
     readBuyerMessagesAutomatically: false,
     scrapeWhatsappMessages: false,
     privateMessageScraping: false,
     hiddenDataHarvesting: false,
+    harvestBuyerContacts: false,
+    buyPrivateContactList: false,
     autoReplyToBuyer: false,
     automaticBuyerMessage: false,
     autoSendWhatsApp: false,
     sendWhatsApp: false,
     autoOpenBrowser: false,
     autoCreateQuote: false,
+    autoCreateQuoteAndSend: false,
     autoMovePipelineStage: false,
     pipelineMovedAutomatically: false,
     autoCompleteBuyerAction: false,
@@ -239,6 +255,7 @@ function getSafety() {
     manualReviewRequired: true,
     manualReviewRequiredForNextStep: true,
     manualReviewRequiredBeforeExecution: true,
+    manualReviewRequiredBeforeLiveBuyerGate: true,
     manualReviewRequiredForAccounting: true,
     manualReviewRequiredForPipelineUpdate: true,
     manualReviewRequiredForStockUpdate: true,
@@ -290,6 +307,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const manualStockMovementReview = safeRead(() => manualStockMovementReviewService.getManualStockMovementReviewSummary(), {});
   const manualAccountingReview = safeRead(() => manualAccountingReviewService.getManualAccountingReviewSummary(), {});
   const manualFinalBusinessReview = safeRead(() => manualFinalBusinessReviewService.getManualFinalBusinessReviewSummary(), {});
+  const assistantSalesAgentTestLab = safeRead(() => assistantSalesAgentTestLabService.getAssistantSalesAgentTestLabSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -318,7 +336,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       manualDealOutcome,
       manualStockMovementReview,
       manualAccountingReview,
-      manualFinalBusinessReview
+      manualFinalBusinessReview,
+      assistantSalesAgentTestLab
     },
     safety: getSafety()
   });

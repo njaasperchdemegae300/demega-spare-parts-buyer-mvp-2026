@@ -1290,3 +1290,53 @@ Create an internal simulation-only test lab to test Assistant Sales Agent behavi
 
 ## Next Phase After Approval
 Version 25C — Assistant Sales Agent Test Lab Dashboard Display
+
+# Version 25D — Admin Hub Link Assistant Sales Agent Test Lab
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect Assistant Sales Agent Test Lab into the Admin Navigation Hub so the readiness of sales-agent behavior is visible before opening real buyer traffic.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /assistant-sales-agent-test-lab
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/assistant-sales-agent-test-lab/summary
+
+## Features
+- Assistant Sales Agent Test Lab card in Admin Hub
+- Sales Agent Test Runs metric
+- Sales Agent Verdict metric
+- Sales Agent Passed metric
+- Sales Agent Failed metric
+- Sales Agent Scenarios metric
+- Approved Agent Runs metric
+- Assistant Sales Agent Test Lab metrics inside Admin Hub metrics API
+- Assistant Sales Agent safety locks inside Admin Hub summary
+- Linked Assistant Sales Agent Test Lab dashboard reachable
+
+## Safety Rules
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
+- Assistant Sales Agent Test Lab remains simulation-only
+- No live buyer gate opened
+- No real buyer contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Manual review required before live buyer traffic
+
+## Next Phase After Approval
+Version 26A — Internal Buyer-Gate Readiness Guardian Foundation
