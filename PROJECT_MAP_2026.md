@@ -1648,3 +1648,58 @@ Connect Controlled Buyer-Gate Activation Execution into Admin Navigation Hub so 
 
 ## Next Phase After Approval
 Version 30A — Controlled Buyer-Gate Lead-Slot Enforcement Foundation
+
+# Version 30B — Controlled Buyer-Gate Lead-Slot Enforcement Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display controlled buyer-gate lead-slot enforcement records in a read-only dashboard. This shows accepted inbound lead slots, remaining slots, and limit status without contacting buyers.
+
+## Routes
+- GET /controlled-buyer-gate-lead-slot-enforcement
+- GET /controlled-buyer-gate-lead-slots
+- GET /api/controlled-buyer-gate-lead-slots
+- GET /api/controlled-buyer-gate-lead-slot-enforcement/summary
+
+## Features
+- Lead-Slot Enforcement dashboard
+- Total slots metric
+- Accepted slots metric
+- Lead limit metric
+- Remaining slots metric
+- Limit reached metric
+- Latest slot status metric
+- Latest slot number metric
+- Latest source metric
+- Slot records table
+- Status filter
+- Safety filter
+
+## Safety
+- Read-only dashboard
+- Lead-slot records display only
+- Controlled inbound lead slot only
+- Buyer-initiated WhatsApp click-to-chat inbound source only
+- 15-lead limit remains enforced
+- Accepted slots are for manual review only
+- Manual reply only
+- No outbound traffic automatically started
+- No paid ads automatically started
+- No lead form automatically published
+- No real buyer automatically contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+
+## Next Phase After Approval
+Version 30C — Admin Hub Link Controlled Buyer-Gate Lead-Slot Enforcement

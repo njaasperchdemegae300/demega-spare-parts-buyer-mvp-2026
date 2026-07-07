@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Lead-Slot Enforcement Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 26px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 2800px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .approved { background: #dcfce7; color: #166534; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Lead-Slot Enforcement Dashboard</h1>
+    <p>Read-only dashboard for controlled inbound lead slots. It enforces the 15-lead limit without contacting buyers.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Slots</h2><strong id="totalSlots">0</strong></div>
+      <div class="card"><h2>Accepted Slots</h2><strong id="acceptedSlotCount">0</strong></div>
+      <div class="card"><h2>Lead Limit</h2><strong id="leadLimit">15</strong></div>
+      <div class="card"><h2>Remaining Slots</h2><strong id="remainingLeadSlots">15</strong></div>
+      <div class="card"><h2>Limit Reached</h2><strong id="limitReached">false</strong></div>
+      <div class="card"><h2>Latest Slot Status</h2><strong id="latestSlotStatus">NO_SLOT</strong></div>
+      <div class="card"><h2>Latest Slot Number</h2><strong id="latestSlotNumber">0</strong></div>
+      <div class="card"><h2>Latest Source</h2><strong id="latestSource">NONE</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Lead-Slot Enforcement Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It displays controlled inbound lead slots only.
+        A slot is only accepted for manual review. The system does not contact buyers, start outbound traffic,
+        send WhatsApp, read WhatsApp, scrape messages, prepare quotes before stock and compatibility, update inventory,
+        create accounting entries, close sales, or move pipeline.
+      </p>
+      <span class="badge safe">Lead-slot enforcement only</span>
+      <span class="badge safe">Controlled inbound lead slot only</span>
+      <span class="badge safe">Buyer-initiated WhatsApp click-to-chat inbound only</span>
+      <span class="badge safe">15-lead limit enforced</span>
+      <span class="badge safe">16th lead slot blocked</span>
+      <span class="badge safe">Accepted for manual review only</span>
+      <span class="badge safe">Manual reply only</span>
+      <span class="badge safe">No outbound traffic</span>
+      <span class="badge safe">No paid ads auto-start</span>
+      <span class="badge safe">No lead form auto-publish</span>
+      <span class="badge safe">No real buyer auto-contact</span>
+      <span class="badge safe">No WhatsApp auto-send</span>
+      <span class="badge safe">No WhatsApp auto-read</span>
+      <span class="badge safe">No buyer message scraping</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden data harvesting</span>
+      <span class="badge safe">No quote before stock confirmation</span>
+      <span class="badge safe">No quote before compatibility confirmation</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Slot Meaning</h2>
+      <p class="muted">
+        Accepted slot means only that one inbound buyer-initiated lead is counted inside the controlled 15-lead test.
+        Every accepted slot still requires manual review before buyer contact.
+      </p>
+      <span class="badge safe">ACCEPTED_PENDING_MANUAL_REVIEW</span>
+      <span class="badge safe">manual review required</span>
+      <span class="badge safe">manual stock confirmation before quote</span>
+      <span class="badge safe">manual compatibility confirmation before quote</span>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled Buyer-Gate Lead Slots</h2>
+      <p class="muted">Read-only list of controlled buyer-initiated inbound lead slots.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search part, vehicle, location, source, status..." />
+        <select id="statusFilter">
+          <option value="">All statuses</option>
+          <option value="ACCEPTED_PENDING_MANUAL_REVIEW">ACCEPTED_PENDING_MANUAL_REVIEW</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe manual-review slots</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Slot</th>
+            <th>Status</th>
+            <th>Source</th>
+            <th>Lead Reference</th>
+            <th>Buyer Request</th>
+            <th>Manual Review</th>
+            <th>Contact Safety</th>
+            <th>Traffic Safety</th>
+            <th>Quote Safety</th>
+            <th>Business Mutation Safety</th>
+            <th>Created By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="slotRows">
+          <tr><td colspan="12">Loading controlled lead slots...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allSlots = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function sourceLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function hasRisk(slot) {
+      return slot.buyerContacted === true ||
+        slot.realBuyerContacted === true ||
+        slot.autoContactBuyer === true ||
+        slot.contactRealBuyerAutomatically === true ||
+        slot.autoSendWhatsApp === true ||
+        slot.sendWhatsApp === true ||
+        slot.broadcastWhatsApp === true ||
+        slot.autoReadWhatsApp === true ||
+        slot.scrapeWhatsappMessages === true ||
+        slot.privateMessageScraping === true ||
+        slot.hiddenDataHarvesting === true ||
+        slot.startOutboundTraffic === true ||
+        slot.startPaidAdsAutomatically === true ||
+        slot.publishLeadFormAutomatically === true ||
+        slot.quotePrepared === true ||
+        slot.quoteBeforeStockConfirmation === true ||
+        slot.quoteBeforeCompatibilityConfirmation === true ||
+        slot.autoUpdateInventory === true ||
+        slot.autoCreateAccountingEntry === true ||
+        slot.autoCloseSale === true ||
+        slot.autoMovePipelineStage === true;
+    }
+
+    function getFilteredSlots() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const statusFilter = document.getElementById("statusFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allSlots.filter(slot => {
+        const risk = hasRisk(slot);
+        const haystack = [
+          slot.slotStatus,
+          slot.source,
+          slot.leadReference,
+          slot.partNeeded,
+          slot.vehicleDetail,
+          slot.buyerLocation,
+          slot.buyerIntentProof,
+          slot.createdBy
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!statusFilter || slot.slotStatus === statusFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("slotRows");
+      const slots = getFilteredSlots();
+
+      if (!slots.length) {
+        tbody.innerHTML = '<tr><td colspan="12">No matching controlled lead slots.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = slots.map(slot => {
+        const risk = hasRisk(slot);
+
+        const requestText = [
+          badge(`Part: ${slot.partNeeded || "Not recorded"}`, "safe"),
+          badge(`Vehicle: ${slot.vehicleDetail || "Not recorded"}`, "safe"),
+          badge(`Location: ${slot.buyerLocation || "Not recorded"}`, "safe")
+        ].join("<br>");
+
+        const reviewText = [
+          slot.inboundBuyerInitiated ? badge("Buyer initiated inbound", "safe") : badge("Inbound proof missing", "danger"),
+          slot.adminReviewedInboundSource ? badge("Inbound source reviewed", "safe") : badge("Source review missing", "danger"),
+          slot.manualReviewRequired ? badge("Manual review required", "safe") : badge("Manual review missing", "danger"),
+          slot.manualReviewCompleted ? badge("Manual review completed", "warn") : badge("Pending manual review", "safe"),
+          slot.acceptedForManualReviewOnly ? badge("Accepted for review only", "safe") : badge("Review-only scope missing", "danger")
+        ].join("<br>");
+
+        const contactSafety = [
+          slot.buyerContacted ? badge("Buyer contacted risk", "danger") : badge("Buyer not contacted", "safe"),
+          slot.autoContactBuyer ? badge("Auto-contact risk", "danger") : badge("No auto-contact", "safe"),
+          slot.autoSendWhatsApp ? badge("WhatsApp auto-send risk", "danger") : badge("No WhatsApp auto-send", "safe"),
+          slot.autoReadWhatsApp ? badge("WhatsApp auto-read risk", "danger") : badge("No WhatsApp auto-read", "safe"),
+          slot.scrapeWhatsappMessages ? badge("WhatsApp scraping risk", "danger") : badge("No WhatsApp scraping", "safe")
+        ].join("<br>");
+
+        const trafficSafety = [
+          slot.startOutboundTraffic ? badge("Outbound traffic risk", "danger") : badge("No outbound traffic", "safe"),
+          slot.startPaidAdsAutomatically ? badge("Paid ads risk", "danger") : badge("No paid ads auto-start", "safe"),
+          slot.publishLeadFormAutomatically ? badge("Lead form publish risk", "danger") : badge("No lead form auto-publish", "safe")
+        ].join("<br>");
+
+        const quoteSafety = [
+          slot.quotePrepared ? badge("Quote prepared risk", "danger") : badge("No quote prepared", "safe"),
+          slot.quoteBeforeStockConfirmation ? badge("Stock quote risk", "danger") : badge("No quote before stock", "safe"),
+          slot.quoteBeforeCompatibilityConfirmation ? badge("Compatibility quote risk", "danger") : badge("No quote before compatibility", "safe"),
+          slot.stockConfirmationRequiredBeforeQuote ? badge("Stock confirmation required", "safe") : badge("Stock rule missing", "danger"),
+          slot.compatibilityConfirmationRequiredBeforeQuote ? badge("Compatibility confirmation required", "safe") : badge("Compatibility rule missing", "danger")
+        ].join("<br>");
+
+        const mutationSafety = risk ? badge("Risk detected", "danger") : [
+          slot.autoUpdateInventory ? badge("Inventory risk", "danger") : badge("No inventory update", "safe"),
+          slot.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          slot.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe"),
+          slot.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline move", "safe"),
+          slot.noPrivateDataScraping ? badge("No private scraping", "safe") : badge("Private scraping rule missing", "danger"),
+          slot.noHiddenDataHarvesting ? badge("No hidden harvesting", "safe") : badge("Hidden harvesting rule missing", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(`#${slot.slotNumber}`, Number(slot.slotNumber || 0) <= 15 ? "safe" : "danger")}<br>${badge(`Remaining after: ${slot.remainingLeadSlotsAfter}`, Number(slot.remainingLeadSlotsAfter || 0) >= 0 ? "safe" : "danger")}</td>
+            <td>${badge(slot.slotStatus, slot.slotStatus === "ACCEPTED_PENDING_MANUAL_REVIEW" ? "approved" : "danger")}</td>
+            <td>${badge(sourceLabel(slot.source), slot.source === "whatsapp_click_to_chat_inbound" ? "safe" : "warn")}</td>
+            <td>${escapeHtml(slot.leadReference)}</td>
+            <td>${requestText}</td>
+            <td>${reviewText}</td>
+            <td>${contactSafety}</td>
+            <td>${trafficSafety}</td>
+            <td>${quoteSafety}</td>
+            <td>${mutationSafety}</td>
+            <td>${escapeHtml(slot.createdBy)}</td>
+            <td>${formatDate(slot.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-lead-slot-enforcement/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalSlots").textContent = summary.totalSlots || 0;
+      document.getElementById("acceptedSlotCount").textContent = summary.acceptedSlotCount || 0;
+      document.getElementById("leadLimit").textContent = summary.leadLimit || 15;
+      document.getElementById("remainingLeadSlots").textContent = summary.remainingLeadSlots ?? 15;
+      document.getElementById("limitReached").textContent = summary.limitReached === true ? "true" : "false";
+      document.getElementById("latestSlotStatus").textContent = summary.latestSlotStatus || "NO_SLOT";
+      document.getElementById("latestSlotNumber").textContent = summary.latestSlotNumber || 0;
+      document.getElementById("latestSource").textContent = summary.latestSource || "NONE";
+
+      const slotsResponse = await fetch("/api/controlled-buyer-gate-lead-slots");
+      const slotsData = await slotsResponse.json();
+      allSlots = Array.isArray(slotsData.slots) ? slotsData.slots : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("statusFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("slotRows").innerHTML =
+        `<tr><td colspan="12">Lead-Slot Enforcement dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

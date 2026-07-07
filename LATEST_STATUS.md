@@ -1,33 +1,35 @@
 # LATEST STATUS
 
 Current Phase:
-Version 30A — Controlled Buyer-Gate Lead-Slot Enforcement Foundation
+Version 30B — Controlled Buyer-Gate Lead-Slot Enforcement Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Controlled Buyer-Gate Lead-Slot Enforcement foundation
-- Lead-slot enforcement phrase requirement
-- Controlled activation execution prerequisite
-- WhatsApp click-to-chat inbound source preserved
-- Buyer-initiated inbound source required
-- 15-lead limit enforced
-- 16th lead slot blocked
-- Slot records accepted for manual review only
-- Manual review required before buyer contact
-- Manual stock confirmation required before quote
-- Manual compatibility confirmation required before quote
-- Lead-slot list API
-- Lead-slot summary API
+- GET /controlled-buyer-gate-lead-slot-enforcement
+- GET /controlled-buyer-gate-lead-slots
+- Lead-Slot Enforcement dashboard
+- Total slots metric
+- Accepted slots metric
+- Lead limit metric
+- Remaining slots metric
+- Limit reached metric
+- Latest slot status metric
+- Latest slot number metric
+- Latest source metric
+- Slot records table
+- Status filter
+- Safety filter
 
 Safety Confirmed:
+- Dashboard displays lead-slot records only
+- Dashboard is read-only
 - Lead-slot enforcement only
 - Controlled inbound lead slot only
-- Buyer-initiated inbound source only
-- 15-lead limit enforced
-- 16th lead slot blocked
-- Manual review required
+- Buyer-initiated WhatsApp click-to-chat inbound source only
+- 15-lead limit remains enforced
+- Accepted slots are for manual review only
 - Manual reply only
 - No outbound traffic automatically started
 - No paid ads automatically started
@@ -46,4 +48,4 @@ Safety Confirmed:
 - No pipeline movement
 
 Next Phase:
-Version 30B — Controlled Buyer-Gate Lead-Slot Enforcement Dashboard Display
+Version 30C — Admin Hub Link Controlled Buyer-Gate Lead-Slot Enforcement
