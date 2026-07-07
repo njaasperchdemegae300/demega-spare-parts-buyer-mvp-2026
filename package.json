@@ -85,7 +85,8 @@
     "version:26a": "node tools/version26a-internal-buyer-gate-readiness-guardian-smoke-test.js",
     "version:26b": "node tools/version26b-internal-buyer-gate-readiness-dashboard-smoke-test.js",
     "version:26c": "node tools/version26c-admin-hub-link-internal-buyer-gate-readiness-smoke-test.js",
-    "version:27a": "node tools/version27a-controlled-buyer-gate-test-plan-smoke-test.js"
+    "version:27a": "node tools/version27a-controlled-buyer-gate-test-plan-smoke-test.js",
+    "version:27b": "node tools/version27b-controlled-buyer-gate-test-plan-dashboard-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

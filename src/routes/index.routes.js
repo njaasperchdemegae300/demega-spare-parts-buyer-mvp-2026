@@ -91,6 +91,8 @@ function routeRequest(req, res, sendJson) {
         "/assistant-sales-agent-test-runs",
         "/internal-buyer-gate-readiness",
         "/internal-buyer-gate-readiness-runs",
+        "/controlled-buyer-gate-test-plan",
+        "/controlled-buyer-gate-test-plans",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -262,6 +264,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/internal-buyer-gate-readiness" || url.pathname === "/internal-buyer-gate-readiness-runs")) {
     return internalBuyerGateReadinessGuardianController.internalBuyerGateReadinessDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/controlled-buyer-gate-test-plan" || url.pathname === "/controlled-buyer-gate-test-plans")) {
+    return controlledBuyerGateTestPlanController.dashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-test-plan/preview") {

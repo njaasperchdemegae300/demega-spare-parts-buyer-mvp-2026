@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Test Plan Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 28px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 2300px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    pre { white-space: pre-wrap; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; max-width: 520px; max-height: 230px; overflow: auto; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .approved { background: #dcfce7; color: #166534; }
+    .blocked { background: #fee2e2; color: #991b1b; }
+    .neutral { background: #e5e7eb; color: #374151; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Test Plan Dashboard</h1>
+    <p>Read-only dashboard for the first controlled 15-lead buyer-gate plan. This page does not open the gate.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Plans</h2><strong id="totalPlans">0</strong></div>
+      <div class="card"><h2>Latest Plan Status</h2><strong id="latestPlanStatus">NO_PLAN</strong></div>
+      <div class="card"><h2>Latest Lead Limit</h2><strong id="latestLeadLimit">0</strong></div>
+      <div class="card"><h2>Latest Source</h2><strong id="latestTestSource">NONE</strong></div>
+      <div class="card"><h2>Activated Plans</h2><strong id="activatedPlans">0</strong></div>
+      <div class="card"><h2>Safe Plans</h2><strong id="safePlans">0</strong></div>
+      <div class="card"><h2>Buyer Gate Status</h2><strong class="badge safe">CLOSED</strong></div>
+      <div class="card"><h2>Traffic Status</h2><strong class="badge safe">NOT ACTIVATED</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Controlled Buyer-Gate Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It displays the controlled test plan only. It does not open live buyer gate,
+        activate traffic, contact real buyers, send WhatsApp, read WhatsApp, scrape private data, harvest hidden data,
+        update inventory, create accounting entries, close sales, or move pipeline.
+      </p>
+      <span class="badge safe">15-lead limit only</span>
+      <span class="badge safe">Manual review required</span>
+      <span class="badge safe">Manual reply only</span>
+      <span class="badge safe">No auto-send</span>
+      <span class="badge safe">No spam</span>
+      <span class="badge safe">No unsolicited WhatsApp</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden harvesting</span>
+      <span class="badge safe">No quote before stock confirmation</span>
+      <span class="badge safe">No quote before compatibility confirmation</span>
+      <span class="badge safe">Buyer gate remains closed</span>
+      <span class="badge safe">Manual activation approval required later</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Chosen First Test Source</h2>
+      <p class="muted">
+        First controlled source should remain WhatsApp click-to-chat inbound because the buyer starts the contact,
+        and the system still requires manual review and manual reply.
+      </p>
+      <span class="badge safe">whatsapp_click_to_chat_inbound</span>
+      <span class="badge safe">buyer-initiated</span>
+      <span class="badge safe">fast Ladipo reply workflow</span>
+      <span class="badge safe">no auto-send</span>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled Buyer-Gate Test Plans</h2>
+      <p class="muted">Read-only list of controlled buyer-gate test plans.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search plan, source, creator, status..." />
+        <select id="sourceFilter">
+          <option value="">All sources</option>
+          <option value="whatsapp_click_to_chat_inbound">WhatsApp click-to-chat inbound</option>
+          <option value="owned_rfq_landing_page">Owned RFQ landing page</option>
+          <option value="meta_lead_form">Meta Lead Form</option>
+          <option value="google_buyer_intent_landing_page">Google buyer-intent landing page</option>
+          <option value="public_business_inquiry_form">Public business inquiry form</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe closed-gate plans</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Plan Name</th>
+            <th>Source</th>
+            <th>Lead Limit</th>
+            <th>Review Rules</th>
+            <th>Gate Status</th>
+            <th>Traffic Status</th>
+            <th>Quote Rules</th>
+            <th>Safety</th>
+            <th>Created By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="planRows">
+          <tr><td colspan="10">Loading controlled buyer-gate test plans...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allPlans = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function sourceLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function hasRisk(plan) {
+      return plan.buyerGateOpened === true ||
+        plan.liveTrafficActivated === true ||
+        plan.realBuyerContacted === true ||
+        plan.autoSendWhatsApp === true ||
+        plan.autoReadWhatsApp === true ||
+        plan.scrapeWhatsappMessages === true ||
+        plan.privateMessageScraping === true ||
+        plan.hiddenDataHarvesting === true ||
+        plan.autoUpdateInventory === true ||
+        plan.autoCreateAccountingEntry === true ||
+        plan.autoCloseSale === true ||
+        plan.autoMovePipelineStage === true;
+    }
+
+    function getFilteredPlans() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const sourceFilter = document.getElementById("sourceFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allPlans.filter(plan => {
+        const risk = hasRisk(plan);
+        const haystack = [
+          plan.planName,
+          plan.testSource,
+          plan.createdBy,
+          plan.leadLimit,
+          plan.buyerGateOpened ? "opened" : "closed",
+          plan.liveTrafficActivated ? "activated" : "not activated"
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!sourceFilter || plan.testSource === sourceFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("planRows");
+      const plans = getFilteredPlans();
+
+      if (!plans.length) {
+        tbody.innerHTML = '<tr><td colspan="10">No matching controlled buyer-gate plans.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = plans.map(plan => {
+        const risk = hasRisk(plan);
+
+        const reviewRules = [
+          plan.manualReviewRequired ? badge("Manual review", "safe") : badge("Review missing", "danger"),
+          plan.manualReplyOnly ? badge("Manual reply only", "safe") : badge("Reply risk", "danger"),
+          plan.noAutoSend ? badge("No auto-send", "safe") : badge("Auto-send risk", "danger"),
+          plan.noSpam ? badge("No spam", "safe") : badge("Spam risk", "danger")
+        ].join("<br>");
+
+        const gateStatus = [
+          plan.buyerGateOpened ? badge("Gate opened risk", "danger") : badge("Gate closed", "safe"),
+          plan.manualApprovalRequiredBeforeActivation ? badge("Manual activation approval required", "safe") : badge("Approval missing", "danger")
+        ].join("<br>");
+
+        const trafficStatus = [
+          plan.liveTrafficActivated ? badge("Live traffic activated risk", "danger") : badge("Live traffic not activated", "safe"),
+          plan.realBuyerContacted ? badge("Buyer contacted risk", "danger") : badge("No buyer contacted", "safe")
+        ].join("<br>");
+
+        const quoteRules = [
+          plan.noQuoteBeforeStockConfirmation ? badge("No quote before stock", "safe") : badge("Stock quote risk", "danger"),
+          plan.noQuoteBeforeCompatibilityConfirmation ? badge("No quote before compatibility", "safe") : badge("Compatibility quote risk", "danger"),
+          plan.stockConfirmationRequired ? badge("Stock confirmation required", "safe") : badge("Stock rule missing", "danger"),
+          plan.compatibilityConfirmationRequired ? badge("Compatibility confirmation required", "safe") : badge("Compatibility rule missing", "danger")
+        ].join("<br>");
+
+        const safety = risk ? badge("Risk detected", "danger") : [
+          plan.controlledPlanOnly ? badge("Plan only", "safe") : badge("Scope risk", "danger"),
+          plan.noPrivateDataScraping ? badge("No private scraping", "safe") : badge("Private scraping risk", "danger"),
+          plan.noHiddenDataHarvesting ? badge("No hidden harvesting", "safe") : badge("Hidden harvesting risk", "danger"),
+          plan.autoUpdateInventory ? badge("Inventory risk", "danger") : badge("No inventory update", "safe"),
+          plan.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          plan.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe"),
+          plan.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline move", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${escapeHtml(plan.planName)}</td>
+            <td>${badge(sourceLabel(plan.testSource), plan.testSource === "whatsapp_click_to_chat_inbound" ? "safe" : "warn")}</td>
+            <td>${badge(String(plan.leadLimit), plan.leadLimit === 15 ? "safe" : "danger")}</td>
+            <td>${reviewRules}</td>
+            <td>${gateStatus}</td>
+            <td>${trafficStatus}</td>
+            <td>${quoteRules}</td>
+            <td>${safety}</td>
+            <td>${escapeHtml(plan.createdBy)}</td>
+            <td>${formatDate(plan.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-test-plan/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalPlans").textContent = summary.totalPlans || 0;
+      document.getElementById("latestPlanStatus").textContent = summary.latestPlanStatus || "NO_PLAN";
+      document.getElementById("latestLeadLimit").textContent = summary.latestLeadLimit || 0;
+      document.getElementById("latestTestSource").textContent = summary.latestTestSource || "NONE";
+      document.getElementById("activatedPlans").textContent = summary.activatedPlans || 0;
+      document.getElementById("safePlans").textContent = summary.safePlans || 0;
+
+      const plansResponse = await fetch("/api/controlled-buyer-gate-test-plans");
+      const plansData = await plansResponse.json();
+      allPlans = Array.isArray(plansData.plans) ? plansData.plans : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("sourceFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("planRows").innerHTML =
+        `<tr><td colspan="10">Controlled Buyer-Gate Test Plan dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

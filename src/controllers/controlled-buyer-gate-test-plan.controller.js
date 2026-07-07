@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const service = require("../services/controlled-buyer-gate-test-plan.service");
+
+function dashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "controlled-buyer-gate-test-plan-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Controlled Buyer-Gate Test Plan dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function previewController(req, res, sendJson) {
   return sendJson(res, 200, service.getControlledBuyerGateTestPlanPreview());
@@ -39,6 +55,7 @@ function summaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  dashboardController,
   previewController,
   createController,
   listController,

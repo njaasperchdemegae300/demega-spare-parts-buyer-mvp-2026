@@ -1,21 +1,29 @@
 # LATEST STATUS
 
 Current Phase:
-Version 27A — Controlled Buyer-Gate Test Plan Foundation
+Version 27B — Controlled Buyer-Gate Test Plan Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Controlled 15-lead buyer-gate test plan foundation
-- Safe plan creation API
-- Safe plan list API
-- Safe plan summary API
-- Unsafe activation request blocking
-- Guardian approval required before plan
-- Assistant Sales Agent approval required before plan
+- GET /controlled-buyer-gate-test-plan
+- GET /controlled-buyer-gate-test-plans
+- Controlled Buyer-Gate Test Plan dashboard
+- Total plans metric
+- Latest plan status metric
+- Latest lead limit metric
+- Latest source metric
+- Activated plans metric
+- Safe plans metric
+- Source filter
+- Safety filter
+- Read-only plan table
+- Chosen first source display: whatsapp_click_to_chat_inbound
 
 Safety Confirmed:
+- Dashboard displays controlled buyer-gate test plans only
+- Dashboard is read-only
 - Buyer gate is not opened
 - Live traffic is not activated
 - No real buyer is contacted
@@ -32,4 +40,4 @@ Safety Confirmed:
 - Manual approval remains required before activation
 
 Next Phase:
-Version 27B — Controlled Buyer-Gate Test Plan Dashboard Display
+Version 27C — Admin Hub Link Controlled Buyer-Gate Test Plan
