@@ -25,6 +25,7 @@ const manualDealOutcomeController = require("../controllers/manual-deal-outcome.
 const manualStockMovementReviewController = require("../controllers/manual-stock-movement-review.controller");
 const manualAccountingReviewController = require("../controllers/manual-accounting-review.controller");
 const manualFinalBusinessReviewController = require("../controllers/manual-final-business-review.controller");
+const projectSourceOfTruthController = require("../controllers/project-source-of-truth.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -124,6 +125,9 @@ function routeRequest(req, res, sendJson) {
         "/api/manual-final-business-review/preview",
         "/api/manual-final-business-reviews",
         "/api/manual-final-business-review/summary",
+        "/api/project-source-of-truth/preview",
+        "/api/project-source-of-truth/files",
+        "/api/project-source-of-truth/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -235,6 +239,18 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-final-business-review" || url.pathname === "/manual-final-business-reviews")) {
     return manualFinalBusinessReviewController.manualFinalBusinessReviewDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/project-source-of-truth/preview") {
+    return projectSourceOfTruthController.projectSourceOfTruthPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/project-source-of-truth/files") {
+    return projectSourceOfTruthController.projectSourceOfTruthFilesController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/project-source-of-truth/summary") {
+    return projectSourceOfTruthController.projectSourceOfTruthSummaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/manual-final-business-review/preview") {

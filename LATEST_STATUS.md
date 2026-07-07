@@ -1,43 +1,43 @@
 # LATEST STATUS
 
 Current Phase:
-Version 24C — Admin Hub Link Manual Final Business Review Gate
+Version 25A — Project Source-of-Truth Handover System Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Manual Final Business Review Gate linked inside Admin Navigation Hub
-- Final Business Reviews metric
-- Final Completed Reviews metric
-- Manual Final Approved metric
-- Final Amount Confirmed metric
-- System Final Records metric
-- Auto Final Close metric
-- Auto Final Pipeline metric
-- Manual final business review metrics inside admin metrics API
-- Manual final business review safety locks inside admin summary
-- Linked Manual Final Business Review dashboard reachable
+- PROJECT_MASTER_PLAN_2026.md
+- START_HERE_EVERY_CHAT.md
+- PHASE_LOG.md
+- DECISION_REGISTER.md
+- TRAFFIC_SOURCE_REGISTRY.md
+- SAFETY_RULES.md
+- VERSION_GATE_RULES.md
+- docs/PROJECT_HANDOVER_2026.md
+- GET /api/project-source-of-truth/preview
+- GET /api/project-source-of-truth/files
+- GET /api/project-source-of-truth/summary
+- Source-of-truth file registry
+- Required source file validation
+- Handover read order
+- Safe project continuation rules
+- Current phase summary
+- Next phase summary
+- Read-only handover API
 
 Safety Confirmed:
-- Admin hub remains navigation and visibility only
-- Metrics API is read-only
-- Manual Final Business Review Gate remains final-review-only
-- Manual accounting review is required before final business review
-- Admin reviewed accounting is required
-- Manual final business review approval is required
-- Admin hub does not create final business records
-- Admin hub does not close sales
-- Admin hub does not move pipeline
-- Admin hub does not create accounting entries
-- Admin hub does not generate receipts
-- Admin hub does not record revenue
-- Admin hub does not update inventory
-- Admin hub does not send WhatsApp
-- Admin hub does not read buyer messages
-- Admin hub does not scrape private messages
-- Admin hub does not harvest hidden data
-- Manual final business record, manager review, and final close review remain required
+- Source-of-truth system is read-only
+- Handover system does not send WhatsApp
+- Handover system does not scrape private data
+- Handover system does not read buyer messages
+- Handover system does not update inventory
+- Handover system does not create accounting entries
+- Handover system does not close sales
+- Handover system does not move pipeline
+- Handover system requires manual review
+- Future chats must start from source-of-truth files before coding
+- Version approval requires smoke test APPROVED and latest commit
 
 Next Phase:
-Version 25A — Project Source-of-Truth Handover System Foundation
+Version 25B — Source-of-Truth Dashboard / Handover Display

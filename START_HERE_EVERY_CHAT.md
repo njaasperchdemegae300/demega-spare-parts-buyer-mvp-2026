@@ -1,34 +1,58 @@
 # START HERE EVERY CHAT
 
-Project:
-Demega Spare Parts Buyer MVP 2026
+## Purpose
+This file is the first file to read before continuing the Demega Spare Parts Buyer MVP 2026 project in any new chat.
 
-Folder:
-demega-spare-parts-buyer-mvp-2026
+## Current Project
+Spare-parts-bulk-buyer_Engine_2026 Ai Morden
 
-Current mission:
-Build a small smart MVP first, not the full worldwide platform yet.
+## Current Safe Version
+Version 25A — Project Source-of-Truth Handover System Foundation
 
-Every new chat must read these files first:
-1. START_HERE_EVERY_CHAT.md
-2. PROJECT_MASTER_PLAN_2026.md
-3. PROJECT_MAP_2026.md
-4. VERSION_PLAN_30_DAYS.md
-5. LATEST_STATUS.md
-6. SAFETY_RULES.md
+## Latest Safe Commit Before This Phase
+84bdecc — Version 24C link manual final business review gate in admin hub
+
+## Current Work Rule
+Do not continue from memory alone. First check:
+1. LATEST_STATUS.md
+2. PROJECT_MAP_2026.md
+3. PROJECT_MASTER_PLAN_2026.md
+4. SAFETY_RULES.md
+5. VERSION_GATE_RULES.md
+6. PHASE_LOG.md
 7. DECISION_REGISTER.md
+8. TRAFFIC_SOURCE_REGISTRY.md
 
-Current build rule:
-Do not move to the next phase until the current phase output is reviewed and approved.
+## What The Project Already Has
+- Buyer intake foundation
+- Admin lead dashboard
+- Buyer scoring
+- Inventory command center
+- Inventory matching
+- Safe quote draft gate
+- Safe quote draft dashboard
+- Buyer pipeline event storage and display
+- Follow-up reminder system
+- Admin navigation hub
+- Action queue
+- Hot buyer ranking
+- WhatsApp manual-open flow
+- Stock confirmation gate
+- Compatibility confirmation gate
+- Final quote eligibility gate
+- Manual quote draft builder
+- Manual quote copy button
+- Manual quote sent confirmation
+- Buyer reply tracking
+- Buyer reply follow-up action gate
+- Manual deal outcome gate
+- Manual stock movement review gate
+- Manual accounting review gate
+- Manual final business review gate
+- Admin Hub links for all major safe review gates
 
-Live traffic rule:
-No live activation until Version Guardian approves controlled testing.
+## Immediate Next Phase
+Version 25B — Source-of-Truth Dashboard / Handover Display
 
-Safety rules:
-No auto-send.
-No spam.
-No unsolicited WhatsApp.
-No private-data scraping.
-No hidden harvesting.
-No quote before stock confirmation.
-No quote before compatibility confirmation.
+## Hard Rule
+No next version is approved unless the smoke test report says APPROVED and the latest commit is shown.

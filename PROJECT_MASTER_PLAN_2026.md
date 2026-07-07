@@ -1,36 +1,39 @@
 # PROJECT MASTER PLAN 2026
 
-## Official Name
-Demega Spare Parts Buyer MVP 2026
-
-## Full Future Vision
+## Project Name
 Spare-parts-bulk-buyer_Engine_2026 Ai Morden
 
-## Small Smart MVP Goal
-Build a working buyer-intake, admin, inventory, safe quote, WhatsApp-copy, and follow-up system within 30 days.
+## Current Definition
+A protected buyer-provider platform that captures real spare-parts buyer intent, ranks serious buyers, checks stock and compatibility, prepares safe WhatsApp-ready quote drafts, tracks buyer replies, manages manual follow-up actions, records manual deal outcomes, reviews stock movement, reviews accounting, reviews final business status, and uses source-of-truth files plus version gates before moving forward.
 
-## MVP Features
-1. Buyer Intake Form
-2. Admin Lead Dashboard
-3. Buyer Scoring
-4. Inventory Command Center
-5. Smart Quote Builder
-6. WhatsApp-ready Reply
-7. Follow-up Queue
-8. Project Health Agent
-9. Version Guardian Agent
+## Business Mission
+Help the spare-parts seller handle serious buyers for alternators, starter motors, kick starters, engine-related parts, and related auto electrical parts with speed, safety, clarity, and manual review.
 
-## What We Are Not Building First
-1. Full worldwide lead platform
-2. Uncontrolled scraping
-3. Auto WhatsApp sender
-4. Paid ads automation
-5. Bulk lead selling system
-6. Full AI agent swarm
+## Core Business Flow
+1. Buyer lead enters.
+2. Lead is saved.
+3. Buyer is reviewed.
+4. Stock is confirmed manually.
+5. Compatibility is confirmed manually.
+6. Final quote eligibility is checked.
+7. Manual quote draft is prepared.
+8. Manual quote copy is prepared.
+9. Admin manually sends quote outside the system.
+10. Admin records manual sent confirmation.
+11. Admin records buyer reply manually.
+12. Follow-up action is planned.
+13. Manual deal outcome is recorded.
+14. Manual stock movement review is recorded.
+15. Manual accounting review is recorded.
+16. Manual final business review is recorded.
+17. Admin Hub shows safe read-only metrics.
+18. Source-of-truth handover files explain how to continue safely.
 
-## Build Principle
-Small first.
-Stable first.
-Safe first.
-Tested first.
-Then expansion.
+## Approved System Direction
+This project must remain a safe buyer-provider system, not a spam tool, not a private-data scraper, and not an automatic WhatsApp sender.
+
+## Current Phase
+Version 25A — Project Source-of-Truth Handover System Foundation
+
+## Next Phase
+Version 25B — Source-of-Truth Dashboard / Handover Display

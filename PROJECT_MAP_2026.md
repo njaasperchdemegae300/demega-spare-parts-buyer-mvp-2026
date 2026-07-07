@@ -1180,3 +1180,60 @@ Display manual final business review records in a read-only dashboard. The dashb
 
 ## Next Phase After Approval
 Version 24C — Admin Hub Link Manual Final Business Review Gate
+
+# Version 25A — Project Source-of-Truth Handover System Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create a project source-of-truth and handover foundation so the project can continue safely across chats without depending on memory alone.
+
+## Files Created / Updated
+- PROJECT_MASTER_PLAN_2026.md
+- START_HERE_EVERY_CHAT.md
+- PHASE_LOG.md
+- DECISION_REGISTER.md
+- TRAFFIC_SOURCE_REGISTRY.md
+- SAFETY_RULES.md
+- VERSION_GATE_RULES.md
+- docs/PROJECT_HANDOVER_2026.md
+- src/services/project-source-of-truth.service.js
+- src/controllers/project-source-of-truth.controller.js
+- tools/version25a-patch-routes.js
+- tools/version25a-project-source-of-truth-smoke-test.js
+
+## Routes
+- GET /api/project-source-of-truth/preview
+- GET /api/project-source-of-truth/files
+- GET /api/project-source-of-truth/summary
+
+## Features
+- Source-of-truth file registry
+- Required source file validation
+- Handover read order
+- Safe project continuation rules
+- Current phase summary
+- Next phase summary
+- Read-only handover API
+
+## Safety Rules
+- Source-of-truth only
+- Handover system only
+- Read-only summary
+- No auto-send
+- No spam
+- No unsolicited WhatsApp
+- No private-data scraping
+- No hidden data harvesting
+- No buyer message reading
+- No WhatsApp scraping
+- No automatic quote sending
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Manual review required
+
+## Next Phase After Approval
+Version 25B — Source-of-Truth Dashboard / Handover Display
