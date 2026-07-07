@@ -26,6 +26,7 @@ const manualStockMovementReviewController = require("../controllers/manual-stock
 const manualAccountingReviewController = require("../controllers/manual-accounting-review.controller");
 const manualFinalBusinessReviewController = require("../controllers/manual-final-business-review.controller");
 const projectSourceOfTruthController = require("../controllers/project-source-of-truth.controller");
+const assistantSalesAgentTestLabController = require("../controllers/assistant-sales-agent-test-lab.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -128,6 +129,9 @@ function routeRequest(req, res, sendJson) {
         "/api/project-source-of-truth/preview",
         "/api/project-source-of-truth/files",
         "/api/project-source-of-truth/summary",
+        "/api/assistant-sales-agent-test-lab/preview",
+        "/api/assistant-sales-agent-test-lab/runs",
+        "/api/assistant-sales-agent-test-lab/summary",
         "/api/hot-buyers/preview",
         "/api/hot-buyers",
         "/api/hot-buyers/summary",
@@ -172,6 +176,7 @@ function routeRequest(req, res, sendJson) {
         "POST /api/manual-stock-movement-review/record",
         "POST /api/manual-accounting-review/record",
         "POST /api/manual-final-business-review/record",
+        "POST /api/assistant-sales-agent-test-lab/run",
         "GET /api/leads"
       ]
     });
@@ -239,6 +244,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/manual-final-business-review" || url.pathname === "/manual-final-business-reviews")) {
     return manualFinalBusinessReviewController.manualFinalBusinessReviewDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/assistant-sales-agent-test-lab/preview") {
+    return assistantSalesAgentTestLabController.assistantSalesAgentTestLabPreviewController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/assistant-sales-agent-test-lab/runs") {
+    return assistantSalesAgentTestLabController.listAssistantSalesAgentTestRunsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/assistant-sales-agent-test-lab/summary") {
+    return assistantSalesAgentTestLabController.assistantSalesAgentTestLabSummaryController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/assistant-sales-agent-test-lab/run") {
+    return assistantSalesAgentTestLabController.runAssistantSalesAgentTestLabController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/project-source-of-truth/preview") {

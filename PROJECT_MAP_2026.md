@@ -1237,3 +1237,56 @@ Create a project source-of-truth and handover foundation so the project can cont
 
 ## Next Phase After Approval
 Version 25B — Source-of-Truth Dashboard / Handover Display
+
+# Version 25B — Assistant Sales Agent Readiness Test Lab Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create an internal simulation-only test lab to test Assistant Sales Agent behavior before opening any real buyer gate.
+
+## Routes
+- GET /api/assistant-sales-agent-test-lab/preview
+- POST /api/assistant-sales-agent-test-lab/run
+- GET /api/assistant-sales-agent-test-lab/runs
+- GET /api/assistant-sales-agent-test-lab/summary
+
+## Test Scenarios
+- Urgent confirmed alternator buyer
+- Buyer asking without enough vehicle detail
+- Buyer asking before stock confirmation
+- Bulk buyer request
+- Lowball price checker
+- Wrong part / subpart risk
+
+## Features
+- Internal sales-agent behavior simulation
+- Buyer type classification test
+- Next-action decision test
+- Safe reply draft test
+- Price-before-gates blocking
+- Bulk buyer qualification logic
+- Lowball buyer margin-protection logic
+- Wrong-part risk logic
+- Unsafe automation request blocking
+- Readiness summary
+
+## Safety Rules
+- Simulation only
+- No live buyer gate opened
+- No real buyer contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No private message scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Manual review required before real buyer traffic
+
+## Next Phase After Approval
+Version 25C — Assistant Sales Agent Test Lab Dashboard Display

@@ -38,3 +38,6 @@ Project Source-of-Truth Handover System Foundation added.
 3. Version 26A — One-Command Project Health Guardian
 4. Version 26B — Full End-to-End Business Flow Test
 5. Version 27A — Controlled Live Buyer Test Readiness
+
+### Version 25B
+Assistant Sales Agent Readiness Test Lab Foundation added.

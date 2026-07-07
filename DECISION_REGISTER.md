@@ -23,3 +23,6 @@ Every new chat or new coding phase must check the source-of-truth files before c
 
 ## Decision 8 — Version Gate Required
 No version can be called approved unless a smoke test report returns APPROVED and a commit is created.
+
+## Decision 9 — Test Sales Agents Before Live Buyer Gate
+Before opening real buyer traffic, the project must internally test Assistant Sales Agent behavior using simulated buyer scenarios. The agent must prove safe replies, correct next actions, and no auto-send behavior before live buyer gate activation.
