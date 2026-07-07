@@ -1,0 +1,52 @@
+const readJsonBody = require("../utils/read-json-body");
+const service = require("../services/controlled-buyer-gate-activation-execution.service");
+
+function previewController(req, res, sendJson) {
+  return sendJson(res, 200, service.getActivationExecutionPreview());
+}
+
+async function createController(req, res, sendJson) {
+  try {
+    const body = await readJsonBody(req);
+    const result = service.createActivationExecution(body);
+
+    if (!result.ok) {
+      return sendJson(res, result.statusCode, {
+        status: "failed",
+        errors: result.errors
+      });
+    }
+
+    return sendJson(res, 201, {
+      status: "created",
+      message: "Controlled 15-lead manual inbound gate activated safely. No buyer was contacted and no outbound traffic was started.",
+      execution: result.execution
+    });
+  } catch (error) {
+    return sendJson(res, 400, {
+      status: "failed",
+      error: error.message
+    });
+  }
+}
+
+function listController(req, res, sendJson) {
+  return sendJson(res, 200, {
+    status: "ok",
+    executions: service.listActivationExecutions()
+  });
+}
+
+function summaryController(req, res, sendJson) {
+  return sendJson(res, 200, {
+    status: "ok",
+    summary: service.getActivationExecutionSummary()
+  });
+}
+
+module.exports = {
+  previewController,
+  createController,
+  listController,
+  summaryController
+};

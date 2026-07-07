@@ -32,3 +32,6 @@ The system must not open real buyer traffic until the Internal Buyer-Gate Readin
 
 ## Decision 11 — Manual Approval Does Not Equal Activation
 The Controlled Buyer-Gate Manual Activation Approval Gate records approval for controlled 15-lead test preparation only. It must not open buyer gate, activate live traffic, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline. A separate activation execution gate is required later.
+
+## Decision 12 — Activation Execution Means Manual Inbound Only
+Controlled Buyer-Gate Activation Execution opens only a controlled 15-lead manual inbound gate. It must not start outbound traffic, paid ads, lead form publishing, automatic buyer contact, WhatsApp auto-send/read, scraping, quote sending, inventory mutation, accounting entry, sale closing, or pipeline movement. Lead-slot enforcement is required next.

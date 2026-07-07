@@ -1541,3 +1541,52 @@ Display controlled buyer-gate manual activation approval records in a read-only 
 
 ## Next Phase After Approval
 Version 28C — Admin Hub Link Controlled Buyer-Gate Manual Activation Approval
+
+# Version 29A — Controlled Buyer-Gate Activation Execution Gate Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create the controlled buyer-gate activation execution gate foundation. This activates controlled 15-lead manual inbound readiness only. It does not contact buyers, push outbound traffic, send/read WhatsApp, scrape, quote before stock/compatibility, update inventory, create accounting entries, close sales, or move pipeline.
+
+## Routes
+- GET /api/controlled-buyer-gate-activation-execution/preview
+- POST /api/controlled-buyer-gate-activation-execution/create
+- GET /api/controlled-buyer-gate-activation-executions
+- GET /api/controlled-buyer-gate-activation-execution/summary
+
+## Features
+- Activation execution phrase requirement
+- Manual approval prerequisite
+- 15-lead limit preserved
+- WhatsApp click-to-chat inbound source preserved
+- Manual inbound gate only
+- Accepted lead count starts at 0
+- Remaining lead slots start at 15
+- Unsafe outbound/contact/send/read/scrape request blocking
+- Activation summary API
+- Activation execution list API
+
+## Safety
+- Controlled 15-lead manual inbound gate only
+- No outbound traffic automatically started
+- No paid ads automatically started
+- No lead form automatically published
+- No real buyer automatically contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Lead-slot enforcement gate required next
+- Manual review required before any buyer contact
+
+## Next Phase After Approval
+Version 29B — Controlled Buyer-Gate Activation Execution Dashboard Display

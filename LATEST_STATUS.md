@@ -1,31 +1,30 @@
 # LATEST STATUS
 
 Current Phase:
-Version 28C — Admin Hub Link Controlled Buyer-Gate Manual Activation Approval
+Version 29A — Controlled Buyer-Gate Activation Execution Gate Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Manual Activation Approval linked inside Admin Navigation Hub
-- Manual Approvals metric
-- Latest Approval metric
-- Approval Lead Limit metric
-- Approval Source metric
-- Approved Not Activated metric
-- Activation Executed metric
-- Manual Activation Approval metrics inside Admin Hub metrics API
-- Manual Activation Approval safety locks inside Admin Hub summary
-- Linked Manual Activation Approval dashboard reachable
+- Controlled Buyer-Gate Activation Execution Gate foundation
+- Activation execution phrase requirement
+- Manual Activation Approval prerequisite
+- 15-lead limit preserved
+- WhatsApp click-to-chat inbound source preserved
+- Manual inbound gate only
+- Accepted lead count starts at 0
+- Remaining lead slots start at 15
+- Unsafe outbound/contact/send/read/scrape request blocking
+- Activation execution list API
+- Activation execution summary API
 
 Safety Confirmed:
-- Admin Hub remains navigation and visibility only
-- Metrics API remains read-only
-- Manual approval record only
-- Approval is not activation
-- Buyer gate remains closed
-- Live traffic not activated
-- No real buyer contacted
+- Controlled 15-lead manual inbound gate only
+- No outbound traffic automatically started
+- No paid ads automatically started
+- No lead form automatically published
+- No real buyer automatically contacted
 - No WhatsApp auto-send
 - No WhatsApp auto-read
 - No buyer message scraping
@@ -37,13 +36,8 @@ Safety Confirmed:
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
-- Separate activation execution gate required later
+- Lead-slot enforcement gate required next
 - Manual review required before any buyer contact
 
-Business Readiness Confirmed:
-- Admin Hub now exposes Manual Activation Approval metrics
-- Admin Hub now links directly to Manual Activation Approval dashboard
-- Approval remains preparation-only until a later separate activation execution gate
-
 Next Phase:
-Version 29A — Controlled Buyer-Gate Activation Execution Gate Foundation
+Version 29B — Controlled Buyer-Gate Activation Execution Dashboard Display
