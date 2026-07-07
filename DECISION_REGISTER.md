@@ -41,3 +41,6 @@ Controlled Buyer-Gate Lead-Slot Enforcement accepts only buyer-initiated WhatsAp
 
 ## Decision 14 — Manual Lead Review Before Buyer Contact
 Controlled Buyer-Gate Manual Lead Review records only admin review decisions for accepted inbound lead slots. It must not contact buyers, send/read WhatsApp, scrape data, prepare quotes, update inventory, create accounting entries, close sales, or move pipeline. Accepted reviews move only toward manual stock check next.
+
+## Decision 15 — Manual Stock Check Before Compatibility And Quote
+Controlled Buyer-Gate Manual Stock Check records stock status only after an accepted manual lead review. It must not contact buyers, send/read WhatsApp, scrape data, prepare quotes, update inventory, reserve/reduce stock, create accounting entries, close sales, or move pipeline. If stock is available, the next gate is manual compatibility check before any quote.

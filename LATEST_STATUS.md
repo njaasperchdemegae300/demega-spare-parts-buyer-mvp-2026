@@ -1,36 +1,34 @@
 # LATEST STATUS
 
 Current Phase:
-Version 31C — Admin Hub Link Controlled Buyer-Gate Manual Lead Review
+Version 32A-FIX1 — Controlled Buyer-Gate Manual Stock Check Gate Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Manual Lead Review linked inside Admin Navigation Hub
-- Manual Lead Reviews metric
-- Completed Reviews metric
-- Accepted For Stock Check metric
-- Rejected Not Ready metric
-- Latest Review Status metric
-- Latest Review Decision metric
-- Latest Review Slot metric
-- Latest Review Source metric
-- Manual Lead Review metrics inside Admin Hub metrics API
-- Manual Lead Review safety locks inside Admin Hub summary
-- Linked Manual Lead Review dashboard reachable
+- Controlled Buyer-Gate Manual Stock Check Gate foundation
+- Manual stock check phrase requirement
+- Accepted manual lead review prerequisite
+- STOCK_CONFIRMED_AVAILABLE decision
+- STOCK_NOT_AVAILABLE decision
+- STOCK_NEEDS_SUPPLIER_CONFIRMATION decision
+- Rejected review blocked from stock check
+- Duplicate stock check blocking
+- Manual compatibility check required next
+- Quote blocked until compatibility confirmation
+- Manual stock check list API
+- Manual stock check summary API
+- Smoke test server-start wait repaired
 
 Safety Confirmed:
-- Admin Hub remains navigation and visibility only
-- Metrics API remains read-only
-- Manual lead review gate only
-- Manual lead review record only
-- Controlled inbound lead review only
-- Buyer-initiated WhatsApp click-to-chat inbound source only
-- Manual review does not contact buyer
-- Manual review does not prepare quote
-- Accepted review moves only toward manual stock check next
-- Rejected review records not-ready status only
+- Manual stock check gate only
+- Manual stock check record only
+- Controlled stock check only
+- Stock status confirmed manually
+- Manual stock check does not contact buyer
+- Manual stock check does not prepare quote
+- Quote remains blocked until compatibility confirmation
 - No outbound traffic automatically started
 - No paid ads automatically started
 - No lead form automatically published
@@ -40,19 +38,14 @@ Safety Confirmed:
 - No buyer message scraping
 - No private-data scraping
 - No hidden data harvesting
-- No quote before stock confirmation
-- No quote before compatibility confirmation
 - No inventory update
+- No stock reservation
+- No stock reduction
+- No stock ledger entry
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
-- Manual stock check required next
-
-Business Readiness Confirmed:
-- Admin Hub now exposes Manual Lead Review metrics
-- Admin Hub now links directly to Manual Lead Review dashboard
-- Controlled inbound leads now require visible manual review before buyer contact
-- Next required build is manual stock check gate before quote preparation
+- Manual compatibility check required next
 
 Next Phase:
-Version 32A — Controlled Buyer-Gate Manual Stock Check Gate Foundation
+Version 32B — Controlled Buyer-Gate Manual Stock Check Dashboard Display
