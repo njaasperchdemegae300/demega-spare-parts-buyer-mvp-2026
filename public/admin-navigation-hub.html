@@ -74,6 +74,11 @@
       <span class="badge">BUYER GATE REMAINS CLOSED</span>
       <span class="badge">LIVE TRAFFIC NOT ACTIVATED</span>
       <span class="badge">WHATSAPP CLICK-TO-CHAT INBOUND ONLY FOR FIRST TEST</span>
+      <span class="badge">MANUAL ACTIVATION APPROVAL RECORD ONLY</span>
+      <span class="badge">APPROVAL IS NOT ACTIVATION</span>
+      <span class="badge">BUYER GATE STILL CLOSED</span>
+      <span class="badge">LIVE TRAFFIC STILL NOT ACTIVATED</span>
+      <span class="badge">SEPARATE ACTIVATION EXECUTION GATE REQUIRED LATER</span>
       <span class="badge">NO WHATSAPP AUTO-READ</span>
       <span class="badge">NO AUTOMATIC CLOSING</span>
       <span class="badge warn">ADMIN MUST MANUALLY OBSERVE BUYER REPLY OUTSIDE THE SYSTEM</span>
@@ -120,6 +125,11 @@
         <li>Chosen first source is WhatsApp click-to-chat inbound.</li>
         <li>Buyer gate remains closed until later manual activation approval.</li>
         <li>Live traffic is not activated from Admin Hub.</li>
+        <li>Manual activation approval is a record only.</li>
+        <li>Approval does not open the buyer gate.</li>
+        <li>Approval does not activate live traffic.</li>
+        <li>No real buyer is contacted from this Admin Hub link.</li>
+        <li>A separate activation execution gate is required later.</li>
       </ul>
     </section>
 
@@ -196,6 +206,12 @@
         <div class="metric"><h2>Latest Test Source</h2><strong id="controlledBuyerGateTestSource">NONE</strong></div>
         <div class="metric"><h2>Activated Plans</h2><strong id="controlledBuyerGateActivatedPlans">0</strong></div>
         <div class="metric"><h2>Safe Plans</h2><strong id="controlledBuyerGateSafePlans">0</strong></div>
+        <div class="metric"><h2>Manual Approvals</h2><strong id="manualActivationApprovalTotal">0</strong></div>
+        <div class="metric"><h2>Latest Approval</h2><strong id="manualActivationLatestStatus">NO_APPROVAL</strong></div>
+        <div class="metric"><h2>Approval Lead Limit</h2><strong id="manualActivationLeadLimit">0</strong></div>
+        <div class="metric"><h2>Approval Source</h2><strong id="manualActivationTestSource">NONE</strong></div>
+        <div class="metric"><h2>Approved Not Activated</h2><strong id="manualActivationApprovedNotActivated">0</strong></div>
+        <div class="metric"><h2>Activation Executed</h2><strong id="manualActivationExecutedCount">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -227,6 +243,8 @@
       <div class="card"><h2>Internal Buyer-Gate Readiness Guardian</h2><p>View internal readiness checks before opening real buyer traffic. Readiness-check-only; no live buyer gate opened, no real buyer contacted, no WhatsApp send/read, no scraping, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/internal-buyer-gate-readiness">Open Buyer-Gate Readiness Guardian</a></div>
 
       <div class="card"><h2>Controlled Buyer-Gate Test Plan</h2><p>View the first controlled 15-lead buyer-gate plan. Plan-only; no live buyer gate opened, no live traffic activated, no real buyer contacted, no WhatsApp auto-send/read, no scraping, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-test-plan">Open Controlled Buyer-Gate Test Plan</a></div>
+
+      <div class="card"><h2>Controlled Buyer-Gate Manual Activation Approval</h2><p>View manual approval records for controlled 15-lead test preparation. Approval is not activation; no live buyer gate opened, no live traffic activated, no real buyer contacted, no WhatsApp auto-send/read, no scraping, no inventory update, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-activation-approval">Open Manual Activation Approval</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -397,6 +415,33 @@
     }
 
     loadControlledBuyerGatePlanHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadManualActivationApprovalHubMetrics() {
+      try {
+        const response = await fetch("/api/controlled-buyer-gate-manual-activation-approval/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("manualActivationApprovalTotal", summary.totalApprovals || 0);
+        setText("manualActivationLatestStatus", summary.latestApprovalStatus || "NO_APPROVAL");
+        setText("manualActivationLeadLimit", summary.latestLeadLimit || 0);
+        setText("manualActivationTestSource", summary.latestTestSource || "NONE");
+        setText("manualActivationApprovedNotActivated", summary.approvedNotActivatedCount || 0);
+        setText("manualActivationExecutedCount", summary.activatedCount || 0);
+      } catch (error) {
+        const element = document.getElementById("manualActivationLatestStatus");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadManualActivationApprovalHubMetrics();
   </script>
 
 </body>

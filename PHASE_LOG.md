@@ -77,3 +77,6 @@ Controlled Buyer-Gate Manual Activation Approval Gate Foundation added.
 
 ### Version 28B
 Controlled Buyer-Gate Manual Activation Approval Dashboard Display added.
+
+### Version 28C
+Admin Hub Link Controlled Buyer-Gate Manual Activation Approval added.

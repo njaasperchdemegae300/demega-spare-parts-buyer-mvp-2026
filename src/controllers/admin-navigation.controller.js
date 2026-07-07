@@ -23,6 +23,7 @@ const manualFinalBusinessReviewService = require("../services/manual-final-busin
 const assistantSalesAgentTestLabService = require("../services/assistant-sales-agent-test-lab.service");
 const internalBuyerGateReadinessGuardianService = require("../services/internal-buyer-gate-readiness-guardian.service");
 const controlledBuyerGateTestPlanService = require("../services/controlled-buyer-gate-test-plan.service");
+const controlledBuyerGateManualActivationApprovalService = require("../services/controlled-buyer-gate-manual-activation-approval.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -48,7 +49,8 @@ const modules = [
   { name: "Manual Final Business Review Gate", path: "/manual-final-business-review", purpose: "Manual final business review visibility. Review-only; system does not create final business records, close sales, move pipeline, create accounting entries, record revenue, update inventory, send, read messages, scrape, or harvest data." },
   { name: "Assistant Sales Agent Test Lab", path: "/assistant-sales-agent-test-lab", purpose: "Internal simulation-only sales-agent behavior testing before live buyer traffic. No live buyer contact, no WhatsApp auto-send, no WhatsApp auto-read, no scraping, no hidden harvesting, no quote before stock and compatibility gates." },
   { name: "Internal Buyer-Gate Readiness Guardian", path: "/internal-buyer-gate-readiness", purpose: "Read-only readiness guardian before live buyer traffic. Checks source-of-truth readiness and Assistant Sales Agent readiness. Does not open buyer gate, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." },
-  { name: "Controlled Buyer-Gate Test Plan", path: "/controlled-buyer-gate-test-plan", purpose: "Read-only controlled 15-lead buyer-gate test plan display. Shows plan readiness only; does not open buyer gate, activate live traffic, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." }];
+  { name: "Controlled Buyer-Gate Test Plan", path: "/controlled-buyer-gate-test-plan", purpose: "Read-only controlled 15-lead buyer-gate test plan display. Shows plan readiness only; does not open buyer gate, activate live traffic, contact buyers, send/read WhatsApp, scrape data, update inventory, create accounting entries, close sales, or move pipeline." },
+  { name: "Controlled Buyer-Gate Manual Activation Approval", path: "/controlled-buyer-gate-manual-activation-approval", purpose: "Read-only manual activation approval dashboard. Approval is not activation; buyer gate remains closed, live traffic remains inactive, no buyer is contacted, no WhatsApp is sent/read, no scraping, no inventory/accounting/sale/pipeline mutation." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -88,6 +90,13 @@ function getSafety() {
     controlledBuyerGateTestPlanOnly: true,
     controlledPlanOnly: true,
     controlled15LeadPlanOnly: true,
+    controlledBuyerGateManualActivationApprovalOnly: true,
+    manualActivationApprovalGateOnly: true,
+    manualApprovalRecordedOnly: true,
+    approvalIsNotActivation: true,
+    approvedForControlledPreparationOnly: true,
+    approvedForLiveActivationExecution: false,
+    activationExecuted: false,
     simulationOnly: true,
 
     noLiveBuyerGateOpened: true,
@@ -103,6 +112,15 @@ function getSafety() {
     realBuyerContacted: false,
     contactRealBuyerAutomatically: false,
     contactBuyerAutomatically: false,
+
+    leadLimitOnly: true,
+    leadLimit: 15,
+    manualReviewRequired: true,
+    manualReplyOnly: true,
+    noAutoSend: true,
+    noSpam: true,
+    noUnsolicitedWhatsApp: true,
+    chosenFirstSource: "whatsapp_click_to_chat_inbound",
 
     hotBuyerRankingReadOnly: true,
     whatsappManualOpenOnly: true,
@@ -151,15 +169,6 @@ function getSafety() {
     requiresAdminReviewedAccounting: true,
     requiresManualFinalBusinessReviewApproval: true,
     adminObservedReplyRequired: true,
-
-    leadLimitOnly: true,
-    leadLimit: 15,
-    manualReviewRequired: true,
-    manualReplyOnly: true,
-    noAutoSend: true,
-    noSpam: true,
-    noUnsolicitedWhatsApp: true,
-    chosenFirstSource: "whatsapp_click_to_chat_inbound",
 
     preparesCopyTextOnly: true,
     confirmationRecordOnly: true,
@@ -287,6 +296,8 @@ function getSafety() {
     manualReviewRequiredBeforeLiveBuyerGate: true,
     manualApprovalRequiredBeforeActivation: true,
     manualApprovalRequiredToOpenBuyerGateLater: true,
+    separateActivationExecutionGateRequiredLater: true,
+    manualReviewRequiredBeforeAnyBuyerContact: true,
     manualReviewRequiredForAccounting: true,
     manualReviewRequiredForPipelineUpdate: true,
     manualReviewRequiredForStockUpdate: true,
@@ -341,6 +352,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const assistantSalesAgentTestLab = safeRead(() => assistantSalesAgentTestLabService.getAssistantSalesAgentTestLabSummary(), {});
   const internalBuyerGateReadiness = safeRead(() => internalBuyerGateReadinessGuardianService.getInternalBuyerGateReadinessSummary(), {});
   const controlledBuyerGateTestPlan = safeRead(() => controlledBuyerGateTestPlanService.getControlledBuyerGateTestPlanSummary(), {});
+  const controlledBuyerGateManualActivationApproval = safeRead(() => controlledBuyerGateManualActivationApprovalService.getManualActivationApprovalSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -372,7 +384,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       manualFinalBusinessReview,
       assistantSalesAgentTestLab,
       internalBuyerGateReadiness,
-      controlledBuyerGateTestPlan
+      controlledBuyerGateTestPlan,
+      controlledBuyerGateManualActivationApproval
     },
     safety: getSafety()
   });
