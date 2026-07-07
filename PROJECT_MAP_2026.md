@@ -1340,3 +1340,71 @@ Connect Assistant Sales Agent Test Lab into the Admin Navigation Hub so the read
 
 ## Next Phase After Approval
 Version 26A — Internal Buyer-Gate Readiness Guardian Foundation
+
+# Version 26B — Internal Buyer-Gate Readiness Guardian Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display Internal Buyer-Gate Readiness Guardian runs in a read-only dashboard before any real buyer gate can be opened.
+
+## Routes
+- GET /internal-buyer-gate-readiness
+- GET /internal-buyer-gate-readiness-runs
+- GET /api/internal-buyer-gate-readiness/runs
+- GET /api/internal-buyer-gate-readiness/summary
+
+## Features
+- Internal Buyer-Gate Readiness Guardian dashboard
+- Guardian run metric cards
+- Latest verdict display
+- Latest check count display
+- Failed check count display
+- Source-of-truth readiness display
+- Assistant Sales Agent verdict display
+- Guardian check table
+- Verdict filter
+- Check status filter
+- Safety status filter
+- Source truth and Assistant Sales Agent details
+- Gate-closed safety labels
+
+## Safety Rules
+- Read-only dashboard
+- Readiness-check-only display
+- Simulation-only display
+- No live buyer gate opened
+- No real buyer contacted
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory update
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Manual approval required before opening buyer gate later
+
+## Next Phase After Approval
+Version 26C — Admin Hub Link Internal Buyer-Gate Readiness Guardian
+
+# Version 26B-FIX1 — Internal Buyer-Gate Readiness Guardian Dashboard Smoke Test Fix
+
+## Status
+APPROVED AFTER RE-RUN
+
+## Purpose
+Fix the Version 26B smoke test request helper so POST test calls pass request options into fetch.
+
+## Fixed Issue
+The smoke test helper accepted request options but did not pass them into fetch. This caused POST setup calls for Assistant Sales Agent readiness and Internal Buyer-Gate Readiness Guardian runs to fail during the dashboard smoke test.
+
+## Safety
+No production buyer-gate behavior was changed. The fix only corrects the smoke test request helper.
+
+## Next Phase After Approval
+Version 26C — Admin Hub Link Internal Buyer-Gate Readiness Guardian

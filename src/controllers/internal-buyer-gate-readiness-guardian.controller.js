@@ -1,5 +1,21 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const internalBuyerGateReadinessGuardianService = require("../services/internal-buyer-gate-readiness-guardian.service");
+
+function internalBuyerGateReadinessDashboardController(req, res, sendJson, sendHtml) {
+  const filePath = path.join(process.cwd(), "public", "internal-buyer-gate-readiness-dashboard.html");
+
+  if (!fs.existsSync(filePath)) {
+    return sendJson(res, 500, {
+      status: "failed",
+      error: "Internal Buyer-Gate Readiness Guardian dashboard file is missing."
+    });
+  }
+
+  const html = fs.readFileSync(filePath, "utf8");
+  return sendHtml(res, 200, html);
+}
 
 function internalBuyerGateReadinessPreviewController(req, res, sendJson) {
   return sendJson(res, 200, internalBuyerGateReadinessGuardianService.getInternalBuyerGateReadinessPreview());
@@ -45,6 +61,7 @@ function internalBuyerGateReadinessSummaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  internalBuyerGateReadinessDashboardController,
   internalBuyerGateReadinessPreviewController,
   runInternalBuyerGateReadinessController,
   listInternalBuyerGateReadinessRunsController,

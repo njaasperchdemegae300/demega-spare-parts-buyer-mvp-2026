@@ -88,6 +88,8 @@ function routeRequest(req, res, sendJson) {
         "/manual-final-business-reviews",
         "/assistant-sales-agent-test-lab",
         "/assistant-sales-agent-test-runs",
+        "/internal-buyer-gate-readiness",
+        "/internal-buyer-gate-readiness-runs",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -255,6 +257,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/assistant-sales-agent-test-lab" || url.pathname === "/assistant-sales-agent-test-runs")) {
     return assistantSalesAgentTestLabController.assistantSalesAgentTestLabDashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/internal-buyer-gate-readiness" || url.pathname === "/internal-buyer-gate-readiness-runs")) {
+    return internalBuyerGateReadinessGuardianController.internalBuyerGateReadinessDashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/internal-buyer-gate-readiness/preview") {

@@ -1,49 +1,55 @@
 # LATEST STATUS
 
 Current Phase:
-Version 26A — Internal Buyer-Gate Readiness Guardian Foundation
+Version 26B-FIX1 — Internal Buyer-Gate Readiness Guardian Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /api/internal-buyer-gate-readiness/preview
-- POST /api/internal-buyer-gate-readiness/run
-- GET /api/internal-buyer-gate-readiness/runs
-- GET /api/internal-buyer-gate-readiness/summary
-- Internal buyer-gate readiness check
-- Source-of-truth readiness validation
-- Assistant Sales Agent readiness validation
-- Assistant Sales Agent zero-failure validation
-- Safety lock validation
-- Unsafe live-gate request blocking
-- Readiness verdict
-- Readiness run history
-- Readiness summary
+- GET /internal-buyer-gate-readiness
+- GET /internal-buyer-gate-readiness-runs
+- Internal Buyer-Gate Readiness Guardian dashboard
+- Guardian run metric cards
+- Latest verdict display
+- Latest check count display
+- Failed check count display
+- Source-of-truth readiness display
+- Assistant Sales Agent verdict display
+- Guardian check table
+- Verdict filter
+- Check status filter
+- Safety status filter
+- Source truth and Assistant Sales Agent details
+- Gate-closed safety labels
+- Fixed smoke test POST request options
 
 Safety Confirmed:
-- Internal Buyer-Gate Readiness Guardian is readiness-check-only
-- Guardian does not open live buyer gate
-- Guardian does not contact real buyers
-- Guardian does not send WhatsApp
-- Guardian does not read WhatsApp
-- Guardian does not scrape buyer messages
-- Guardian does not scrape private data
-- Guardian does not harvest hidden data
-- Guardian does not quote before stock confirmation
-- Guardian does not quote before compatibility confirmation
-- Guardian does not update inventory
-- Guardian does not create accounting entries
-- Guardian does not close sales
-- Guardian does not move pipeline
-- Manual approval is required before opening buyer gate later
+- Dashboard displays readiness guardian runs only
+- Dashboard is read-only
+- Dashboard does not open live buyer gate
+- Dashboard does not contact real buyers
+- Dashboard does not send WhatsApp
+- Dashboard does not read WhatsApp
+- Dashboard does not scrape buyer messages
+- Dashboard does not scrape private data
+- Dashboard does not harvest hidden data
+- Dashboard does not quote before stock confirmation
+- Dashboard does not quote before compatibility confirmation
+- Dashboard does not update inventory
+- Dashboard does not create accounting entries
+- Dashboard does not close sales
+- Dashboard does not move pipeline
+- Manual approval remains required before opening buyer gate later
 
-Readiness Confirmed:
-- Source-of-truth files are ready
-- Assistant Sales Agent readiness has approved run
-- Assistant Sales Agent latest run has zero failures
-- Safety locks remain active
-- The system is only a candidate for controlled buyer-gate opening after manual approval
+Readiness Display Confirmed:
+- Dashboard displays latest guardian verdict
+- Dashboard displays check count and failed check count
+- Dashboard displays source-of-truth readiness
+- Dashboard displays Assistant Sales Agent verdict
+- Dashboard displays live buyer gate closed status
+- Dashboard displays individual guardian checks
+- Dashboard displays safety labels
 
 Next Phase:
-Version 26B — Internal Buyer-Gate Readiness Guardian Dashboard Display
+Version 26C — Admin Hub Link Internal Buyer-Gate Readiness Guardian
