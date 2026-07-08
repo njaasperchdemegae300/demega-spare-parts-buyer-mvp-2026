@@ -115,6 +115,8 @@ function routeRequest(req, res, sendJson) {
         "/controlled-buyer-gate-manual-compatibility-checks",
         "/controlled-buyer-gate-final-quote-eligibility",
         "/controlled-buyer-gate-final-quote-eligibilities",
+        "/controlled-buyer-gate-manual-quote-draft",
+        "/controlled-buyer-gate-manual-quote-drafts",
         "/api/admin-navigation/summary",
         "/api/admin-navigation/dashboard-metrics",
         "/api/whatsapp-manual/preview",
@@ -318,6 +320,10 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/controlled-buyer-gate-final-quote-eligibility" || url.pathname === "/controlled-buyer-gate-final-quote-eligibilities")) {
     return controlledBuyerGateFinalQuoteEligibilityController.dashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && (url.pathname === "/controlled-buyer-gate-manual-quote-draft" || url.pathname === "/controlled-buyer-gate-manual-quote-drafts")) {
+    return controlledBuyerGateManualQuoteDraftController.dashboardController(req, res, sendJson, sendHtml);
   }
 
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-quote-draft/preview") {

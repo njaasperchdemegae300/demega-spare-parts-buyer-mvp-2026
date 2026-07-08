@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Manual Quote Draft Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 26px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 3900px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .approved { background: #dcfce7; color: #166534; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+    pre { white-space: pre-wrap; background: #f9fafb; padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Manual Quote Draft Dashboard</h1>
+    <p>Read-only dashboard for internal manual quote drafts. It does not contact buyers, send WhatsApp, send quote, send price, or change inventory.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Manual Quote Drafts</h2><strong id="totalManualQuoteDrafts">0</strong></div>
+      <div class="card"><h2>Prepared Drafts</h2><strong id="preparedManualQuoteDraftCount">0</strong></div>
+      <div class="card"><h2>Eligible Drafts</h2><strong id="eligibleManualQuoteDraftCount">0</strong></div>
+      <div class="card"><h2>Latest Status</h2><strong id="latestManualQuoteDraftStatus">NO_MANUAL_QUOTE_DRAFT</strong></div>
+      <div class="card"><h2>Latest Source</h2><strong id="latestSource">NONE</strong></div>
+      <div class="card"><h2>Latest Currency</h2><strong id="latestCurrency">NONE</strong></div>
+      <div class="card"><h2>Latest Total Price</h2><strong id="latestTotalPrice">0</strong></div>
+      <div class="card"><h2>Next Gate</h2><strong>MANUAL REVIEW BEFORE SENDING</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Quote Draft Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It displays internal quote drafts only.
+        Price is allowed only inside the internal draft. The system does not contact the buyer,
+        send WhatsApp, read WhatsApp, scrape messages, send quote, send price, update inventory,
+        reserve stock, reduce stock, create accounting entries, close sales, or move pipeline.
+      </p>
+      <span class="badge safe">Manual quote draft gate only</span>
+      <span class="badge safe">Manual quote draft record only</span>
+      <span class="badge safe">Controlled manual quote draft only</span>
+      <span class="badge safe">Final quote eligibility required first</span>
+      <span class="badge safe">ELIGIBLE_FOR_MANUAL_QUOTE_DRAFT required first</span>
+      <span class="badge safe">Price allowed only inside internal draft</span>
+      <span class="badge safe">No buyer contact from draft gate</span>
+      <span class="badge safe">No quote sent at draft gate</span>
+      <span class="badge safe">No price sent to buyer</span>
+      <span class="badge safe">No WhatsApp auto-send</span>
+      <span class="badge safe">No WhatsApp auto-read</span>
+      <span class="badge safe">No buyer message scraping</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden data harvesting</span>
+      <span class="badge safe">No inventory update</span>
+      <span class="badge safe">No stock reservation</span>
+      <span class="badge safe">No stock reduction</span>
+      <span class="badge safe">No stock ledger entry</span>
+      <span class="badge safe">No accounting entry</span>
+      <span class="badge safe">No sale closing</span>
+      <span class="badge safe">No pipeline movement</span>
+      <span class="badge safe">Manual review before sending required next</span>
+      <span class="badge safe">Manual send confirmation required next</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Manual Quote Draft Scope</h2>
+      <p class="muted">
+        This gate prepares draft text only. Admin must review manually before any buyer-facing sending happens outside this gate.
+      </p>
+      <span class="badge safe">MANUAL_QUOTE_DRAFT_PREPARED</span>
+      <span class="badge safe">INTERNAL_DRAFT_ONLY</span>
+      <span class="badge safe">PRICE_IN_DRAFT_ONLY</span>
+      <span class="badge safe">QUOTE_NOT_SENT_TO_BUYER</span>
+      <span class="badge safe">PRICE_NOT_SENT_TO_BUYER</span>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled Buyer-Gate Manual Quote Draft Records</h2>
+      <p class="muted">Read-only list of internal quote drafts after final quote eligibility.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search part, vehicle, price, checker..." />
+        <select id="currencyFilter">
+          <option value="">All currencies</option>
+          <option value="NGN">NGN</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe quote drafts</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Draft Status</th>
+            <th>Slot</th>
+            <th>Source</th>
+            <th>Lead Reference</th>
+            <th>Buyer Request</th>
+            <th>Internal Draft Price</th>
+            <th>Internal Draft Message</th>
+            <th>Draft Scope</th>
+            <th>Contact Safety</th>
+            <th>Send Safety</th>
+            <th>Inventory Safety</th>
+            <th>Business Mutation Safety</th>
+            <th>Checked By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="draftRows">
+          <tr><td colspan="14">Loading manual quote draft records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allDrafts = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function sourceLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function hasRisk(record) {
+      return record.buyerContacted === true ||
+        record.realBuyerContacted === true ||
+        record.autoContactBuyer === true ||
+        record.contactRealBuyerAutomatically === true ||
+        record.startOutboundTraffic === true ||
+        record.startPaidAdsAutomatically === true ||
+        record.publishLeadFormAutomatically === true ||
+        record.autoSendWhatsApp === true ||
+        record.sendWhatsApp === true ||
+        record.broadcastWhatsApp === true ||
+        record.autoReadWhatsApp === true ||
+        record.scrapeWhatsappMessages === true ||
+        record.privateMessageScraping === true ||
+        record.hiddenDataHarvesting === true ||
+        record.quoteSentToBuyer === true ||
+        record.priceSentToBuyer === true ||
+        record.inventoryUpdated === true ||
+        record.stockReserved === true ||
+        record.stockReduced === true ||
+        record.autoUpdateInventory === true ||
+        record.reserveStockAutomatically === true ||
+        record.reduceStockAutomatically === true ||
+        record.autoCreateInventoryEvent === true ||
+        record.autoCreateStockLedgerEntry === true ||
+        record.autoCreateAccountingEntry === true ||
+        record.autoCloseSale === true ||
+        record.autoMovePipelineStage === true;
+    }
+
+    function getFilteredDrafts() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const currencyFilter = document.getElementById("currencyFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allDrafts.filter(record => {
+        const risk = hasRisk(record);
+        const haystack = [
+          record.manualQuoteDraftStatus,
+          record.source,
+          record.leadReference,
+          record.partNeeded,
+          record.vehicleDetail,
+          record.buyerLocation,
+          record.quotedPartName,
+          record.quotedCondition,
+          record.currency,
+          record.unitPrice,
+          record.totalPrice,
+          record.manualQuoteDraftMessage,
+          record.quoteNote,
+          record.checkedBy
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!currencyFilter || record.currency === currencyFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("draftRows");
+      const records = getFilteredDrafts();
+
+      if (!records.length) {
+        tbody.innerHTML = '<tr><td colspan="14">No matching manual quote draft records.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = records.map(record => {
+        const risk = hasRisk(record);
+
+        const requestText = [
+          badge(`Part: ${record.partNeeded || "Not recorded"}`, "safe"),
+          badge(`Vehicle: ${record.vehicleDetail || "Not recorded"}`, "safe"),
+          badge(`Location: ${record.buyerLocation || "Not recorded"}`, "safe")
+        ].join("<br>");
+
+        const priceText = [
+          badge(`Quoted part: ${record.quotedPartName || "Not recorded"}`, "safe"),
+          badge(`Condition: ${record.quotedCondition || "Not recorded"}`, "safe"),
+          badge(`Quantity: ${record.quantity || 0}`, "safe"),
+          badge(`Unit: ${record.currency || ""} ${record.unitPrice || 0}`, "safe"),
+          badge(`Total: ${record.currency || ""} ${record.totalPrice || 0}`, "safe")
+        ].join("<br>");
+
+        const draftScope = [
+          record.manualQuoteDraftGateOnly ? badge("Draft gate only", "safe") : badge("Draft gate risk", "danger"),
+          record.manualQuoteDraftRecordOnly ? badge("Record only", "safe") : badge("Record risk", "danger"),
+          record.controlledManualQuoteDraftOnly ? badge("Controlled manual draft", "safe") : badge("Control risk", "danger"),
+          record.quoteDraftPreparedOnly ? badge("Draft prepared only", "safe") : badge("Draft scope risk", "danger"),
+          record.quoteDraftNotSentOnly ? badge("Quote not sent", "safe") : badge("Quote send risk", "danger"),
+          record.priceIncludedInDraftOnly ? badge("Price in draft only", "safe") : badge("Price scope risk", "danger"),
+          record.manualReviewBeforeSendingRequired ? badge("Manual review before sending", "safe") : badge("Review gate missing", "danger"),
+          record.manualSendConfirmationRequiredNext ? badge("Manual send confirmation next", "safe") : badge("Send confirmation missing", "danger")
+        ].join("<br>");
+
+        const contactSafety = [
+          record.buyerContacted ? badge("Buyer contacted risk", "danger") : badge("Buyer not contacted", "safe"),
+          record.autoContactBuyer ? badge("Auto-contact risk", "danger") : badge("No auto-contact", "safe"),
+          record.autoSendWhatsApp ? badge("WhatsApp auto-send risk", "danger") : badge("No WhatsApp auto-send", "safe"),
+          record.autoReadWhatsApp ? badge("WhatsApp auto-read risk", "danger") : badge("No WhatsApp auto-read", "safe"),
+          record.scrapeWhatsappMessages ? badge("WhatsApp scraping risk", "danger") : badge("No WhatsApp scraping", "safe")
+        ].join("<br>");
+
+        const sendSafety = [
+          record.quoteSentToBuyer ? badge("Quote sent risk", "danger") : badge("Quote not sent", "safe"),
+          record.priceSentToBuyer ? badge("Price sent risk", "danger") : badge("Price not sent", "safe"),
+          record.broadcastWhatsApp ? badge("Broadcast risk", "danger") : badge("No broadcast", "safe"),
+          record.noPrivateDataScraping ? badge("No private scraping", "safe") : badge("Private scraping rule missing", "danger"),
+          record.noHiddenDataHarvesting ? badge("No hidden harvesting", "safe") : badge("Hidden harvesting rule missing", "danger")
+        ].join("<br>");
+
+        const inventorySafety = [
+          record.inventoryUpdated ? badge("Inventory update risk", "danger") : badge("No inventory update", "safe"),
+          record.stockReserved ? badge("Stock reservation risk", "danger") : badge("No stock reservation", "safe"),
+          record.stockReduced ? badge("Stock reduction risk", "danger") : badge("No stock reduction", "safe"),
+          record.autoCreateInventoryEvent ? badge("Inventory event risk", "danger") : badge("No inventory event", "safe"),
+          record.autoCreateStockLedgerEntry ? badge("Stock ledger risk", "danger") : badge("No stock ledger", "safe")
+        ].join("<br>");
+
+        const mutationSafety = risk ? badge("Risk detected", "danger") : [
+          record.startOutboundTraffic ? badge("Outbound risk", "danger") : badge("No outbound traffic", "safe"),
+          record.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          record.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe"),
+          record.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline move", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(record.manualQuoteDraftStatus, record.manualQuoteDraftStatus === "MANUAL_QUOTE_DRAFT_PREPARED" ? "approved" : "danger")}</td>
+            <td>${badge(`#${record.slotNumber}`, Number(record.slotNumber || 0) >= 1 && Number(record.slotNumber || 0) <= 15 ? "safe" : "danger")}</td>
+            <td>${badge(sourceLabel(record.source), record.source === "whatsapp_click_to_chat_inbound" ? "safe" : "warn")}</td>
+            <td>${escapeHtml(record.leadReference)}</td>
+            <td>${requestText}</td>
+            <td>${priceText}</td>
+            <td><pre>${escapeHtml(record.manualQuoteDraftMessage || "")}</pre></td>
+            <td>${draftScope}</td>
+            <td>${contactSafety}</td>
+            <td>${sendSafety}</td>
+            <td>${inventorySafety}</td>
+            <td>${mutationSafety}</td>
+            <td>${escapeHtml(record.checkedBy)}</td>
+            <td>${formatDate(record.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-manual-quote-draft/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalManualQuoteDrafts").textContent = summary.totalManualQuoteDrafts || 0;
+      document.getElementById("preparedManualQuoteDraftCount").textContent = summary.preparedManualQuoteDraftCount || 0;
+      document.getElementById("eligibleManualQuoteDraftCount").textContent = summary.eligibleManualQuoteDraftCount || 0;
+      document.getElementById("latestManualQuoteDraftStatus").textContent = summary.latestManualQuoteDraftStatus || "NO_MANUAL_QUOTE_DRAFT";
+      document.getElementById("latestSource").textContent = summary.latestSource || "NONE";
+      document.getElementById("latestCurrency").textContent = summary.latestCurrency || "NONE";
+      document.getElementById("latestTotalPrice").textContent = summary.latestTotalPrice || 0;
+
+      const recordsResponse = await fetch("/api/controlled-buyer-gate-manual-quote-drafts");
+      const recordsData = await recordsResponse.json();
+      allDrafts = Array.isArray(recordsData.manualQuoteDrafts) ? recordsData.manualQuoteDrafts : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("currencyFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("draftRows").innerHTML =
+        `<tr><td colspan="14">Manual Quote Draft dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>
