@@ -35,6 +35,7 @@ const controlledBuyerGateLeadSlotEnforcementController = require("../controllers
 const controlledBuyerGateManualLeadReviewController = require("../controllers/controlled-buyer-gate-manual-lead-review.controller");
 const controlledBuyerGateManualStockCheckController = require("../controllers/controlled-buyer-gate-manual-stock-check.controller");
 const controlledBuyerGateManualCompatibilityCheckController = require("../controllers/controlled-buyer-gate-manual-compatibility-check.controller");
+const controlledBuyerGateFinalQuoteEligibilityController = require("../controllers/controlled-buyer-gate-final-quote-eligibility.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -310,6 +311,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/controlled-buyer-gate-manual-compatibility-check" || url.pathname === "/controlled-buyer-gate-manual-compatibility-checks")) {
     return controlledBuyerGateManualCompatibilityCheckController.dashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-final-quote-eligibility/preview") {
+    return controlledBuyerGateFinalQuoteEligibilityController.previewController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/controlled-buyer-gate-final-quote-eligibility/create") {
+    return controlledBuyerGateFinalQuoteEligibilityController.createController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-final-quote-eligibilities") {
+    return controlledBuyerGateFinalQuoteEligibilityController.listController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-final-quote-eligibility/summary") {
+    return controlledBuyerGateFinalQuoteEligibilityController.summaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-compatibility-check/preview") {

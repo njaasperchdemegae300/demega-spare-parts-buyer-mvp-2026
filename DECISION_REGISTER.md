@@ -50,3 +50,6 @@ Controlled Buyer-Gate Manual Compatibility Check records compatibility status on
 
 ## Decision 16 — Manual Compatibility Check Before Final Quote Eligibility
 Controlled Buyer-Gate Manual Compatibility Check records compatibility status only after available stock confirmation. It must not contact buyers, send/read WhatsApp, scrape data, prepare quotes, include price, update inventory, reserve/reduce stock, create accounting entries, close sales, or move pipeline. If compatibility is confirmed, the next gate is final quote eligibility before any quote.
+
+## Decision 17 — Final Quote Eligibility Before Manual Quote Draft
+Controlled Buyer-Gate Final Quote Eligibility records quote readiness only after stock and compatibility confirmation. It must not contact buyers, send/read WhatsApp, scrape data, prepare quotes, include price, send quote, update inventory, reserve/reduce stock, create accounting entries, close sales, or move pipeline. If eligible, the next gate is controlled manual quote draft.

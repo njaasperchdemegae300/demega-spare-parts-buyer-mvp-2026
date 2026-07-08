@@ -1,37 +1,41 @@
 # LATEST STATUS
 
 Current Phase:
-Version 33C-FIX1 — Admin Hub Link Controlled Buyer-Gate Manual Compatibility Check
+Version 34A — Controlled Buyer-Gate Final Quote Eligibility Gate Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Manual Compatibility Check linked inside Admin Navigation Hub
-- Manual Compatibility Checks metric
-- Completed Compatibility Checks metric
-- Compatibility Confirmed metric
-- Compatibility Not Confirmed metric
-- Compatibility Needs More Info metric
-- Latest Compatibility Status metric
-- Latest Compatibility Decision metric
-- Latest Compatibility Source metric
-- Manual Compatibility Check metrics inside Admin Hub metrics API
-- Manual Compatibility Check safety locks inside Admin Hub summary
-- Linked Manual Compatibility Check dashboard reachable
-- Version 33C smoke test prerequisite slot chain repaired
+- Controlled Buyer-Gate Final Quote Eligibility Gate foundation
+- Final quote eligibility phrase requirement
+- Confirmed compatibility prerequisite
+- ELIGIBLE_FOR_MANUAL_QUOTE_DRAFT decision
+- NOT_ELIGIBLE_FOR_QUOTE decision
+- NEEDS_MANAGER_REVIEW decision
+- Compatibility needs-more-info blocked
+- Supplier-confirmation stock blocked
+- Rejected lead review blocked
+- Duplicate final quote eligibility blocking
+- Manual quote draft required next
+- Quote blocked until manual quote draft gate
+- Final quote eligibility list API
+- Final quote eligibility summary API
 
 Safety Confirmed:
-- Admin Hub remains navigation and visibility only
-- Metrics API remains read-only
-- Manual compatibility check gate only
-- Manual compatibility check record only
-- Controlled compatibility check only
-- Compatibility status confirmed manually
-- Manual compatibility check does not contact buyer
-- Manual compatibility check does not prepare quote
-- Manual compatibility check does not include price
-- Quote remains blocked until final quote eligibility
+- Final quote eligibility gate only
+- Final quote eligibility record only
+- Controlled final quote eligibility only
+- Stock confirmation required first
+- Compatibility confirmation required first
+- No buyer contact
+- No quote prepared
+- No price included
+- No quote sent
+- No outbound traffic automatically started
+- No paid ads automatically started
+- No lead form automatically published
+- No real buyer automatically contacted
 - No WhatsApp auto-send
 - No WhatsApp auto-read
 - No buyer message scraping
@@ -44,13 +48,7 @@ Safety Confirmed:
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
-- Final quote eligibility required next
-
-Business Readiness Confirmed:
-- Admin Hub now exposes Manual Compatibility Check metrics
-- Admin Hub now links directly to Manual Compatibility Check dashboard
-- Controlled inbound leads now require visible compatibility confirmation before quote eligibility
-- Next required build is final quote eligibility gate before quote preparation
+- Manual quote draft required next
 
 Next Phase:
-Version 34A — Controlled Buyer-Gate Final Quote Eligibility Gate Foundation
+Version 34B — Controlled Buyer-Gate Final Quote Eligibility Dashboard Display
