@@ -60,9 +60,6 @@ Version 38B — Controlled Buyer-Gate Follow-Up Decision Dashboard Display
 ```txt
 
 [wait-for-health attempt 1] fetch failed
-[wait-for-health attempt 2] fetch failed
-[wait-for-health attempt 3] fetch failed
-[wait-for-health attempt 4] fetch failed
-[wait-for-health attempt 5] fetch failedDemega Spare Parts Buyer MVP 2026 server running on http://localhost:3129
+[wait-for-health attempt 2] fetch failedDemega Spare Parts Buyer MVP 2026 server running on http://localhost:3129
 
 ```
