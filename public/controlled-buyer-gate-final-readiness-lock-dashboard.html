@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Controlled Buyer-Gate Final Readiness Lock Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
+
+    header {
+      background: #111827;
+      color: #ffffff;
+      padding: 24px;
+    }
+
+    main {
+      padding: 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .notice {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card, .panel {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .card strong {
+      display: block;
+      font-size: 26px;
+      color: #111827;
+    }
+
+    .badge {
+      display: inline-block;
+      margin: 4px 6px 4px 0;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      border: 1px solid #bae6fd;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .danger {
+      background: #fee2e2;
+      border-color: #fecaca;
+    }
+
+    .safe {
+      background: #dcfce7;
+      border-color: #bbf7d0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    th, td {
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 12px;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-size: 12px;
+    }
+
+    .small {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .actions a {
+      color: #0f766e;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Controlled Buyer-Gate Final Readiness Lock Dashboard</h1>
+    <p>Read-only final technical readiness visibility. This page does not open live traffic.</p>
+  </header>
+
+  <main>
+    <div class="notice">
+      <strong>FINAL READINESS LOCK DASHBOARD ONLY.</strong>
+      This dashboard displays final readiness records only. It does not open real buyer traffic, start ads, publish lead forms, contact buyers, send WhatsApp, auto-reply, auto-follow-up, read WhatsApp, scrape buyer messages, mutate inventory, create accounting records, close sale, or move pipeline.
+    </div>
+
+    <section class="grid">
+      <div class="card"><h2>Total Final Locks</h2><strong id="totalFinalReadinessLocks">0</strong></div>
+      <div class="card"><h2>Recorded Locks</h2><strong id="recordedFinalReadinessLockCount">0</strong></div>
+      <div class="card"><h2>Latest Status</h2><strong id="latestFinalReadinessLockStatus">NONE</strong></div>
+      <div class="card"><h2>Lead Limit</h2><strong id="latestLeadLimit">15</strong></div>
+      <div class="card"><h2>Approved Source</h2><strong id="latestApprovedSource">NONE</strong></div>
+      <div class="card"><h2>Manual Live Gate Required</h2><strong id="nextGateRequiresManualLiveGateApproval">YES</strong></div>
+    </section>
+
+    <section class="panel">
+      <h2>Safety Locks Confirmed</h2>
+      <span class="badge safe">FINAL READINESS LOCK ONLY</span>
+      <span class="badge safe">FINAL READINESS RECORD ONLY</span>
+      <span class="badge safe">CONTROLLED BUYER-GATE FINAL READINESS ONLY</span>
+      <span class="badge danger">NO LIVE TRAFFIC OPENED</span>
+      <span class="badge danger">NO REAL BUYER GATE OPENED</span>
+      <span class="badge danger">NO OUTBOUND TRAFFIC STARTED</span>
+      <span class="badge danger">NO AUTO-SEND WHATSAPP</span>
+      <span class="badge danger">NO AUTO-REPLY</span>
+      <span class="badge danger">NO AUTO-FOLLOW-UP</span>
+      <span class="badge danger">NO WHATSAPP READING</span>
+      <span class="badge danger">NO MESSAGE SCRAPING</span>
+      <span class="badge danger">NO INVENTORY MUTATION</span>
+      <span class="badge danger">NO ACCOUNTING MUTATION</span>
+      <span class="badge danger">NO SALE CLOSING</span>
+      <span class="badge danger">NO PIPELINE MOVEMENT</span>
+      <span class="badge safe">NEXT GATE NEEDS SEPARATE MANUAL LIVE-GATE APPROVAL</span>
+    </section>
+
+    <section class="panel actions">
+      <h2>Navigation</h2>
+      <p><a href="/admin-hub">Back to Admin Hub</a></p>
+    </section>
+
+    <section class="panel">
+      <h2>Search Final Readiness Locks</h2>
+      <input id="searchInput" placeholder="Search lock status, source, lock channel, locked by, or reason..." />
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Lead Limit</th>
+            <th>Approved Source</th>
+            <th>Lock Channel</th>
+            <th>Locked By</th>
+            <th>Reason</th>
+            <th>Next Gate</th>
+            <th>Safety</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="recordsBody">
+          <tr><td colspan="9">Loading records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      records: []
+    };
+
+    function safeText(value) {
+      return value === undefined || value === null || value === "" ? "—" : String(value);
+    }
+
+    function setText(id, value) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = safeText(value);
+    }
+
+    function renderRecords() {
+      const body = document.getElementById("recordsBody");
+      const query = (document.getElementById("searchInput").value || "").toLowerCase();
+
+      const records = state.records.filter(record => {
+        const text = JSON.stringify(record).toLowerCase();
+        return text.includes(query);
+      });
+
+      if (!records.length) {
+        body.innerHTML = '<tr><td colspan="9">No final readiness lock records found.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = records.map(record => `
+        <tr>
+          <td><strong>${safeText(record.finalReadinessLockStatus)}</strong></td>
+          <td>${safeText(record.leadLimit)}</td>
+          <td>${safeText(record.approvedSource)}</td>
+          <td>${safeText(record.lockChannel)}</td>
+          <td>${safeText(record.lockedBy)}</td>
+          <td>${safeText(record.lockReason)}</td>
+          <td>${record.nextGateRequiresManualLiveGateApproval ? "Separate manual live-gate approval required" : "NOT READY"}</td>
+          <td class="small">
+            No live traffic: ${record.noLiveTrafficOpened === true ? "YES" : "CHECK"}<br>
+            No real buyer gate: ${record.noRealBuyerGateOpened === true ? "YES" : "CHECK"}<br>
+            Execution blocked: ${record.systemExecutionBlocked === true ? "YES" : "CHECK"}<br>
+            No WhatsApp send: ${record.autoSendWhatsApp === false ? "YES" : "CHECK"}<br>
+            No inventory mutation: ${record.inventoryUpdated === false ? "YES" : "CHECK"}
+          </td>
+          <td>${safeText(record.createdAt)}</td>
+        </tr>
+      `).join("");
+    }
+
+    async function loadDashboard() {
+      try {
+        const summaryResponse = await fetch("/api/controlled-buyer-gate-final-readiness-lock/summary");
+        const summaryJson = await summaryResponse.json();
+        const summary = summaryJson.summary || {};
+
+        setText("totalFinalReadinessLocks", summary.totalFinalReadinessLocks || 0);
+        setText("recordedFinalReadinessLockCount", summary.recordedFinalReadinessLockCount || 0);
+        setText("latestFinalReadinessLockStatus", summary.latestFinalReadinessLockStatus || "NO_FINAL_READINESS_LOCK");
+        setText("latestLeadLimit", summary.latestLeadLimit || 15);
+        setText("latestApprovedSource", summary.latestApprovedSource || "NONE");
+        setText("nextGateRequiresManualLiveGateApproval", summary.nextGateRequiresManualLiveGateApproval ? "YES" : "NO");
+
+        const listResponse = await fetch("/api/controlled-buyer-gate-final-readiness-locks");
+        const listJson = await listResponse.json();
+        state.records = listJson.finalReadinessLocks || [];
+        renderRecords();
+      } catch (error) {
+        document.getElementById("recordsBody").innerHTML = `<tr><td colspan="9">Dashboard load error: ${safeText(error.message)}</td></tr>`;
+      }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRecords);
+    loadDashboard();
+  </script>
+</body>
+</html>

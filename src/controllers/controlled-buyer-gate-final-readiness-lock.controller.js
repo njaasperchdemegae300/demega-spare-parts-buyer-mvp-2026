@@ -1,5 +1,14 @@
+const fs = require("fs");
+const path = require("path");
 const readJsonBody = require("../utils/read-json-body");
 const service = require("../services/controlled-buyer-gate-final-readiness-lock.service");
+
+function dashboardController(req, res) {
+  const filePath = path.join(process.cwd(), "public", "controlled-buyer-gate-final-readiness-lock-dashboard.html");
+  const html = fs.readFileSync(filePath, "utf8");
+  res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+  return res.end(html);
+}
 
 function previewController(req, res, sendJson) {
   return sendJson(res, 200, service.getFinalReadinessLockPreview());
@@ -45,6 +54,7 @@ function summaryController(req, res, sendJson) {
 }
 
 module.exports = {
+  dashboardController,
   previewController,
   createController,
   listController,

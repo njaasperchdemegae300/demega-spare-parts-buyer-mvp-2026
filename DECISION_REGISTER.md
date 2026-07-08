@@ -74,3 +74,6 @@ Controlled Buyer-Gate Follow-Up Decision is visible inside Admin Hub as read-onl
 
 ## Decision 23 — Final Readiness Lock Does Not Open Live Traffic
 Controlled Buyer-Gate Final Readiness Lock records technical readiness only. It must not open live buyer traffic, activate real buyer gate, start ads, publish lead forms, contact buyers, send WhatsApp, auto-reply, auto-follow-up, auto-schedule, read WhatsApp, scrape buyer messages, mutate inventory, create accounting records, close sales, or move pipeline. Live gate requires a separate manual approval phase.
+
+## Decision 24 — Final Readiness Lock Dashboard Is Read-Only
+Controlled Buyer-Gate Final Readiness Lock Dashboard displays final readiness only. It must not open live traffic, activate real buyer gate, start ads, publish lead forms, contact buyers, send WhatsApp, auto-reply, auto-follow-up, auto-schedule, read WhatsApp, scrape messages, mutate inventory, create accounting records, close sales, or move pipeline.

@@ -348,6 +348,10 @@ function routeRequest(req, res, sendJson) {
     return controlledBuyerGateFollowUpDecisionController.dashboardController(req, res, sendJson, sendHtml);
   }
 
+  if (method === "GET" && (url.pathname === "/controlled-buyer-gate-final-readiness-lock" || url.pathname === "/controlled-buyer-gate-final-readiness-lock-dashboard")) {
+    return controlledBuyerGateFinalReadinessLockController.dashboardController(req, res, sendHtml);
+  }
+
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-final-readiness-lock/preview") {
     return controlledBuyerGateFinalReadinessLockController.previewController(req, res, sendJson);
   }
