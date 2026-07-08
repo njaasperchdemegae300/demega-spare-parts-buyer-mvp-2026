@@ -179,3 +179,6 @@ Controlled Buyer-Gate Follow-Up Decision Gate Foundation added.
 
 ### Version 38B
 Controlled Buyer-Gate Follow-Up Decision Dashboard Display added.
+
+### Version 38B
+Controlled Buyer-Gate Follow-Up Decision Dashboard Display added.

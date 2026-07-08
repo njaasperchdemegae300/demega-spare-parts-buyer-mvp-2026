@@ -13,9 +13,9 @@
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
     .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
     .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
-    .card strong { display: block; margin-top: 8px; font-size: 24px; color: #111827; }
+    .card strong { display: block; margin-top: 8px; font-size: 26px; color: #111827; }
     .panel { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 3900px; }
+    table { width: 100%; border-collapse: collapse; min-width: 4200px; }
     th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
     th { background: #f3f4f6; color: #374151; }
     .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
@@ -23,7 +23,7 @@
     .danger { background: #fee2e2; color: #991b1b; }
     .urgent { background: #fee2e2; color: #991b1b; }
     .high { background: #ffedd5; color: #9a3412; }
-    .normal { background: #dbeafe; color: #1e40af; }
+    .normal { background: #e0f2fe; color: #075985; }
     .low { background: #f3f4f6; color: #374151; }
     .muted { color: #6b7280; font-size: 13px; }
     .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
@@ -44,27 +44,29 @@
       <div class="card"><h2>Total Follow-Up Decisions</h2><strong id="totalFollowUpDecisions">0</strong></div>
       <div class="card"><h2>Recorded Decisions</h2><strong id="recordedFollowUpDecisionCount">0</strong></div>
       <div class="card"><h2>Urgent Decisions</h2><strong id="urgentFollowUpDecisionCount">0</strong></div>
-      <div class="card"><h2>High Priority</h2><strong id="highFollowUpDecisionCount">0</strong></div>
-      <div class="card"><h2>Normal Priority</h2><strong id="normalFollowUpDecisionCount">0</strong></div>
+      <div class="card"><h2>High Decisions</h2><strong id="highFollowUpDecisionCount">0</strong></div>
+      <div class="card"><h2>Normal Decisions</h2><strong id="normalFollowUpDecisionCount">0</strong></div>
       <div class="card"><h2>Manual Action Required</h2><strong id="manualActionRequiredCount">0</strong></div>
       <div class="card"><h2>Latest Decision</h2><strong id="latestFollowUpDecision">NONE</strong></div>
       <div class="card"><h2>Latest Priority</h2><strong id="latestFollowUpPriority">NONE</strong></div>
+      <div class="card"><h2>System Execution</h2><strong>BLOCKED</strong></div>
     </section>
 
     <section class="panel warning">
       <h2>Follow-Up Decision Safety Rule</h2>
       <p class="muted">
-        This dashboard is read-only. It records admin follow-up decisions only.
-        The system does not execute follow-up, auto-schedule, send WhatsApp, auto-reply,
-        read WhatsApp, scrape buyer messages, update inventory, create accounting entries,
-        close sales, or move pipeline.
+        This dashboard is read-only. It displays admin manual follow-up decisions only.
+        The system does not execute follow-up, does not schedule follow-up, does not send WhatsApp,
+        does not auto-reply, does not read WhatsApp, does not scrape messages, does not update inventory,
+        does not create accounting entries, does not close sales, and does not move pipeline.
       </p>
       <span class="badge safe">Follow-up decision gate only</span>
       <span class="badge safe">Follow-up decision record only</span>
       <span class="badge safe">Controlled follow-up decision only</span>
+      <span class="badge safe">Buyer reply tracking required first</span>
       <span class="badge safe">Admin manual decision only</span>
       <span class="badge safe">System execution blocked</span>
-      <span class="badge safe">Manual action outside system only</span>
+      <span class="badge safe">Manual action required outside system</span>
       <span class="badge safe">No auto-follow-up</span>
       <span class="badge safe">No auto-schedule</span>
       <span class="badge safe">No auto-send WhatsApp</span>
@@ -85,18 +87,20 @@
 
     <section class="panel success">
       <h2>Decision Meaning</h2>
-      <span class="badge urgent">URGENT: act manually now</span>
-      <span class="badge high">HIGH: act manually soon</span>
-      <span class="badge normal">NORMAL: normal manual follow-up</span>
-      <span class="badge low">LOW / NONE: no immediate manual action</span>
+      <span class="badge high">CALL_BUYER_MANUALLY: admin should call outside system</span>
+      <span class="badge high">SEND_PRODUCT_PROOF_MANUALLY: admin should manually send photo/video proof</span>
+      <span class="badge normal">NEGOTIATE_MANUALLY: admin handles price discussion manually</span>
+      <span class="badge normal">SEND_LOCATION_MANUALLY: admin manually sends pickup/delivery location</span>
+      <span class="badge low">WAIT_FOR_BUYER: admin waits without system automation</span>
+      <span class="badge low">NO_FOLLOW_UP_NOW: no action currently</span>
     </section>
 
     <section class="panel">
       <h2>Controlled Buyer-Gate Follow-Up Decision Records</h2>
-      <p class="muted">Read-only list of admin manual decisions. This page does not execute follow-up.</p>
+      <p class="muted">Read-only list of admin manual follow-up decisions. This page does not execute follow-up.</p>
 
       <div class="toolbar">
-        <input id="searchInput" placeholder="Search decision, buyer reply, part, vehicle..." />
+        <input id="searchInput" placeholder="Search part, vehicle, decision, reason, instruction..." />
         <select id="priorityFilter">
           <option value="">All priorities</option>
           <option value="URGENT">URGENT</option>
@@ -132,12 +136,13 @@
             <th>Lead Reference</th>
             <th>Buyer Request</th>
             <th>Buyer Reply</th>
+            <th>Quote Details</th>
             <th>Follow-Up Decision</th>
             <th>Priority</th>
             <th>Decision Reason</th>
             <th>Manual Action Instruction</th>
             <th>Decision Scope</th>
-            <th>Automation Safety</th>
+            <th>Execution Safety</th>
             <th>WhatsApp / Scraping Safety</th>
             <th>Business Mutation Safety</th>
             <th>Decided By</th>
@@ -145,7 +150,7 @@
           </tr>
         </thead>
         <tbody id="decisionRows">
-          <tr><td colspan="16">Loading follow-up decision records...</td></tr>
+          <tr><td colspan="17">Loading follow-up decision records...</td></tr>
         </tbody>
       </table>
     </section>
@@ -178,7 +183,8 @@
       if (value === "URGENT") return "urgent";
       if (value === "HIGH") return "high";
       if (value === "NORMAL") return "normal";
-      return "low";
+      if (value === "LOW") return "low";
+      return "";
     }
 
     function hasRisk(record) {
@@ -224,7 +230,10 @@
           record.buyerLocation,
           record.buyerReplyStatus,
           record.buyerReplyTemperature,
-          record.buyerReplyText
+          record.buyerReplyText,
+          record.quotedPartName,
+          record.currency,
+          record.totalPrice
         ].join(" ").toLowerCase();
 
         return (!search || haystack.includes(search)) &&
@@ -241,7 +250,7 @@
       const records = getFilteredDecisions();
 
       if (!records.length) {
-        tbody.innerHTML = '<tr><td colspan="16">No matching follow-up decision records.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="17">No matching follow-up decision records.</td></tr>';
         return;
       }
 
@@ -253,33 +262,40 @@
         ].join("<br>");
 
         const buyerReply = [
-          badge(`Status: ${record.buyerReplyStatus || "Not recorded"}`, "safe"),
-          badge(`Temp: ${record.buyerReplyTemperature || "Not recorded"}`, "safe"),
+          badge(`Reply status: ${record.buyerReplyStatus || "Not recorded"}`, "safe"),
+          badge(`Temperature: ${record.buyerReplyTemperature || "Not recorded"}`, priorityClass(record.followUpPriority)),
           `<pre>${escapeHtml(record.buyerReplyText || "")}</pre>`
+        ].join("<br>");
+
+        const quoteDetails = [
+          badge(`Quoted part: ${record.quotedPartName || "Not recorded"}`, "safe"),
+          badge(`Condition: ${record.quotedCondition || "Not recorded"}`, "safe"),
+          badge(`Qty: ${record.quantity || 0}`, "safe"),
+          badge(`Total: ${record.currency || ""} ${record.totalPrice || 0}`, "safe")
         ].join("<br>");
 
         const decisionScope = [
           record.followUpDecisionGateOnly ? badge("Decision gate only", "safe") : badge("Gate risk", "danger"),
           record.followUpDecisionRecordOnly ? badge("Record only", "safe") : badge("Record risk", "danger"),
           record.controlledFollowUpDecisionOnly ? badge("Controlled decision", "safe") : badge("Control risk", "danger"),
-          record.adminManualDecisionOnly ? badge("Admin manual decision only", "safe") : badge("Manual decision missing", "danger"),
+          record.adminManualDecisionOnly ? badge("Admin manual decision", "safe") : badge("Manual decision missing", "danger"),
           record.systemExecutionBlocked ? badge("System execution blocked", "safe") : badge("Execution risk", "danger"),
           record.manualActionRequiredOutsideSystem ? badge("Manual action outside system", "safe") : badge("Manual action missing", "danger")
         ].join("<br>");
 
-        const automationSafety = [
-          record.autoStartFollowUp ? badge("Auto follow-up risk", "danger") : badge("No auto-follow-up", "safe"),
-          record.autoScheduleFollowUp ? badge("Auto schedule risk", "danger") : badge("No auto-schedule", "safe"),
-          record.autoSendFollowUp ? badge("Auto send follow-up risk", "danger") : badge("No auto follow-up send", "safe"),
+        const executionSafety = [
+          record.autoStartFollowUp ? badge("Auto follow-up risk", "danger") : badge("No auto follow-up", "safe"),
+          record.autoScheduleFollowUp ? badge("Auto schedule risk", "danger") : badge("No auto schedule", "safe"),
+          record.autoSendFollowUp ? badge("Auto follow-up send risk", "danger") : badge("No auto follow-up send", "safe"),
           record.autoReplyToBuyer ? badge("Auto-reply risk", "danger") : badge("No auto-reply", "safe"),
           record.autoMovePipelineStage ? badge("Pipeline move risk", "danger") : badge("No pipeline move", "safe")
         ].join("<br>");
 
-        const whatsappSafety = [
-          record.autoSendWhatsApp ? badge("Auto WhatsApp send risk", "danger") : badge("No auto WhatsApp send", "safe"),
+        const whatsAppSafety = [
+          record.autoSendWhatsApp ? badge("WhatsApp auto-send risk", "danger") : badge("No WhatsApp auto-send", "safe"),
           record.systemSendWhatsApp ? badge("System WhatsApp send risk", "danger") : badge("No system WhatsApp send", "safe"),
-          record.autoReadWhatsApp ? badge("WhatsApp read risk", "danger") : badge("No WhatsApp reading", "safe"),
-          record.scrapeWhatsappMessages ? badge("Scraping risk", "danger") : badge("No message scraping", "safe"),
+          record.autoReadWhatsApp ? badge("WhatsApp auto-read risk", "danger") : badge("No WhatsApp reading", "safe"),
+          record.scrapeWhatsappMessages ? badge("Message scraping risk", "danger") : badge("No message scraping", "safe"),
           record.privateMessageScraping ? badge("Private scraping risk", "danger") : badge("No private scraping", "safe"),
           record.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe")
         ].join("<br>");
@@ -302,13 +318,14 @@
             <td>${escapeHtml(record.leadReference)}</td>
             <td>${requestText}</td>
             <td>${buyerReply}</td>
+            <td>${quoteDetails}</td>
             <td>${badge(record.followUpDecision || "NONE", "safe")}</td>
             <td>${badge(record.followUpPriority || "NONE", priorityClass(record.followUpPriority))}</td>
             <td><pre>${escapeHtml(record.decisionReason || "")}</pre></td>
             <td><pre>${escapeHtml(record.manualActionInstruction || "")}</pre></td>
             <td>${decisionScope}</td>
-            <td>${automationSafety}</td>
-            <td>${whatsappSafety}</td>
+            <td>${executionSafety}</td>
+            <td>${whatsAppSafety}</td>
             <td>${mutationSafety}</td>
             <td>${escapeHtml(record.decidedBy)}</td>
             <td>${formatDate(record.createdAt)}</td>
@@ -345,7 +362,7 @@
 
     loadDashboard().catch(error => {
       document.getElementById("decisionRows").innerHTML =
-        `<tr><td colspan="16">Follow-Up Decision dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+        `<tr><td colspan="17">Follow-Up Decision dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
     });
   </script>
 </body>

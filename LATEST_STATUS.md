@@ -13,10 +13,10 @@ Approved Features:
 - Total follow-up decisions metric
 - Recorded decisions metric
 - Urgent decisions metric
-- High priority metric
-- Normal priority metric
+- High decisions metric
+- Normal decisions metric
 - Manual action required metric
-- Latest follow-up decision metric
+- Latest decision metric
 - Latest priority metric
 - Decision filter
 - Priority filter
@@ -29,15 +29,16 @@ Safety Confirmed:
 - Follow-up decision gate only
 - Follow-up decision record only
 - Controlled follow-up decision only
+- Buyer reply tracking required first
 - Admin manual decision only
 - System execution blocked
-- Manual action required outside the system
+- Manual action required outside system
 - No auto-follow-up
 - No auto-schedule
 - No auto-send WhatsApp
 - No auto-reply
 - No WhatsApp reading
-- No message scraping
+- No buyer message scraping
 - No private-data scraping
 - No hidden harvesting
 - No inventory update
