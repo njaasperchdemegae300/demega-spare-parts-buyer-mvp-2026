@@ -2103,3 +2103,60 @@ Create the controlled buyer-gate manual quote draft gate foundation. This prepar
 
 ## Next Phase After Approval
 Version 35B — Controlled Buyer-Gate Manual Quote Draft Dashboard Display
+
+# Version 35C — Admin Hub Link Controlled Buyer-Gate Manual Quote Draft
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Connect Controlled Buyer-Gate Manual Quote Draft into Admin Navigation Hub so internal draft readiness is visible before any buyer-facing manual sending.
+
+## Routes
+- GET /admin-navigation-hub
+- GET /admin-hub
+- GET /controlled-buyer-gate-manual-quote-draft
+- GET /api/admin-navigation/summary
+- GET /api/admin-navigation/dashboard-metrics
+- GET /api/controlled-buyer-gate-manual-quote-draft/summary
+
+## Features
+- Manual Quote Draft card in Admin Hub
+- Manual Quote Draft Records metric
+- Prepared Manual Quote Drafts metric
+- Eligible Manual Quote Drafts metric
+- Latest Draft Status metric
+- Latest Draft Source metric
+- Latest Draft Currency metric
+- Latest Draft Total Price metric
+- Manual Quote Draft metrics inside Admin Hub metrics API
+- Manual Quote Draft safety locks inside Admin Hub summary
+- Linked Manual Quote Draft dashboard reachable
+
+## Safety Rules
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
+- Manual quote draft gate only
+- Manual quote draft record only
+- Controlled manual quote draft only
+- Price allowed only inside internal draft
+- No buyer contact
+- No quote sent to buyer
+- No price sent to buyer
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No inventory update
+- No stock reservation
+- No stock reduction
+- No stock ledger entry
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+- Manual review before sending required next
+- Manual send confirmation gate required next
+
+## Next Phase After Approval
+Version 36A — Controlled Buyer-Gate Manual Send Confirmation Gate Foundation

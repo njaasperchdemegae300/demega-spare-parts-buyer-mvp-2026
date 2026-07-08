@@ -146,3 +146,6 @@ Controlled Buyer-Gate Manual Quote Draft Gate Foundation added.
 
 ### Version 35B
 Controlled Buyer-Gate Manual Quote Draft Dashboard Display added.
+
+### Version 35C
+Admin Hub Link Controlled Buyer-Gate Manual Quote Draft added.

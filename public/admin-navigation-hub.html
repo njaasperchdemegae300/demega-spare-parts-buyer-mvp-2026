@@ -112,6 +112,14 @@
       <span class="badge">NO PRICE INCLUDED AT ELIGIBILITY GATE</span>
       <span class="badge">NO QUOTE SENT AT ELIGIBILITY GATE</span>
       <span class="badge">QUOTE BLOCKED UNTIL MANUAL QUOTE DRAFT GATE</span>
+      <span class="badge">MANUAL QUOTE DRAFT DASHBOARD ONLY</span>
+      <span class="badge">MANUAL QUOTE DRAFT RECORD ONLY</span>
+      <span class="badge">PRICE INSIDE INTERNAL DRAFT ONLY</span>
+      <span class="badge">NO BUYER CONTACT FROM DRAFT GATE</span>
+      <span class="badge">NO QUOTE SENT FROM DRAFT GATE</span>
+      <span class="badge">NO PRICE SENT TO BUYER</span>
+      <span class="badge">MANUAL REVIEW BEFORE SENDING REQUIRED</span>
+      <span class="badge">MANUAL SEND CONFIRMATION REQUIRED NEXT</span>
       <span class="badge">NO INVENTORY MUTATION</span>
       <span class="badge">QUOTE BLOCKED UNTIL COMPATIBILITY</span>
       <span class="badge">ACCEPT MOVES TO MANUAL STOCK CHECK ONLY</span>
@@ -193,6 +201,13 @@
         <li>Final quote eligibility does not send quote.</li>
         <li>Quote remains blocked until manual quote draft gate.</li>
         <li>Manual quote draft gate is required next.</li>
+        <li>Manual quote draft records internal draft text only.</li>
+        <li>Manual quote draft can include price only inside the internal draft.</li>
+        <li>Manual quote draft does not contact buyers.</li>
+        <li>Manual quote draft does not send quote.</li>
+        <li>Manual quote draft does not send price.</li>
+        <li>Manual review before sending is required next.</li>
+        <li>Manual send confirmation gate is required next.</li>
         <li>Manual compatibility check does not include price.</li>
         <li>Quote remains blocked until final quote eligibility.</li>
         <li>Final quote eligibility is required next.</li>
@@ -331,6 +346,13 @@
         <div class="metric"><h2>Latest Eligibility Status</h2><strong id="finalQuoteLatestStatus">NO_FINAL_QUOTE_ELIGIBILITY</strong></div>
         <div class="metric"><h2>Latest Eligibility Decision</h2><strong id="finalQuoteLatestDecision">NONE</strong></div>
         <div class="metric"><h2>Latest Eligibility Source</h2><strong id="finalQuoteLatestSource">NONE</strong></div>
+        <div class="metric"><h2>Manual Quote Draft Records</h2><strong id="manualQuoteDraftTotal">0</strong></div>
+        <div class="metric"><h2>Prepared Manual Quote Drafts</h2><strong id="manualQuoteDraftPrepared">0</strong></div>
+        <div class="metric"><h2>Eligible Manual Quote Drafts</h2><strong id="manualQuoteDraftEligible">0</strong></div>
+        <div class="metric"><h2>Latest Draft Status</h2><strong id="manualQuoteDraftLatestStatus">NO_MANUAL_QUOTE_DRAFT</strong></div>
+        <div class="metric"><h2>Latest Draft Source</h2><strong id="manualQuoteDraftLatestSource">NONE</strong></div>
+        <div class="metric"><h2>Latest Draft Currency</h2><strong id="manualQuoteDraftLatestCurrency">NONE</strong></div>
+        <div class="metric"><h2>Latest Draft Total Price</h2><strong id="manualQuoteDraftLatestTotalPrice">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -376,6 +398,8 @@
       <div class="card"><h2>Controlled Buyer-Gate Manual Compatibility Check</h2><p>View controlled manual compatibility check decisions before final quote eligibility or quote preparation. Read-only; no buyer contact, no quote, no price, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-compatibility-check">Open Manual Compatibility Check</a></div>
 
       <div class="card"><h2>Controlled Buyer-Gate Final Quote Eligibility</h2><p>View final quote eligibility records before manual quote draft preparation. Read-only; no buyer contact, no quote, no price, no quote sent, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-final-quote-eligibility">Open Final Quote Eligibility</a></div>
+
+      <div class="card"><h2>Controlled Buyer-Gate Manual Quote Draft</h2><p>View internal manual quote drafts after final quote eligibility. Read-only; price is internal only, no buyer contact, no quote sent, no price sent, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-quote-draft">Open Manual Quote Draft</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -747,6 +771,34 @@
     }
 
     loadFinalQuoteEligibilityHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadManualQuoteDraftHubMetrics() {
+      try {
+        const response = await fetch("/api/controlled-buyer-gate-manual-quote-draft/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("manualQuoteDraftTotal", summary.totalManualQuoteDrafts || 0);
+        setText("manualQuoteDraftPrepared", summary.preparedManualQuoteDraftCount || 0);
+        setText("manualQuoteDraftEligible", summary.eligibleManualQuoteDraftCount || 0);
+        setText("manualQuoteDraftLatestStatus", summary.latestManualQuoteDraftStatus || "NO_MANUAL_QUOTE_DRAFT");
+        setText("manualQuoteDraftLatestSource", summary.latestSource || "NONE");
+        setText("manualQuoteDraftLatestCurrency", summary.latestCurrency || "NONE");
+        setText("manualQuoteDraftLatestTotalPrice", summary.latestTotalPrice || 0);
+      } catch (error) {
+        const element = document.getElementById("manualQuoteDraftLatestStatus");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadManualQuoteDraftHubMetrics();
   </script>
 
 </body>
