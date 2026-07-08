@@ -1,31 +1,28 @@
 # LATEST STATUS
 
 Current Phase:
-Version 38B — Controlled Buyer-Gate Follow-Up Decision Dashboard Display
+Version 38C — Admin Hub Link Controlled Buyer-Gate Follow-Up Decision
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /controlled-buyer-gate-follow-up-decision
-- GET /controlled-buyer-gate-follow-up-decisions
-- Follow-Up Decision dashboard
-- Total follow-up decisions metric
-- Recorded decisions metric
-- Urgent decisions metric
-- High decisions metric
-- Normal decisions metric
-- Manual action required metric
-- Latest decision metric
-- Latest priority metric
-- Decision filter
-- Priority filter
-- Safety filter
-- Manual action instruction display
+- Follow-Up Decision linked inside Admin Navigation Hub
+- Follow-Up Decision Records metric
+- Recorded Follow-Up Decisions metric
+- Urgent Follow-Up Decisions metric
+- High Follow-Up Decisions metric
+- Normal Follow-Up Decisions metric
+- Manual Action Required metric
+- Latest Follow-Up Decision metric
+- Latest Follow-Up Priority metric
+- Follow-Up Decision metrics inside Admin Hub metrics API
+- Follow-Up Decision safety locks inside Admin Hub summary
+- Linked Follow-Up Decision dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays follow-up decision records only
-- Dashboard is read-only
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
 - Follow-up decision gate only
 - Follow-up decision record only
 - Controlled follow-up decision only
@@ -38,7 +35,7 @@ Safety Confirmed:
 - No auto-send WhatsApp
 - No auto-reply
 - No WhatsApp reading
-- No buyer message scraping
+- No message scraping
 - No private-data scraping
 - No hidden harvesting
 - No inventory update
@@ -50,5 +47,11 @@ Safety Confirmed:
 - No sale closing
 - No pipeline movement
 
+Business Readiness Confirmed:
+- Admin Hub now exposes Follow-Up Decision metrics
+- Admin Hub now links directly to Follow-Up Decision dashboard
+- Controlled inbound leads now support manual follow-up decision visibility after buyer reply tracking
+- Next required build is final controlled buyer-gate readiness lock
+
 Next Phase:
-Version 38C — Admin Hub Link Controlled Buyer-Gate Follow-Up Decision
+Version 39A — Controlled Buyer-Gate Final Readiness Lock Foundation

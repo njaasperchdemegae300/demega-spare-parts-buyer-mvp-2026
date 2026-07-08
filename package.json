@@ -119,7 +119,8 @@
     "version:37b": "node tools/version37b-controlled-buyer-gate-buyer-reply-tracking-dashboard-smoke-test.js",
     "version:37c": "node tools/version37c-admin-hub-link-controlled-buyer-gate-buyer-reply-tracking-smoke-test.js",
     "version:38a": "node tools/version38a-controlled-buyer-gate-follow-up-decision-smoke-test.js",
-    "version:38b": "node tools/version38b-controlled-buyer-gate-follow-up-decision-dashboard-smoke-test.js"
+    "version:38b": "node tools/version38b-controlled-buyer-gate-follow-up-decision-dashboard-smoke-test.js",
+    "version:38c": "node tools/version38c-admin-hub-link-controlled-buyer-gate-follow-up-decision-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

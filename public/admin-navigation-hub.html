@@ -137,6 +137,19 @@
       <span class="badge">NO AUTO-REPLY</span>
       <span class="badge">NO AUTO-FOLLOW-UP</span>
       <span class="badge">FOLLOW-UP DECISION GATE REQUIRED NEXT</span>
+      <span class="badge">FOLLOW-UP DECISION DASHBOARD ONLY</span>
+      <span class="badge">FOLLOW-UP DECISION RECORD ONLY</span>
+      <span class="badge">ADMIN MANUAL DECISION ONLY</span>
+      <span class="badge">SYSTEM EXECUTION BLOCKED</span>
+      <span class="badge">MANUAL ACTION OUTSIDE SYSTEM ONLY</span>
+      <span class="badge">NO AUTO-FOLLOW-UP</span>
+      <span class="badge">NO AUTO-SCHEDULE</span>
+      <span class="badge">NO FOLLOW-UP AUTO-SEND</span>
+      <span class="badge">NO FOLLOW-UP AUTO-REPLY</span>
+      <span class="badge">NO INVENTORY MUTATION</span>
+      <span class="badge">NO ACCOUNTING MUTATION</span>
+      <span class="badge">NO SALE CLOSING</span>
+      <span class="badge">NO PIPELINE MOVEMENT</span>
       <span class="badge">NO AUTO FOLLOW-UP</span>
       <span class="badge">NO INVENTORY MUTATION</span>
       <span class="badge">QUOTE BLOCKED UNTIL COMPATIBILITY</span>
@@ -241,6 +254,13 @@
         <li>Buyer reply tracking does not auto-follow-up.</li>
         <li>Buyer reply tracking does not mutate inventory, accounting, sales, or pipeline.</li>
         <li>Follow-up decision gate is required next.</li>
+        <li>Follow-up decision records admin manual decision only.</li>
+        <li>Follow-up decision does not execute follow-up.</li>
+        <li>Follow-up decision does not auto-schedule.</li>
+        <li>Follow-up decision does not auto-send WhatsApp.</li>
+        <li>Follow-up decision does not auto-reply.</li>
+        <li>Follow-up decision does not mutate inventory, accounting, sales, or pipeline.</li>
+        <li>Manual action remains outside the system.</li>
         <li>No auto follow-up starts at this gate.</li>
         <li>Manual compatibility check does not include price.</li>
         <li>Quote remains blocked until final quote eligibility.</li>
@@ -403,6 +423,14 @@
         <div class="metric"><h2>No Reply Count</h2><strong id="buyerReplyTrackingNoReply">0</strong></div>
         <div class="metric"><h2>Latest Buyer Reply Status</h2><strong id="buyerReplyTrackingLatestStatus">NONE</strong></div>
         <div class="metric"><h2>Latest Reply Temperature</h2><strong id="buyerReplyTrackingLatestTemperature">NONE</strong></div>
+        <div class="metric"><h2>Follow-Up Decision Records</h2><strong id="followUpDecisionTotal">0</strong></div>
+        <div class="metric"><h2>Recorded Follow-Up Decisions</h2><strong id="followUpDecisionRecorded">0</strong></div>
+        <div class="metric"><h2>Urgent Follow-Up Decisions</h2><strong id="followUpDecisionUrgent">0</strong></div>
+        <div class="metric"><h2>High Follow-Up Decisions</h2><strong id="followUpDecisionHigh">0</strong></div>
+        <div class="metric"><h2>Normal Follow-Up Decisions</h2><strong id="followUpDecisionNormal">0</strong></div>
+        <div class="metric"><h2>Manual Action Required</h2><strong id="followUpDecisionManualAction">0</strong></div>
+        <div class="metric"><h2>Latest Follow-Up Decision</h2><strong id="followUpDecisionLatest">NONE</strong></div>
+        <div class="metric"><h2>Latest Follow-Up Priority</h2><strong id="followUpDecisionLatestPriority">NONE</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -454,6 +482,8 @@
       <div class="card"><h2>Controlled Buyer-Gate Manual Send Confirmation</h2><p>View admin manual send confirmation records after manual quote draft review. Read-only; system did not send WhatsApp, quote, or price, did not read WhatsApp, did not scrape, did not mutate inventory/accounting/sales/pipeline, and buyer reply tracking is required next.</p><a href="/controlled-buyer-gate-manual-send-confirmation">Open Manual Send Confirmation</a></div>
 
       <div class="card"><h2>Controlled Buyer-Gate Buyer Reply Tracking</h2><p>View buyer replies manually observed outside the system after manual send confirmation. Read-only; system does not read WhatsApp, scrape, auto-reply, auto-follow-up, mutate inventory/accounting/sales/pipeline, or close sale.</p><a href="/controlled-buyer-gate-buyer-reply-tracking">Open Buyer Reply Tracking</a></div>
+
+      <div class="card"><h2>Controlled Buyer-Gate Follow-Up Decision</h2><p>View admin manual follow-up decisions after buyer reply tracking. Read-only; system execution is blocked and no follow-up, scheduling, WhatsApp sending, auto-reply, inventory/accounting/sale/pipeline mutation is performed.</p><a href="/controlled-buyer-gate-follow-up-decision">Open Follow-Up Decision</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -911,6 +941,35 @@
     }
 
     loadBuyerReplyTrackingHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadFollowUpDecisionHubMetrics() {
+      try {
+        const response = await fetch("/api/controlled-buyer-gate-follow-up-decision/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("followUpDecisionTotal", summary.totalFollowUpDecisions || 0);
+        setText("followUpDecisionRecorded", summary.recordedFollowUpDecisionCount || 0);
+        setText("followUpDecisionUrgent", summary.urgentFollowUpDecisionCount || 0);
+        setText("followUpDecisionHigh", summary.highFollowUpDecisionCount || 0);
+        setText("followUpDecisionNormal", summary.normalFollowUpDecisionCount || 0);
+        setText("followUpDecisionManualAction", summary.manualActionRequiredCount || 0);
+        setText("followUpDecisionLatest", summary.latestFollowUpDecision || "NONE");
+        setText("followUpDecisionLatestPriority", summary.latestFollowUpPriority || "NONE");
+      } catch (error) {
+        const element = document.getElementById("followUpDecisionLatest");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadFollowUpDecisionHubMetrics();
   </script>
 
 </body>

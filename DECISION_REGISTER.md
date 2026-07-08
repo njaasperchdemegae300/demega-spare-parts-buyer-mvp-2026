@@ -68,3 +68,6 @@ Controlled Buyer-Gate Follow-Up Decision records admin manual follow-up decision
 
 ## Decision 21 — Follow-Up Decision Records Manual Decision Only
 Controlled Buyer-Gate Follow-Up Decision records admin manual follow-up decisions after buyer reply tracking. The system must not execute follow-up, auto-schedule, auto-send WhatsApp, auto-reply, auto-read WhatsApp, scrape buyer messages, mutate inventory, reserve/reduce stock, create accounting records, create receipts/invoices, close sales, or move pipeline.
+
+## Decision 22 — Follow-Up Decision Visible In Admin Hub Only
+Controlled Buyer-Gate Follow-Up Decision is visible inside Admin Hub as read-only navigation and metrics. The Admin Hub must not execute follow-up, schedule follow-up, send WhatsApp, auto-reply, read WhatsApp, scrape buyer messages, mutate inventory, create accounting records, close sales, or move pipeline.
