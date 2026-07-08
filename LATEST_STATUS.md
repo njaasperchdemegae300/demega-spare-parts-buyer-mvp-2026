@@ -1,39 +1,41 @@
 # LATEST STATUS
 
 Current Phase:
-Version 34C — Admin Hub Link Controlled Buyer-Gate Final Quote Eligibility
+Version 35A — Controlled Buyer-Gate Manual Quote Draft Gate Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Final Quote Eligibility linked inside Admin Navigation Hub
-- Final Quote Eligibility Records metric
-- Recorded Final Eligibility metric
-- Eligible For Manual Draft metric
-- Not Eligible For Quote metric
-- Needs Manager Review metric
-- Latest Eligibility Status metric
-- Latest Eligibility Decision metric
-- Latest Eligibility Source metric
-- Final Quote Eligibility metrics inside Admin Hub metrics API
-- Final Quote Eligibility safety locks inside Admin Hub summary
-- Linked Final Quote Eligibility dashboard reachable
+- Controlled Buyer-Gate Manual Quote Draft Gate foundation
+- Manual quote draft phrase requirement
+- Final quote eligibility prerequisite
+- ELIGIBLE_FOR_MANUAL_QUOTE_DRAFT prerequisite
+- Manual quote draft record
+- Manual price entry
+- NGN currency requirement
+- Internal WhatsApp-ready draft text
+- Manager-review eligibility blocked
+- Supplier-confirmation stock path blocked
+- Rejected lead review path blocked
+- Duplicate manual quote draft blocking
+- Manual review before sending required next
+- Manual send confirmation gate required next
+- Manual quote draft list API
+- Manual quote draft summary API
 
 Safety Confirmed:
-- Admin Hub remains navigation and visibility only
-- Metrics API remains read-only
-- Final quote eligibility gate only
-- Final quote eligibility record only
-- Controlled final quote eligibility only
-- Stock confirmation required first
-- Compatibility confirmation required first
-- Final quote eligibility does not contact buyer
-- Final quote eligibility does not prepare quote
-- Final quote eligibility does not include price
-- Final quote eligibility does not send quote
-- Quote remains blocked until manual quote draft gate
-- Manual quote draft required next
+- Manual quote draft gate only
+- Manual quote draft record only
+- Controlled manual quote draft only
+- Price allowed only inside internal draft
+- No buyer contact
+- No quote sent
+- No price sent to buyer
+- No outbound traffic automatically started
+- No paid ads automatically started
+- No lead form automatically published
+- No real buyer automatically contacted
 - No WhatsApp auto-send
 - No WhatsApp auto-read
 - No buyer message scraping
@@ -46,12 +48,8 @@ Safety Confirmed:
 - No accounting entry creation
 - No sale closing
 - No pipeline movement
-
-Business Readiness Confirmed:
-- Admin Hub now exposes Final Quote Eligibility metrics
-- Admin Hub now links directly to Final Quote Eligibility dashboard
-- Controlled inbound leads now require visible final quote eligibility before quote drafting
-- Next required build is controlled manual quote draft gate
+- Manual review before sending required next
+- Manual send confirmation gate required next
 
 Next Phase:
-Version 35A — Controlled Buyer-Gate Manual Quote Draft Gate Foundation
+Version 35B — Controlled Buyer-Gate Manual Quote Draft Dashboard Display

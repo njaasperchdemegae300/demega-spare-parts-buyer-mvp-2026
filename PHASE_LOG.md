@@ -140,3 +140,6 @@ Controlled Buyer-Gate Final Quote Eligibility Dashboard Display added.
 
 ### Version 34C
 Admin Hub Link Controlled Buyer-Gate Final Quote Eligibility added.
+
+### Version 35A
+Controlled Buyer-Gate Manual Quote Draft Gate Foundation added.

@@ -36,6 +36,7 @@ const controlledBuyerGateManualLeadReviewController = require("../controllers/co
 const controlledBuyerGateManualStockCheckController = require("../controllers/controlled-buyer-gate-manual-stock-check.controller");
 const controlledBuyerGateManualCompatibilityCheckController = require("../controllers/controlled-buyer-gate-manual-compatibility-check.controller");
 const controlledBuyerGateFinalQuoteEligibilityController = require("../controllers/controlled-buyer-gate-final-quote-eligibility.controller");
+const controlledBuyerGateManualQuoteDraftController = require("../controllers/controlled-buyer-gate-manual-quote-draft.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -317,6 +318,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/controlled-buyer-gate-final-quote-eligibility" || url.pathname === "/controlled-buyer-gate-final-quote-eligibilities")) {
     return controlledBuyerGateFinalQuoteEligibilityController.dashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-quote-draft/preview") {
+    return controlledBuyerGateManualQuoteDraftController.previewController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/controlled-buyer-gate-manual-quote-draft/create") {
+    return controlledBuyerGateManualQuoteDraftController.createController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-quote-drafts") {
+    return controlledBuyerGateManualQuoteDraftController.listController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-quote-draft/summary") {
+    return controlledBuyerGateManualQuoteDraftController.summaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-final-quote-eligibility/preview") {
