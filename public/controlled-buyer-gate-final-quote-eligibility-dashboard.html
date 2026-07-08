@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Final Quote Eligibility Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 26px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 3500px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .approved { background: #dcfce7; color: #166534; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Final Quote Eligibility Dashboard</h1>
+    <p>Read-only dashboard for final quote eligibility records. It does not contact buyers, prepare quotes, include price, send quotes, or change inventory.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Eligibility Records</h2><strong id="totalFinalQuoteEligibilities">0</strong></div>
+      <div class="card"><h2>Recorded Eligibility</h2><strong id="recordedFinalQuoteEligibilityCount">0</strong></div>
+      <div class="card"><h2>Eligible For Manual Draft</h2><strong id="eligibleForManualQuoteDraftCount">0</strong></div>
+      <div class="card"><h2>Not Eligible</h2><strong id="notEligibleForQuoteCount">0</strong></div>
+      <div class="card"><h2>Manager Review</h2><strong id="needsManagerReviewCount">0</strong></div>
+      <div class="card"><h2>Latest Status</h2><strong id="latestFinalQuoteEligibilityStatus">NO_FINAL_QUOTE_ELIGIBILITY</strong></div>
+      <div class="card"><h2>Latest Decision</h2><strong id="latestEligibilityDecision">NONE</strong></div>
+      <div class="card"><h2>Latest Source</h2><strong id="latestSource">NONE</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Final Quote Eligibility Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It displays final quote readiness only.
+        Final quote eligibility does not contact buyers, send WhatsApp, read WhatsApp, scrape messages, prepare quotes,
+        include price, send quote, update inventory, reserve stock, reduce stock, create accounting entries, close sales, or move pipeline.
+      </p>
+      <span class="badge safe">Final quote eligibility gate only</span>
+      <span class="badge safe">Final quote eligibility record only</span>
+      <span class="badge safe">Controlled final quote eligibility only</span>
+      <span class="badge safe">Stock confirmation required first</span>
+      <span class="badge safe">Compatibility confirmation required first</span>
+      <span class="badge safe">No buyer contact from eligibility gate</span>
+      <span class="badge safe">No quote prepared at eligibility gate</span>
+      <span class="badge safe">No price included at eligibility gate</span>
+      <span class="badge safe">No quote sent at eligibility gate</span>
+      <span class="badge safe">Quote blocked until manual quote draft gate</span>
+      <span class="badge safe">Manual quote draft required next</span>
+      <span class="badge safe">No WhatsApp auto-send</span>
+      <span class="badge safe">No WhatsApp auto-read</span>
+      <span class="badge safe">No buyer message scraping</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden data harvesting</span>
+      <span class="badge safe">No inventory update</span>
+      <span class="badge safe">No stock reservation</span>
+      <span class="badge safe">No stock reduction</span>
+      <span class="badge safe">No stock ledger entry</span>
+      <span class="badge safe">No accounting entry</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Allowed Eligibility Decisions</h2>
+      <p class="muted">
+        An eligibility decision only records whether the lead is ready for the next manual quote draft gate.
+      </p>
+      <span class="badge safe">ELIGIBLE_FOR_MANUAL_QUOTE_DRAFT</span>
+      <span class="badge warn">NOT_ELIGIBLE_FOR_QUOTE</span>
+      <span class="badge warn">NEEDS_MANAGER_REVIEW</span>
+      <span class="badge safe">FINAL_QUOTE_ELIGIBILITY_RECORDED</span>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled Buyer-Gate Final Quote Eligibility Records</h2>
+      <p class="muted">Read-only list of final quote eligibility records after confirmed stock and confirmed compatibility.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search decision, part, vehicle, checker..." />
+        <select id="decisionFilter">
+          <option value="">All eligibility decisions</option>
+          <option value="ELIGIBLE_FOR_MANUAL_QUOTE_DRAFT">ELIGIBLE_FOR_MANUAL_QUOTE_DRAFT</option>
+          <option value="NOT_ELIGIBLE_FOR_QUOTE">NOT_ELIGIBLE_FOR_QUOTE</option>
+          <option value="NEEDS_MANAGER_REVIEW">NEEDS_MANAGER_REVIEW</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe eligibility records</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Eligibility Status</th>
+            <th>Eligibility Decision</th>
+            <th>Slot</th>
+            <th>Source</th>
+            <th>Lead Reference</th>
+            <th>Buyer Request</th>
+            <th>Eligibility Details</th>
+            <th>Eligibility Scope</th>
+            <th>Contact Safety</th>
+            <th>Quote / Price Safety</th>
+            <th>Inventory Safety</th>
+            <th>Business Mutation Safety</th>
+            <th>Checked By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="eligibilityRows">
+          <tr><td colspan="14">Loading final quote eligibility records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allEligibilityRecords = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function sourceLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function hasRisk(record) {
+      return record.buyerContacted === true ||
+        record.realBuyerContacted === true ||
+        record.autoContactBuyer === true ||
+        record.contactRealBuyerAutomatically === true ||
+        record.startOutboundTraffic === true ||
+        record.startPaidAdsAutomatically === true ||
+        record.publishLeadFormAutomatically === true ||
+        record.autoSendWhatsApp === true ||
+        record.sendWhatsApp === true ||
+        record.broadcastWhatsApp === true ||
+        record.autoReadWhatsApp === true ||
+        record.scrapeWhatsappMessages === true ||
+        record.privateMessageScraping === true ||
+        record.hiddenDataHarvesting === true ||
+        record.quotePrepared === true ||
+        record.autoCreateQuote === true ||
+        record.autoCreateQuoteAndSend === true ||
+        record.quoteBeforeStockConfirmation === true ||
+        record.quoteBeforeCompatibilityConfirmation === true ||
+        record.priceIncluded === true ||
+        record.quoteAmountIncluded === true ||
+        record.priceSentToBuyer === true ||
+        record.quoteSentToBuyer === true ||
+        record.inventoryUpdated === true ||
+        record.stockReserved === true ||
+        record.stockReduced === true ||
+        record.autoUpdateInventory === true ||
+        record.reserveStockAutomatically === true ||
+        record.reduceStockAutomatically === true ||
+        record.autoCreateInventoryEvent === true ||
+        record.autoCreateStockLedgerEntry === true ||
+        record.autoCreateAccountingEntry === true ||
+        record.autoCloseSale === true ||
+        record.autoMovePipelineStage === true;
+    }
+
+    function getFilteredRecords() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const decisionFilter = document.getElementById("decisionFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allEligibilityRecords.filter(record => {
+        const risk = hasRisk(record);
+        const haystack = [
+          record.finalQuoteEligibilityStatus,
+          record.eligibilityDecision,
+          record.source,
+          record.leadReference,
+          record.partNeeded,
+          record.vehicleDetail,
+          record.buyerLocation,
+          record.eligibilityNote,
+          record.quoteReadinessReason,
+          record.managerReviewNote,
+          record.checkedBy
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!decisionFilter || record.eligibilityDecision === decisionFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("eligibilityRows");
+      const records = getFilteredRecords();
+
+      if (!records.length) {
+        tbody.innerHTML = '<tr><td colspan="14">No matching final quote eligibility records.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = records.map(record => {
+        const risk = hasRisk(record);
+
+        const requestText = [
+          badge(`Part: ${record.partNeeded || "Not recorded"}`, "safe"),
+          badge(`Vehicle: ${record.vehicleDetail || "Not recorded"}`, "safe"),
+          badge(`Location: ${record.buyerLocation || "Not recorded"}`, "safe")
+        ].join("<br>");
+
+        const eligibilityDetails = [
+          badge(`Reason: ${record.quoteReadinessReason || "Not recorded"}`, "safe"),
+          badge(`Eligibility note: ${record.eligibilityNote || "No note"}`, "warn"),
+          badge(`Manager note: ${record.managerReviewNote || "No manager note"}`, "warn")
+        ].join("<br>");
+
+        const eligibilityScope = [
+          record.finalQuoteEligibilityGateOnly ? badge("Eligibility gate only", "safe") : badge("Eligibility scope risk", "danger"),
+          record.finalQuoteEligibilityRecordOnly ? badge("Record only", "safe") : badge("Record scope risk", "danger"),
+          record.controlledFinalQuoteEligibilityOnly ? badge("Controlled eligibility", "safe") : badge("Control scope risk", "danger"),
+          record.manualFinalQuoteEligibilityOnly ? badge("Manual eligibility only", "safe") : badge("Manual status missing", "danger"),
+          record.quoteEligibilityDecisionOnly ? badge("Decision only", "safe") : badge("Decision scope risk", "danger"),
+          record.eligibleForManualQuoteDraftOnly ? badge("Eligible for manual draft", "safe") : "",
+          record.notEligibleForQuoteOnly ? badge("Not eligible", "warn") : "",
+          record.needsManagerReviewOnly ? badge("Manager review", "warn") : ""
+        ].filter(Boolean).join("<br>");
+
+        const contactSafety = [
+          record.buyerContacted ? badge("Buyer contacted risk", "danger") : badge("Buyer not contacted", "safe"),
+          record.autoContactBuyer ? badge("Auto-contact risk", "danger") : badge("No auto-contact", "safe"),
+          record.autoSendWhatsApp ? badge("WhatsApp auto-send risk", "danger") : badge("No WhatsApp auto-send", "safe"),
+          record.autoReadWhatsApp ? badge("WhatsApp auto-read risk", "danger") : badge("No WhatsApp auto-read", "safe"),
+          record.scrapeWhatsappMessages ? badge("WhatsApp scraping risk", "danger") : badge("No WhatsApp scraping", "safe")
+        ].join("<br>");
+
+        const quoteSafety = [
+          record.quotePrepared ? badge("Quote prepared risk", "danger") : badge("No quote prepared", "safe"),
+          record.autoCreateQuote ? badge("Auto quote risk", "danger") : badge("No auto quote", "safe"),
+          record.priceIncluded ? badge("Price included risk", "danger") : badge("No price included", "safe"),
+          record.quoteSentToBuyer ? badge("Quote sent risk", "danger") : badge("No quote sent", "safe"),
+          record.quoteBeforeStockConfirmation ? badge("Stock quote risk", "danger") : badge("No quote before stock", "safe"),
+          record.quoteBeforeCompatibilityConfirmation ? badge("Compatibility quote risk", "danger") : badge("No quote before compatibility", "safe"),
+          record.quoteStillBlockedUntilDraftGate ? badge("Quote blocked until draft gate", "safe") : badge("Quote block missing", "danger"),
+          record.manualQuoteDraftRequiredNext ? badge("Manual quote draft next", "safe") : badge("Draft gate missing", "danger")
+        ].join("<br>");
+
+        const inventorySafety = [
+          record.inventoryUpdated ? badge("Inventory update risk", "danger") : badge("No inventory update", "safe"),
+          record.stockReserved ? badge("Stock reservation risk", "danger") : badge("No stock reservation", "safe"),
+          record.stockReduced ? badge("Stock reduction risk", "danger") : badge("No stock reduction", "safe"),
+          record.autoCreateInventoryEvent ? badge("Inventory event risk", "danger") : badge("No inventory event", "safe"),
+          record.autoCreateStockLedgerEntry ? badge("Stock ledger risk", "danger") : badge("No stock ledger", "safe")
+        ].join("<br>");
+
+        const mutationSafety = risk ? badge("Risk detected", "danger") : [
+          record.startOutboundTraffic ? badge("Outbound risk", "danger") : badge("No outbound traffic", "safe"),
+          record.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          record.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe"),
+          record.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline move", "safe"),
+          record.noPrivateDataScraping ? badge("No private scraping", "safe") : badge("Private scraping rule missing", "danger"),
+          record.noHiddenDataHarvesting ? badge("No hidden harvesting", "safe") : badge("Hidden harvesting rule missing", "danger")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(record.finalQuoteEligibilityStatus, record.finalQuoteEligibilityStatus === "FINAL_QUOTE_ELIGIBILITY_RECORDED" ? "approved" : "danger")}</td>
+            <td>${badge(record.eligibilityDecision, record.eligibilityDecision === "ELIGIBLE_FOR_MANUAL_QUOTE_DRAFT" ? "safe" : "warn")}</td>
+            <td>${badge(`#${record.slotNumber}`, Number(record.slotNumber || 0) >= 1 && Number(record.slotNumber || 0) <= 15 ? "safe" : "danger")}</td>
+            <td>${badge(sourceLabel(record.source), record.source === "whatsapp_click_to_chat_inbound" ? "safe" : "warn")}</td>
+            <td>${escapeHtml(record.leadReference)}</td>
+            <td>${requestText}</td>
+            <td>${eligibilityDetails}</td>
+            <td>${eligibilityScope}</td>
+            <td>${contactSafety}</td>
+            <td>${quoteSafety}</td>
+            <td>${inventorySafety}</td>
+            <td>${mutationSafety}</td>
+            <td>${escapeHtml(record.checkedBy)}</td>
+            <td>${formatDate(record.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-final-quote-eligibility/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalFinalQuoteEligibilities").textContent = summary.totalFinalQuoteEligibilities || 0;
+      document.getElementById("recordedFinalQuoteEligibilityCount").textContent = summary.recordedFinalQuoteEligibilityCount || 0;
+      document.getElementById("eligibleForManualQuoteDraftCount").textContent = summary.eligibleForManualQuoteDraftCount || 0;
+      document.getElementById("notEligibleForQuoteCount").textContent = summary.notEligibleForQuoteCount || 0;
+      document.getElementById("needsManagerReviewCount").textContent = summary.needsManagerReviewCount || 0;
+      document.getElementById("latestFinalQuoteEligibilityStatus").textContent = summary.latestFinalQuoteEligibilityStatus || "NO_FINAL_QUOTE_ELIGIBILITY";
+      document.getElementById("latestEligibilityDecision").textContent = summary.latestEligibilityDecision || "NONE";
+      document.getElementById("latestSource").textContent = summary.latestSource || "NONE";
+
+      const recordsResponse = await fetch("/api/controlled-buyer-gate-final-quote-eligibilities");
+      const recordsData = await recordsResponse.json();
+      allEligibilityRecords = Array.isArray(recordsData.finalQuoteEligibilities) ? recordsData.finalQuoteEligibilities : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("decisionFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("eligibilityRows").innerHTML =
+        `<tr><td colspan="14">Final Quote Eligibility dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

@@ -134,3 +134,6 @@ Admin Hub Link Controlled Buyer-Gate Manual Compatibility Check added.
 
 ### Version 34A
 Controlled Buyer-Gate Final Quote Eligibility Gate Foundation added.
+
+### Version 34B
+Controlled Buyer-Gate Final Quote Eligibility Dashboard Display added.

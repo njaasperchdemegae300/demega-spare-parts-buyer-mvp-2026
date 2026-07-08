@@ -1986,3 +1986,59 @@ Connect Controlled Buyer-Gate Manual Compatibility Check into Admin Navigation H
 
 ## Next Phase After Approval
 Version 34A — Controlled Buyer-Gate Final Quote Eligibility Gate Foundation
+
+# Version 34B — Controlled Buyer-Gate Final Quote Eligibility Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display controlled buyer-gate final quote eligibility records in a read-only dashboard. This shows final quote readiness before manual quote draft preparation.
+
+## Routes
+- GET /controlled-buyer-gate-final-quote-eligibility
+- GET /controlled-buyer-gate-final-quote-eligibilities
+- GET /api/controlled-buyer-gate-final-quote-eligibilities
+- GET /api/controlled-buyer-gate-final-quote-eligibility/summary
+
+## Features
+- Final Quote Eligibility dashboard
+- Total eligibility records metric
+- Recorded eligibility metric
+- Eligible for manual quote draft metric
+- Not eligible for quote metric
+- Manager review metric
+- Latest eligibility status metric
+- Latest eligibility decision metric
+- Latest source metric
+- Final quote eligibility table
+- Decision filter
+- Safety filter
+
+## Safety
+- Read-only dashboard
+- Final quote eligibility records display only
+- Final quote eligibility does not contact buyer
+- Final quote eligibility does not prepare quote
+- Final quote eligibility does not include price
+- Final quote eligibility does not send quote
+- Quote remains blocked until manual quote draft gate
+- Manual quote draft required next
+- No outbound traffic automatically started
+- No paid ads automatically started
+- No lead form automatically published
+- No WhatsApp auto-send
+- No WhatsApp auto-read
+- No buyer message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No inventory update
+- No stock reservation
+- No stock reduction
+- No stock ledger entry
+- No accounting entry creation
+- No sale closing
+- No pipeline movement
+
+## Next Phase After Approval
+Version 34C — Admin Hub Link Controlled Buyer-Gate Final Quote Eligibility
