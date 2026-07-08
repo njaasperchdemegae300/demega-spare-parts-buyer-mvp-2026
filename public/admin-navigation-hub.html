@@ -128,6 +128,15 @@
       <span class="badge">SYSTEM DID NOT SEND QUOTE</span>
       <span class="badge">SYSTEM DID NOT SEND PRICE</span>
       <span class="badge">BUYER REPLY TRACKING REQUIRED NEXT</span>
+      <span class="badge">BUYER REPLY TRACKING DASHBOARD ONLY</span>
+      <span class="badge">BUYER REPLY TRACKING RECORD ONLY</span>
+      <span class="badge">ADMIN OBSERVED OUTSIDE SYSTEM ONLY</span>
+      <span class="badge">SYSTEM DID NOT READ WHATSAPP</span>
+      <span class="badge">NO WHATSAPP AUTO-READ</span>
+      <span class="badge">NO BUYER MESSAGE SCRAPING</span>
+      <span class="badge">NO AUTO-REPLY</span>
+      <span class="badge">NO AUTO-FOLLOW-UP</span>
+      <span class="badge">FOLLOW-UP DECISION GATE REQUIRED NEXT</span>
       <span class="badge">NO AUTO FOLLOW-UP</span>
       <span class="badge">NO INVENTORY MUTATION</span>
       <span class="badge">QUOTE BLOCKED UNTIL COMPATIBILITY</span>
@@ -225,6 +234,13 @@
         <li>Manual send confirmation does not scrape buyer messages.</li>
         <li>Manual send confirmation does not mutate inventory, accounting, sales, or pipeline.</li>
         <li>Buyer reply tracking is required next.</li>
+        <li>Buyer reply tracking records admin manual observation outside the system only.</li>
+        <li>Buyer reply tracking does not read WhatsApp.</li>
+        <li>Buyer reply tracking does not scrape buyer messages.</li>
+        <li>Buyer reply tracking does not auto-reply.</li>
+        <li>Buyer reply tracking does not auto-follow-up.</li>
+        <li>Buyer reply tracking does not mutate inventory, accounting, sales, or pipeline.</li>
+        <li>Follow-up decision gate is required next.</li>
         <li>No auto follow-up starts at this gate.</li>
         <li>Manual compatibility check does not include price.</li>
         <li>Quote remains blocked until final quote eligibility.</li>
@@ -379,6 +395,14 @@
         <div class="metric"><h2>Latest Send Channel</h2><strong id="manualSendConfirmationLatestChannel">NONE</strong></div>
         <div class="metric"><h2>Latest Send Currency</h2><strong id="manualSendConfirmationLatestCurrency">NONE</strong></div>
         <div class="metric"><h2>Latest Send Total Price</h2><strong id="manualSendConfirmationLatestTotalPrice">0</strong></div>
+        <div class="metric"><h2>Buyer Reply Tracking Records</h2><strong id="buyerReplyTrackingTotal">0</strong></div>
+        <div class="metric"><h2>Recorded Buyer Replies</h2><strong id="buyerReplyTrackingRecorded">0</strong></div>
+        <div class="metric"><h2>Hot Buyer Replies</h2><strong id="buyerReplyTrackingHot">0</strong></div>
+        <div class="metric"><h2>Warm Buyer Replies</h2><strong id="buyerReplyTrackingWarm">0</strong></div>
+        <div class="metric"><h2>Cold Buyer Replies</h2><strong id="buyerReplyTrackingCold">0</strong></div>
+        <div class="metric"><h2>No Reply Count</h2><strong id="buyerReplyTrackingNoReply">0</strong></div>
+        <div class="metric"><h2>Latest Buyer Reply Status</h2><strong id="buyerReplyTrackingLatestStatus">NONE</strong></div>
+        <div class="metric"><h2>Latest Reply Temperature</h2><strong id="buyerReplyTrackingLatestTemperature">NONE</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -428,6 +452,8 @@
       <div class="card"><h2>Controlled Buyer-Gate Manual Quote Draft</h2><p>View internal manual quote drafts after final quote eligibility. Read-only; price is internal only, no buyer contact, no quote sent, no price sent, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-quote-draft">Open Manual Quote Draft</a></div>
 
       <div class="card"><h2>Controlled Buyer-Gate Manual Send Confirmation</h2><p>View admin manual send confirmation records after manual quote draft review. Read-only; system did not send WhatsApp, quote, or price, did not read WhatsApp, did not scrape, did not mutate inventory/accounting/sales/pipeline, and buyer reply tracking is required next.</p><a href="/controlled-buyer-gate-manual-send-confirmation">Open Manual Send Confirmation</a></div>
+
+      <div class="card"><h2>Controlled Buyer-Gate Buyer Reply Tracking</h2><p>View buyer replies manually observed outside the system after manual send confirmation. Read-only; system does not read WhatsApp, scrape, auto-reply, auto-follow-up, mutate inventory/accounting/sales/pipeline, or close sale.</p><a href="/controlled-buyer-gate-buyer-reply-tracking">Open Buyer Reply Tracking</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -856,6 +882,35 @@
     }
 
     loadManualSendConfirmationHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadBuyerReplyTrackingHubMetrics() {
+      try {
+        const response = await fetch("/api/controlled-buyer-gate-buyer-reply-tracking/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("buyerReplyTrackingTotal", summary.totalBuyerReplyTrackings || 0);
+        setText("buyerReplyTrackingRecorded", summary.recordedBuyerReplyTrackingCount || 0);
+        setText("buyerReplyTrackingHot", summary.hotReplyCount || 0);
+        setText("buyerReplyTrackingWarm", summary.warmReplyCount || 0);
+        setText("buyerReplyTrackingCold", summary.coldReplyCount || 0);
+        setText("buyerReplyTrackingNoReply", summary.noReplyCount || 0);
+        setText("buyerReplyTrackingLatestStatus", summary.latestBuyerReplyStatus || "NONE");
+        setText("buyerReplyTrackingLatestTemperature", summary.latestBuyerReplyTemperature || "NONE");
+      } catch (error) {
+        const element = document.getElementById("buyerReplyTrackingLatestStatus");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadBuyerReplyTrackingHubMetrics();
   </script>
 
 </body>

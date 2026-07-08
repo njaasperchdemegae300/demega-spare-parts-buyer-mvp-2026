@@ -1,31 +1,28 @@
 # LATEST STATUS
 
 Current Phase:
-Version 37B — Controlled Buyer-Gate Buyer Reply Tracking Dashboard Display
+Version 37C — Admin Hub Link Controlled Buyer-Gate Buyer Reply Tracking
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /controlled-buyer-gate-buyer-reply-tracking
-- GET /controlled-buyer-gate-buyer-reply-trackings
-- Buyer Reply Tracking dashboard
-- Total buyer reply tracking metric
-- Recorded replies metric
-- Hot replies metric
-- Warm replies metric
-- Cold replies metric
-- No-reply metric
-- Latest reply status metric
-- Latest reply temperature metric
-- Buyer reply text display
-- Temperature filter
-- Reply status filter
-- Safety filter
+- Buyer Reply Tracking linked inside Admin Navigation Hub
+- Buyer Reply Tracking Records metric
+- Recorded Buyer Replies metric
+- Hot Buyer Replies metric
+- Warm Buyer Replies metric
+- Cold Buyer Replies metric
+- No Reply Count metric
+- Latest Buyer Reply Status metric
+- Latest Reply Temperature metric
+- Buyer Reply Tracking metrics inside Admin Hub metrics API
+- Buyer Reply Tracking safety locks inside Admin Hub summary
+- Linked Buyer Reply Tracking dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays buyer reply tracking records only
-- Dashboard is read-only
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
 - Buyer reply tracking gate only
 - Buyer reply tracking record only
 - Controlled buyer reply tracking only
@@ -35,18 +32,24 @@ Safety Confirmed:
 - System did not scrape buyer messages
 - System did not scrape private data
 - System did not harvest hidden data
-- System did not auto-reply
-- System did not auto-send WhatsApp
-- System did not auto-follow-up
-- System did not update inventory
-- System did not reserve stock
-- System did not reduce stock
-- System did not create accounting entry
-- System did not create receipt
-- System did not create invoice
-- System did not close sale
-- System did not move pipeline
+- No auto-reply
+- No auto-send WhatsApp
+- No auto-follow-up
+- No inventory update
+- No stock reservation
+- No stock reduction
+- No accounting entry creation
+- No receipt creation
+- No invoice creation
+- No sale closing
+- No pipeline movement
 - Follow-up decision gate required next
 
+Business Readiness Confirmed:
+- Admin Hub now exposes Buyer Reply Tracking metrics
+- Admin Hub now links directly to Buyer Reply Tracking dashboard
+- Controlled inbound leads now require follow-up decision after manual buyer reply tracking
+- Next required build is follow-up decision gate
+
 Next Phase:
-Version 37C — Admin Hub Link Controlled Buyer-Gate Buyer Reply Tracking
+Version 38A — Controlled Buyer-Gate Follow-Up Decision Gate Foundation
