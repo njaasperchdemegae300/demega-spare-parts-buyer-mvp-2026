@@ -170,3 +170,6 @@ Controlled Buyer-Gate Buyer Reply Tracking Dashboard Display added.
 
 ### Version 37C
 Admin Hub Link Controlled Buyer-Gate Buyer Reply Tracking added.
+
+### Version 38A
+Controlled Buyer-Gate Follow-Up Decision Gate Foundation added.

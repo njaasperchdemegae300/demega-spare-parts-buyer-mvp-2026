@@ -62,3 +62,6 @@ Controlled Buyer-Gate Manual Send Confirmation records that admin manually sent 
 
 ## Decision 20 — Buyer Reply Tracking Records Manual Observation Only
 Controlled Buyer-Gate Buyer Reply Tracking records buyer replies manually observed by admin outside the system after manual send confirmation. The system must not read WhatsApp, scrape buyer messages, auto-reply, auto-send, auto-follow-up, update inventory, reserve/reduce stock, create accounting records, create receipts/invoices, close sales, or move pipeline. Follow-up decision gate is required next.
+
+## Decision 21 — Follow-Up Decision Records Manual Decision Only
+Controlled Buyer-Gate Follow-Up Decision records admin manual follow-up decisions after buyer reply tracking. The system must not execute follow-up, auto-schedule, auto-send WhatsApp, auto-reply, auto-read WhatsApp, scrape buyer messages, mutate inventory, reserve/reduce stock, create accounting records, create receipts/invoices, close sales, or move pipeline.

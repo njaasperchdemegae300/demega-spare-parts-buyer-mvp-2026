@@ -1,40 +1,38 @@
 # LATEST STATUS
 
 Current Phase:
-Version 37C — Admin Hub Link Controlled Buyer-Gate Buyer Reply Tracking
+Version 38A — Controlled Buyer-Gate Follow-Up Decision Gate Foundation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Buyer Reply Tracking linked inside Admin Navigation Hub
-- Buyer Reply Tracking Records metric
-- Recorded Buyer Replies metric
-- Hot Buyer Replies metric
-- Warm Buyer Replies metric
-- Cold Buyer Replies metric
-- No Reply Count metric
-- Latest Buyer Reply Status metric
-- Latest Reply Temperature metric
-- Buyer Reply Tracking metrics inside Admin Hub metrics API
-- Buyer Reply Tracking safety locks inside Admin Hub summary
-- Linked Buyer Reply Tracking dashboard reachable
+- Controlled Buyer-Gate Follow-Up Decision Gate foundation
+- Follow-up decision phrase requirement
+- Buyer reply tracking prerequisite
+- Manual decision channel requirement
+- Follow-up decision type
+- Follow-up priority
+- Manual action instruction
+- Duplicate follow-up decision blocking
+- Follow-up decision list API
+- Follow-up decision summary API
 
 Safety Confirmed:
-- Admin Hub remains navigation and visibility only
-- Metrics API remains read-only
-- Buyer reply tracking gate only
-- Buyer reply tracking record only
-- Controlled buyer reply tracking only
-- Manual send confirmation required first
-- Admin observed buyer reply manually outside the system
-- System did not read WhatsApp
-- System did not scrape buyer messages
-- System did not scrape private data
-- System did not harvest hidden data
-- No auto-reply
-- No auto-send WhatsApp
+- Follow-up decision gate only
+- Follow-up decision record only
+- Controlled follow-up decision only
+- Admin manual decision only
+- System execution blocked
+- Manual action required outside the system
 - No auto-follow-up
+- No auto-schedule
+- No auto-send WhatsApp
+- No auto-reply
+- No WhatsApp reading
+- No message scraping
+- No private-data scraping
+- No hidden harvesting
 - No inventory update
 - No stock reservation
 - No stock reduction
@@ -43,13 +41,6 @@ Safety Confirmed:
 - No invoice creation
 - No sale closing
 - No pipeline movement
-- Follow-up decision gate required next
-
-Business Readiness Confirmed:
-- Admin Hub now exposes Buyer Reply Tracking metrics
-- Admin Hub now links directly to Buyer Reply Tracking dashboard
-- Controlled inbound leads now require follow-up decision after manual buyer reply tracking
-- Next required build is follow-up decision gate
 
 Next Phase:
-Version 38A — Controlled Buyer-Gate Follow-Up Decision Gate Foundation
+Version 38B — Controlled Buyer-Gate Follow-Up Decision Dashboard Display
