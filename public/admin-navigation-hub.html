@@ -105,6 +105,13 @@
       <span class="badge">NO QUOTE PREPARED AT COMPATIBILITY GATE</span>
       <span class="badge">NO PRICE INCLUDED</span>
       <span class="badge">QUOTE BLOCKED UNTIL FINAL ELIGIBILITY</span>
+      <span class="badge">FINAL QUOTE ELIGIBILITY DASHBOARD ONLY</span>
+      <span class="badge">FINAL QUOTE ELIGIBILITY RECORD ONLY</span>
+      <span class="badge">NO BUYER CONTACT FROM ELIGIBILITY GATE</span>
+      <span class="badge">NO QUOTE PREPARED AT ELIGIBILITY GATE</span>
+      <span class="badge">NO PRICE INCLUDED AT ELIGIBILITY GATE</span>
+      <span class="badge">NO QUOTE SENT AT ELIGIBILITY GATE</span>
+      <span class="badge">QUOTE BLOCKED UNTIL MANUAL QUOTE DRAFT GATE</span>
       <span class="badge">NO INVENTORY MUTATION</span>
       <span class="badge">QUOTE BLOCKED UNTIL COMPATIBILITY</span>
       <span class="badge">ACCEPT MOVES TO MANUAL STOCK CHECK ONLY</span>
@@ -179,6 +186,13 @@
         <li>Manual compatibility check records compatibility status only.</li>
         <li>Manual compatibility check does not contact buyers.</li>
         <li>Manual compatibility check does not prepare quote.</li>
+        <li>Final quote eligibility records quote readiness only.</li>
+        <li>Final quote eligibility does not contact buyers.</li>
+        <li>Final quote eligibility does not prepare quote.</li>
+        <li>Final quote eligibility does not include price.</li>
+        <li>Final quote eligibility does not send quote.</li>
+        <li>Quote remains blocked until manual quote draft gate.</li>
+        <li>Manual quote draft gate is required next.</li>
         <li>Manual compatibility check does not include price.</li>
         <li>Quote remains blocked until final quote eligibility.</li>
         <li>Final quote eligibility is required next.</li>
@@ -309,6 +323,14 @@
         <div class="metric"><h2>Latest Compatibility Status</h2><strong id="manualCompatibilityLatestStatus">NO_COMPATIBILITY_CHECK</strong></div>
         <div class="metric"><h2>Latest Compatibility Decision</h2><strong id="manualCompatibilityLatestDecision">NONE</strong></div>
         <div class="metric"><h2>Latest Compatibility Source</h2><strong id="manualCompatibilityLatestSource">NONE</strong></div>
+        <div class="metric"><h2>Final Quote Eligibility Records</h2><strong id="finalQuoteEligibilityTotal">0</strong></div>
+        <div class="metric"><h2>Recorded Final Eligibility</h2><strong id="finalQuoteEligibilityRecorded">0</strong></div>
+        <div class="metric"><h2>Eligible For Manual Draft</h2><strong id="finalQuoteEligibleForDraft">0</strong></div>
+        <div class="metric"><h2>Not Eligible For Quote</h2><strong id="finalQuoteNotEligible">0</strong></div>
+        <div class="metric"><h2>Needs Manager Review</h2><strong id="finalQuoteNeedsManagerReview">0</strong></div>
+        <div class="metric"><h2>Latest Eligibility Status</h2><strong id="finalQuoteLatestStatus">NO_FINAL_QUOTE_ELIGIBILITY</strong></div>
+        <div class="metric"><h2>Latest Eligibility Decision</h2><strong id="finalQuoteLatestDecision">NONE</strong></div>
+        <div class="metric"><h2>Latest Eligibility Source</h2><strong id="finalQuoteLatestSource">NONE</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -352,6 +374,8 @@
       <div class="card"><h2>Controlled Buyer-Gate Manual Stock Check</h2><p>View controlled manual stock check decisions before compatibility check or quote preparation. Read-only; no buyer contact, no quote, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-stock-check">Open Manual Stock Check</a></div>
 
       <div class="card"><h2>Controlled Buyer-Gate Manual Compatibility Check</h2><p>View controlled manual compatibility check decisions before final quote eligibility or quote preparation. Read-only; no buyer contact, no quote, no price, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-compatibility-check">Open Manual Compatibility Check</a></div>
+
+      <div class="card"><h2>Controlled Buyer-Gate Final Quote Eligibility</h2><p>View final quote eligibility records before manual quote draft preparation. Read-only; no buyer contact, no quote, no price, no quote sent, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-final-quote-eligibility">Open Final Quote Eligibility</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -694,6 +718,35 @@
     }
 
     loadManualCompatibilityCheckHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadFinalQuoteEligibilityHubMetrics() {
+      try {
+        const response = await fetch("/api/controlled-buyer-gate-final-quote-eligibility/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("finalQuoteEligibilityTotal", summary.totalFinalQuoteEligibilities || 0);
+        setText("finalQuoteEligibilityRecorded", summary.recordedFinalQuoteEligibilityCount || 0);
+        setText("finalQuoteEligibleForDraft", summary.eligibleForManualQuoteDraftCount || 0);
+        setText("finalQuoteNotEligible", summary.notEligibleForQuoteCount || 0);
+        setText("finalQuoteNeedsManagerReview", summary.needsManagerReviewCount || 0);
+        setText("finalQuoteLatestStatus", summary.latestFinalQuoteEligibilityStatus || "NO_FINAL_QUOTE_ELIGIBILITY");
+        setText("finalQuoteLatestDecision", summary.latestEligibilityDecision || "NONE");
+        setText("finalQuoteLatestSource", summary.latestSource || "NONE");
+      } catch (error) {
+        const element = document.getElementById("finalQuoteLatestStatus");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadFinalQuoteEligibilityHubMetrics();
   </script>
 
 </body>

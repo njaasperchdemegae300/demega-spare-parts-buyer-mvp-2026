@@ -1,31 +1,28 @@
 # LATEST STATUS
 
 Current Phase:
-Version 34B-FIX1 — Controlled Buyer-Gate Final Quote Eligibility Dashboard Display
+Version 34C — Admin Hub Link Controlled Buyer-Gate Final Quote Eligibility
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /controlled-buyer-gate-final-quote-eligibility
-- GET /controlled-buyer-gate-final-quote-eligibilities
-- Final Quote Eligibility dashboard
-- Total eligibility records metric
-- Recorded eligibility metric
-- Eligible for manual quote draft metric
-- Not eligible for quote metric
-- Manager review metric
-- Latest eligibility status metric
-- Latest eligibility decision metric
-- Latest source metric
-- Final quote eligibility table
-- Decision filter
-- Safety filter
-- Version 34B smoke test prerequisite slot chain repaired
+- Final Quote Eligibility linked inside Admin Navigation Hub
+- Final Quote Eligibility Records metric
+- Recorded Final Eligibility metric
+- Eligible For Manual Draft metric
+- Not Eligible For Quote metric
+- Needs Manager Review metric
+- Latest Eligibility Status metric
+- Latest Eligibility Decision metric
+- Latest Eligibility Source metric
+- Final Quote Eligibility metrics inside Admin Hub metrics API
+- Final Quote Eligibility safety locks inside Admin Hub summary
+- Linked Final Quote Eligibility dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays final quote eligibility records only
-- Dashboard is read-only
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
 - Final quote eligibility gate only
 - Final quote eligibility record only
 - Controlled final quote eligibility only
@@ -50,5 +47,11 @@ Safety Confirmed:
 - No sale closing
 - No pipeline movement
 
+Business Readiness Confirmed:
+- Admin Hub now exposes Final Quote Eligibility metrics
+- Admin Hub now links directly to Final Quote Eligibility dashboard
+- Controlled inbound leads now require visible final quote eligibility before quote drafting
+- Next required build is controlled manual quote draft gate
+
 Next Phase:
-Version 34C — Admin Hub Link Controlled Buyer-Gate Final Quote Eligibility
+Version 35A — Controlled Buyer-Gate Manual Quote Draft Gate Foundation

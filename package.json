@@ -107,7 +107,8 @@
     "version:33b": "node tools/version33b-controlled-buyer-gate-manual-compatibility-check-dashboard-smoke-test.js",
     "version:33c": "node tools/version33c-admin-hub-link-controlled-buyer-gate-manual-compatibility-check-smoke-test.js",
     "version:34a": "node tools/version34a-controlled-buyer-gate-final-quote-eligibility-smoke-test.js",
-    "version:34b": "node tools/version34b-controlled-buyer-gate-final-quote-eligibility-dashboard-smoke-test.js"
+    "version:34b": "node tools/version34b-controlled-buyer-gate-final-quote-eligibility-dashboard-smoke-test.js",
+    "version:34c": "node tools/version34c-admin-hub-link-controlled-buyer-gate-final-quote-eligibility-smoke-test.js"
   },
   "keywords": [
     "spare-parts",
