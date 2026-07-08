@@ -71,3 +71,6 @@ Controlled Buyer-Gate Follow-Up Decision records admin manual follow-up decision
 
 ## Decision 22 — Follow-Up Decision Visible In Admin Hub Only
 Controlled Buyer-Gate Follow-Up Decision is visible inside Admin Hub as read-only navigation and metrics. The Admin Hub must not execute follow-up, schedule follow-up, send WhatsApp, auto-reply, read WhatsApp, scrape buyer messages, mutate inventory, create accounting records, close sales, or move pipeline.
+
+## Decision 23 — Final Readiness Lock Does Not Open Live Traffic
+Controlled Buyer-Gate Final Readiness Lock records technical readiness only. It must not open live buyer traffic, activate real buyer gate, start ads, publish lead forms, contact buyers, send WhatsApp, auto-reply, auto-follow-up, auto-schedule, read WhatsApp, scrape buyer messages, mutate inventory, create accounting records, close sales, or move pipeline. Live gate requires a separate manual approval phase.
