@@ -155,3 +155,9 @@ Controlled Buyer-Gate Manual Send Confirmation Gate Foundation added.
 
 ### Version 36B
 Controlled Buyer-Gate Manual Send Confirmation Dashboard Display added.
+
+### Version 36C
+Admin Hub Link Controlled Buyer-Gate Manual Send Confirmation added.
+
+### Version 36C
+Admin Hub Link Controlled Buyer-Gate Manual Send Confirmation added.

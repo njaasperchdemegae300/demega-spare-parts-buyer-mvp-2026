@@ -1,30 +1,28 @@
 # LATEST STATUS
 
 Current Phase:
-Version 36B — Controlled Buyer-Gate Manual Send Confirmation Dashboard Display
+Version 36C — Admin Hub Link Controlled Buyer-Gate Manual Send Confirmation
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- GET /controlled-buyer-gate-manual-send-confirmation
-- GET /controlled-buyer-gate-manual-send-confirmations
-- Manual Send Confirmation dashboard
-- Total manual send confirmations metric
-- Recorded manual send confirmation metric
-- Outside-system sends metric
-- Latest confirmation status metric
-- Latest source metric
-- Latest manual send channel metric
-- Latest currency metric
-- Latest total price metric
-- Manual send evidence display
-- Manual send channel filter
-- Safety filter
+- Manual Send Confirmation linked inside Admin Navigation Hub
+- Manual Send Confirmation Records metric
+- Recorded Manual Send Confirmations metric
+- Outside-System Sends metric
+- Latest Send Confirmation Status metric
+- Latest Send Source metric
+- Latest Send Channel metric
+- Latest Send Currency metric
+- Latest Send Total Price metric
+- Manual Send Confirmation metrics inside Admin Hub metrics API
+- Manual Send Confirmation safety locks inside Admin Hub summary
+- Linked Manual Send Confirmation dashboard reachable
 
 Safety Confirmed:
-- Dashboard displays manual send confirmation records only
-- Dashboard is read-only
+- Admin Hub remains navigation and visibility only
+- Metrics API remains read-only
 - Manual send confirmation gate only
 - Manual send confirmation record only
 - Controlled manual send confirmation only
@@ -50,5 +48,11 @@ Safety Confirmed:
 - No auto follow-up
 - Buyer reply tracking required next
 
+Business Readiness Confirmed:
+- Admin Hub now exposes Manual Send Confirmation metrics
+- Admin Hub now links directly to Manual Send Confirmation dashboard
+- Controlled inbound leads now require buyer reply tracking after manual outside-system sending
+- Next required build is buyer reply tracking gate
+
 Next Phase:
-Version 36C — Admin Hub Link Controlled Buyer-Gate Manual Send Confirmation
+Version 37A — Controlled Buyer-Gate Buyer Reply Tracking Gate Foundation

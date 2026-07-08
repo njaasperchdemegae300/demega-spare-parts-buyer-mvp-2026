@@ -120,6 +120,15 @@
       <span class="badge">NO PRICE SENT TO BUYER</span>
       <span class="badge">MANUAL REVIEW BEFORE SENDING REQUIRED</span>
       <span class="badge">MANUAL SEND CONFIRMATION REQUIRED NEXT</span>
+      <span class="badge">MANUAL SEND CONFIRMATION DASHBOARD ONLY</span>
+      <span class="badge">MANUAL SEND CONFIRMATION RECORD ONLY</span>
+      <span class="badge">ADMIN MANUAL SEND OUTSIDE SYSTEM ONLY</span>
+      <span class="badge">SYSTEM SEND BLOCKED</span>
+      <span class="badge">SYSTEM DID NOT SEND WHATSAPP</span>
+      <span class="badge">SYSTEM DID NOT SEND QUOTE</span>
+      <span class="badge">SYSTEM DID NOT SEND PRICE</span>
+      <span class="badge">BUYER REPLY TRACKING REQUIRED NEXT</span>
+      <span class="badge">NO AUTO FOLLOW-UP</span>
       <span class="badge">NO INVENTORY MUTATION</span>
       <span class="badge">QUOTE BLOCKED UNTIL COMPATIBILITY</span>
       <span class="badge">ACCEPT MOVES TO MANUAL STOCK CHECK ONLY</span>
@@ -208,6 +217,15 @@
         <li>Manual quote draft does not send price.</li>
         <li>Manual review before sending is required next.</li>
         <li>Manual send confirmation gate is required next.</li>
+        <li>Manual send confirmation records admin manual sending outside the system only.</li>
+        <li>Manual send confirmation does not send WhatsApp.</li>
+        <li>Manual send confirmation does not send quote.</li>
+        <li>Manual send confirmation does not send price.</li>
+        <li>Manual send confirmation does not read WhatsApp.</li>
+        <li>Manual send confirmation does not scrape buyer messages.</li>
+        <li>Manual send confirmation does not mutate inventory, accounting, sales, or pipeline.</li>
+        <li>Buyer reply tracking is required next.</li>
+        <li>No auto follow-up starts at this gate.</li>
         <li>Manual compatibility check does not include price.</li>
         <li>Quote remains blocked until final quote eligibility.</li>
         <li>Final quote eligibility is required next.</li>
@@ -353,6 +371,14 @@
         <div class="metric"><h2>Latest Draft Source</h2><strong id="manualQuoteDraftLatestSource">NONE</strong></div>
         <div class="metric"><h2>Latest Draft Currency</h2><strong id="manualQuoteDraftLatestCurrency">NONE</strong></div>
         <div class="metric"><h2>Latest Draft Total Price</h2><strong id="manualQuoteDraftLatestTotalPrice">0</strong></div>
+        <div class="metric"><h2>Manual Send Confirmation Records</h2><strong id="manualSendConfirmationTotal">0</strong></div>
+        <div class="metric"><h2>Recorded Manual Send Confirmations</h2><strong id="manualSendConfirmationRecorded">0</strong></div>
+        <div class="metric"><h2>Outside-System Sends</h2><strong id="manualSendConfirmationOutsideSystem">0</strong></div>
+        <div class="metric"><h2>Latest Send Confirmation Status</h2><strong id="manualSendConfirmationLatestStatus">NO_MANUAL_SEND_CONFIRMATION</strong></div>
+        <div class="metric"><h2>Latest Send Source</h2><strong id="manualSendConfirmationLatestSource">NONE</strong></div>
+        <div class="metric"><h2>Latest Send Channel</h2><strong id="manualSendConfirmationLatestChannel">NONE</strong></div>
+        <div class="metric"><h2>Latest Send Currency</h2><strong id="manualSendConfirmationLatestCurrency">NONE</strong></div>
+        <div class="metric"><h2>Latest Send Total Price</h2><strong id="manualSendConfirmationLatestTotalPrice">0</strong></div>
         <div class="metric"><h2>Auto Send Count</h2><strong id="autoSendCount">0</strong></div>
       </div>
     </section>
@@ -400,6 +426,8 @@
       <div class="card"><h2>Controlled Buyer-Gate Final Quote Eligibility</h2><p>View final quote eligibility records before manual quote draft preparation. Read-only; no buyer contact, no quote, no price, no quote sent, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-final-quote-eligibility">Open Final Quote Eligibility</a></div>
 
       <div class="card"><h2>Controlled Buyer-Gate Manual Quote Draft</h2><p>View internal manual quote drafts after final quote eligibility. Read-only; price is internal only, no buyer contact, no quote sent, no price sent, no WhatsApp auto-send/read, no scraping, no inventory mutation, no accounting entry, no sale closing, and no pipeline movement.</p><a href="/controlled-buyer-gate-manual-quote-draft">Open Manual Quote Draft</a></div>
+
+      <div class="card"><h2>Controlled Buyer-Gate Manual Send Confirmation</h2><p>View admin manual send confirmation records after manual quote draft review. Read-only; system did not send WhatsApp, quote, or price, did not read WhatsApp, did not scrape, did not mutate inventory/accounting/sales/pipeline, and buyer reply tracking is required next.</p><a href="/controlled-buyer-gate-manual-send-confirmation">Open Manual Send Confirmation</a></div>
       <div class="card"><h2>System Health</h2><p>Check whether the backend server foundation is alive and responding.</p><a href="/api/health">Open Health API</a></div>
     </section>
   </main>
@@ -799,6 +827,35 @@
     }
 
     loadManualQuoteDraftHubMetrics();
+  </script>
+
+
+  <script>
+    async function loadManualSendConfirmationHubMetrics() {
+      try {
+        const response = await fetch("/api/controlled-buyer-gate-manual-send-confirmation/summary");
+        const data = await response.json();
+        const summary = data.summary || {};
+        const setText = (id, value) => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = value;
+        };
+
+        setText("manualSendConfirmationTotal", summary.totalManualSendConfirmations || 0);
+        setText("manualSendConfirmationRecorded", summary.recordedManualSendConfirmationCount || 0);
+        setText("manualSendConfirmationOutsideSystem", summary.manualOutsideSystemSendCount || 0);
+        setText("manualSendConfirmationLatestStatus", summary.latestManualSendConfirmationStatus || "NO_MANUAL_SEND_CONFIRMATION");
+        setText("manualSendConfirmationLatestSource", summary.latestSource || "NONE");
+        setText("manualSendConfirmationLatestChannel", summary.latestManualSendChannel || "NONE");
+        setText("manualSendConfirmationLatestCurrency", summary.latestCurrency || "NONE");
+        setText("manualSendConfirmationLatestTotalPrice", summary.latestTotalPrice || 0);
+      } catch (error) {
+        const element = document.getElementById("manualSendConfirmationLatestStatus");
+        if (element) element.textContent = "LOAD_ERROR";
+      }
+    }
+
+    loadManualSendConfirmationHubMetrics();
   </script>
 
 </body>

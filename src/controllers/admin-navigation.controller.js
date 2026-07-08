@@ -31,6 +31,7 @@ const controlledBuyerGateManualStockCheckService = require("../services/controll
 const controlledBuyerGateManualCompatibilityCheckService = require("../services/controlled-buyer-gate-manual-compatibility-check.service");
 const controlledBuyerGateFinalQuoteEligibilityService = require("../services/controlled-buyer-gate-final-quote-eligibility.service");
 const controlledBuyerGateManualQuoteDraftService = require("../services/controlled-buyer-gate-manual-quote-draft.service");
+const controlledBuyerGateManualSendConfirmationService = require("../services/controlled-buyer-gate-manual-send-confirmation.service");
 
 const modules = [
   { name: "Buyer Lead Dashboard", path: "/dashboard", purpose: "Captured buyer leads, scoring, and manual review." },
@@ -64,7 +65,8 @@ const modules = [
   { name: "Controlled Buyer-Gate Manual Stock Check", path: "/controlled-buyer-gate-manual-stock-check", purpose: "Read-only manual stock check dashboard. Shows manually confirmed stock decisions before compatibility check or quote preparation. No buyer contact, no quote, no WhatsApp send/read, no scraping, no inventory mutation, no accounting, no sale closing, and no pipeline movement." },
   { name: "Controlled Buyer-Gate Manual Compatibility Check", path: "/controlled-buyer-gate-manual-compatibility-check", purpose: "Read-only manual compatibility check dashboard. Shows manually confirmed compatibility decisions before final quote eligibility or quote preparation. No buyer contact, no quote, no price, no WhatsApp send/read, no scraping, no inventory mutation, no accounting, no sale closing, and no pipeline movement." },
   { name: "Controlled Buyer-Gate Final Quote Eligibility", path: "/controlled-buyer-gate-final-quote-eligibility", purpose: "Read-only final quote eligibility dashboard. Shows final quote readiness before manual quote draft preparation. No buyer contact, no quote, no price, no quote sent, no WhatsApp send/read, no scraping, no inventory mutation, no accounting, no sale closing, and no pipeline movement." },
-  { name: "Controlled Buyer-Gate Manual Quote Draft", path: "/controlled-buyer-gate-manual-quote-draft", purpose: "Read-only manual quote draft dashboard. Shows internal quote drafts after final quote eligibility. Price is internal only. No buyer contact, no quote sent, no price sent, no WhatsApp send/read, no scraping, no inventory mutation, no accounting, no sale closing, and no pipeline movement." }];
+  { name: "Controlled Buyer-Gate Manual Quote Draft", path: "/controlled-buyer-gate-manual-quote-draft", purpose: "Read-only manual quote draft dashboard. Shows internal quote drafts after final quote eligibility. Price is internal only. No buyer contact, no quote sent, no price sent, no WhatsApp send/read, no scraping, no inventory mutation, no accounting, no sale closing, and no pipeline movement." },
+  { name: "Controlled Buyer-Gate Manual Send Confirmation", path: "/controlled-buyer-gate-manual-send-confirmation", purpose: "Read-only manual send confirmation dashboard. Shows that admin manually sent quote outside the system after manual quote draft review. System does not send WhatsApp, quote, or price; does not read WhatsApp; does not scrape; does not mutate inventory, accounting, sales, or pipeline." }];
 
 function safeRead(factory, fallback) {
   try {
@@ -148,6 +150,22 @@ function getSafety() {
 
 
 
+
+
+    controlledBuyerGateManualSendConfirmationOnly: true,
+    manualSendConfirmationGateOnly: true,
+    manualSendConfirmationRecordOnly: true,
+    controlledManualSendConfirmationOnly: true,
+    adminManualSendOutsideSystemOnly: true,
+    systemSendBlocked: true,
+    systemDidNotSendQuote: true,
+    systemDidNotSendPrice: true,
+    manualSendRecordedOnly: true,
+    buyerReplyTrackingRequiredNext: true,
+    noAutoFollowUp: true,
+    noSystemSendWhatsApp: true,
+    noReceiptCreation: true,
+    noInvoiceCreation: true,
 
     controlledBuyerGateManualQuoteDraftOnly: true,
     manualQuoteDraftGateOnly: true,
@@ -453,6 +471,7 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
   const controlledBuyerGateManualCompatibilityCheck = safeRead(() => controlledBuyerGateManualCompatibilityCheckService.getManualCompatibilityCheckSummary(), {});
   const controlledBuyerGateFinalQuoteEligibility = safeRead(() => controlledBuyerGateFinalQuoteEligibilityService.getFinalQuoteEligibilitySummary(), {});
   const controlledBuyerGateManualQuoteDraft = safeRead(() => controlledBuyerGateManualQuoteDraftService.getManualQuoteDraftSummary(), {});
+  const controlledBuyerGateManualSendConfirmation = safeRead(() => controlledBuyerGateManualSendConfirmationService.getManualSendConfirmationSummary(), {});
 
   return sendJson(res, 200, {
     status: "ok",
@@ -492,7 +511,8 @@ function adminNavigationDashboardMetricsController(req, res, sendJson) {
       controlledBuyerGateManualStockCheck,
       controlledBuyerGateManualCompatibilityCheck,
       controlledBuyerGateFinalQuoteEligibility,
-      controlledBuyerGateManualQuoteDraft
+      controlledBuyerGateManualQuoteDraft,
+      controlledBuyerGateManualSendConfirmation
     },
     safety: getSafety()
   });
