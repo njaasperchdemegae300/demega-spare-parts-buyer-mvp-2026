@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Buyer Reply Tracking Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 26px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 3800px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .hot { background: #fee2e2; color: #991b1b; }
+    .warm { background: #fef3c7; color: #92400e; }
+    .cold { background: #e0f2fe; color: #075985; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+    pre { white-space: pre-wrap; background: #f9fafb; padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Buyer Reply Tracking Dashboard</h1>
+    <p>Read-only dashboard for buyer replies manually observed outside the system after manual send confirmation.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Reply Trackings</h2><strong id="totalBuyerReplyTrackings">0</strong></div>
+      <div class="card"><h2>Recorded Replies</h2><strong id="recordedBuyerReplyTrackingCount">0</strong></div>
+      <div class="card"><h2>Hot Replies</h2><strong id="hotReplyCount">0</strong></div>
+      <div class="card"><h2>Warm Replies</h2><strong id="warmReplyCount">0</strong></div>
+      <div class="card"><h2>Cold Replies</h2><strong id="coldReplyCount">0</strong></div>
+      <div class="card"><h2>No Reply</h2><strong id="noReplyCount">0</strong></div>
+      <div class="card"><h2>Latest Reply Status</h2><strong id="latestBuyerReplyStatus">NONE</strong></div>
+      <div class="card"><h2>Latest Temperature</h2><strong id="latestBuyerReplyTemperature">NONE</strong></div>
+      <div class="card"><h2>Next Gate</h2><strong>FOLLOW-UP DECISION</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Buyer Reply Tracking Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It displays buyer replies that admin manually observed outside the system.
+        The system does not read WhatsApp, does not scrape buyer messages, does not auto-reply, does not auto-follow-up,
+        does not update inventory, does not create accounting entries, does not close sales, and does not move pipeline.
+      </p>
+      <span class="badge safe">Buyer reply tracking gate only</span>
+      <span class="badge safe">Buyer reply tracking record only</span>
+      <span class="badge safe">Controlled buyer reply tracking only</span>
+      <span class="badge safe">Manual send confirmation required first</span>
+      <span class="badge safe">Admin observed outside system only</span>
+      <span class="badge safe">System did not read WhatsApp</span>
+      <span class="badge safe">No WhatsApp auto-read</span>
+      <span class="badge safe">No buyer message scraping</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden data harvesting</span>
+      <span class="badge safe">No auto-reply</span>
+      <span class="badge safe">No auto-send WhatsApp</span>
+      <span class="badge safe">No auto-follow-up</span>
+      <span class="badge safe">No inventory update</span>
+      <span class="badge safe">No stock reservation</span>
+      <span class="badge safe">No stock reduction</span>
+      <span class="badge safe">No accounting entry</span>
+      <span class="badge safe">No receipt</span>
+      <span class="badge safe">No invoice</span>
+      <span class="badge safe">No sale closing</span>
+      <span class="badge safe">No pipeline movement</span>
+      <span class="badge safe">Follow-up decision gate required next</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Reply Temperature Meaning</h2>
+      <span class="badge hot">HOT: buyer is active / interested / ready</span>
+      <span class="badge warm">WARM: buyer is negotiating or needs more info</span>
+      <span class="badge cold">COLD: buyer not ready or no longer interested</span>
+      <span class="badge">NO_REPLY: no buyer response yet</span>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled Buyer-Gate Buyer Reply Tracking Records</h2>
+      <p class="muted">Read-only list of manually observed buyer replies. Follow-up decisions come next; this page does not execute follow-up.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search part, vehicle, reply text, observer..." />
+        <select id="temperatureFilter">
+          <option value="">All temperatures</option>
+          <option value="HOT">HOT</option>
+          <option value="WARM">WARM</option>
+          <option value="COLD">COLD</option>
+          <option value="NO_REPLY">NO_REPLY</option>
+        </select>
+        <select id="statusFilter">
+          <option value="">All reply statuses</option>
+          <option value="BUYER_REPLIED_INTERESTED">BUYER_REPLIED_INTERESTED</option>
+          <option value="BUYER_REPLIED_PRICE_NEGOTIATION">BUYER_REPLIED_PRICE_NEGOTIATION</option>
+          <option value="BUYER_REPLIED_NEEDS_MORE_INFO">BUYER_REPLIED_NEEDS_MORE_INFO</option>
+          <option value="BUYER_REPLIED_NOT_READY">BUYER_REPLIED_NOT_READY</option>
+          <option value="BUYER_REPLIED_NO_LONGER_INTERESTED">BUYER_REPLIED_NO_LONGER_INTERESTED</option>
+          <option value="NO_REPLY_YET">NO_REPLY_YET</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe records</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Tracking Status</th>
+            <th>Slot</th>
+            <th>Source</th>
+            <th>Lead Reference</th>
+            <th>Buyer Request</th>
+            <th>Quote Details</th>
+            <th>Reply Status</th>
+            <th>Reply Temperature</th>
+            <th>Buyer Reply Text</th>
+            <th>Observation Scope</th>
+            <th>WhatsApp / Scraping Safety</th>
+            <th>Automation Safety</th>
+            <th>Business Mutation Safety</th>
+            <th>Observed By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="replyRows">
+          <tr><td colspan="15">Loading buyer reply tracking records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allReplies = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function temperatureClass(value) {
+      if (value === "HOT") return "hot";
+      if (value === "WARM") return "warm";
+      if (value === "COLD") return "cold";
+      return "";
+    }
+
+    function hasRisk(record) {
+      return record.autoReadWhatsApp === true ||
+        record.scrapeWhatsappMessages === true ||
+        record.privateMessageScraping === true ||
+        record.hiddenDataHarvesting === true ||
+        record.autoContactBuyer === true ||
+        record.autoSendWhatsApp === true ||
+        record.systemSendWhatsApp === true ||
+        record.autoReplyToBuyer === true ||
+        record.autoStartFollowUp === true ||
+        record.autoScheduleFollowUp === true ||
+        record.autoMovePipelineStage === true ||
+        record.autoCloseSale === true ||
+        record.autoCreateAccountingEntry === true ||
+        record.autoCreateReceipt === true ||
+        record.autoCreateInvoice === true ||
+        record.inventoryUpdated === true ||
+        record.stockReserved === true ||
+        record.stockReduced === true;
+    }
+
+    function getFilteredReplies() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const temperatureFilter = document.getElementById("temperatureFilter").value;
+      const statusFilter = document.getElementById("statusFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allReplies.filter(record => {
+        const risk = hasRisk(record);
+        const haystack = [
+          record.buyerReplyTrackingStatus,
+          record.buyerReplyStatus,
+          record.buyerReplyTemperature,
+          record.buyerReplyText,
+          record.observationNote,
+          record.observedBy,
+          record.source,
+          record.leadReference,
+          record.partNeeded,
+          record.vehicleDetail,
+          record.buyerLocation,
+          record.quotedPartName,
+          record.currency,
+          record.totalPrice
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!temperatureFilter || record.buyerReplyTemperature === temperatureFilter) &&
+          (!statusFilter || record.buyerReplyStatus === statusFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("replyRows");
+      const records = getFilteredReplies();
+
+      if (!records.length) {
+        tbody.innerHTML = '<tr><td colspan="15">No matching buyer reply tracking records.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = records.map(record => {
+        const requestText = [
+          badge(`Part: ${record.partNeeded || "Not recorded"}`, "safe"),
+          badge(`Vehicle: ${record.vehicleDetail || "Not recorded"}`, "safe"),
+          badge(`Location: ${record.buyerLocation || "Not recorded"}`, "safe")
+        ].join("<br>");
+
+        const quoteDetails = [
+          badge(`Quoted part: ${record.quotedPartName || "Not recorded"}`, "safe"),
+          badge(`Condition: ${record.quotedCondition || "Not recorded"}`, "safe"),
+          badge(`Qty: ${record.quantity || 0}`, "safe"),
+          badge(`Total: ${record.currency || ""} ${record.totalPrice || 0}`, "safe")
+        ].join("<br>");
+
+        const observationScope = [
+          record.buyerReplyTrackingGateOnly ? badge("Reply tracking gate only", "safe") : badge("Gate risk", "danger"),
+          record.buyerReplyTrackingRecordOnly ? badge("Record only", "safe") : badge("Record risk", "danger"),
+          record.controlledBuyerReplyTrackingOnly ? badge("Controlled reply tracking", "safe") : badge("Control risk", "danger"),
+          record.manualBuyerReplyObservationOnly ? badge("Manual observation only", "safe") : badge("Manual observation missing", "danger"),
+          record.adminObservedOutsideSystemOnly ? badge("Admin observed outside system", "safe") : badge("Outside-system observation missing", "danger"),
+          record.systemDidNotReadBuyerReply ? badge("System did not read reply", "safe") : badge("Read-risk", "danger"),
+          record.followUpDecisionGateRequiredNext ? badge("Follow-up decision next", "safe") : badge("Next gate missing", "danger")
+        ].join("<br>");
+
+        const whatsAppSafety = [
+          record.autoReadWhatsApp ? badge("WhatsApp auto-read risk", "danger") : badge("No WhatsApp auto-read", "safe"),
+          record.scrapeWhatsappMessages ? badge("WhatsApp scraping risk", "danger") : badge("No WhatsApp scraping", "safe"),
+          record.privateMessageScraping ? badge("Private scraping risk", "danger") : badge("No private scraping", "safe"),
+          record.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe")
+        ].join("<br>");
+
+        const automationSafety = [
+          record.autoReplyToBuyer ? badge("Auto-reply risk", "danger") : badge("No auto-reply", "safe"),
+          record.autoSendWhatsApp ? badge("Auto-send risk", "danger") : badge("No auto-send", "safe"),
+          record.autoStartFollowUp ? badge("Auto follow-up risk", "danger") : badge("No auto follow-up", "safe"),
+          record.autoScheduleFollowUp ? badge("Auto schedule risk", "danger") : badge("No auto scheduling", "safe"),
+          record.autoMovePipelineStage ? badge("Pipeline move risk", "danger") : badge("No pipeline move", "safe")
+        ].join("<br>");
+
+        const mutationSafety = [
+          record.inventoryUpdated ? badge("Inventory update risk", "danger") : badge("No inventory update", "safe"),
+          record.stockReserved ? badge("Stock reservation risk", "danger") : badge("No stock reservation", "safe"),
+          record.stockReduced ? badge("Stock reduction risk", "danger") : badge("No stock reduction", "safe"),
+          record.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          record.autoCreateReceipt ? badge("Receipt risk", "danger") : badge("No receipt", "safe"),
+          record.autoCreateInvoice ? badge("Invoice risk", "danger") : badge("No invoice", "safe"),
+          record.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(record.buyerReplyTrackingStatus, record.buyerReplyTrackingStatus === "BUYER_REPLY_TRACKING_RECORDED" ? "safe" : "danger")}</td>
+            <td>${badge(`#${record.slotNumber}`, Number(record.slotNumber || 0) >= 1 && Number(record.slotNumber || 0) <= 15 ? "safe" : "danger")}</td>
+            <td>${badge(String(record.source || "").replaceAll("_", " ").toUpperCase(), record.source === "whatsapp_click_to_chat_inbound" ? "safe" : "danger")}</td>
+            <td>${escapeHtml(record.leadReference)}</td>
+            <td>${requestText}</td>
+            <td>${quoteDetails}</td>
+            <td>${badge(record.buyerReplyStatus || "NONE", "safe")}</td>
+            <td>${badge(record.buyerReplyTemperature || "NONE", temperatureClass(record.buyerReplyTemperature))}</td>
+            <td><pre>${escapeHtml(record.buyerReplyText || "")}</pre></td>
+            <td>${observationScope}</td>
+            <td>${whatsAppSafety}</td>
+            <td>${automationSafety}</td>
+            <td>${mutationSafety}</td>
+            <td>${escapeHtml(record.observedBy)}</td>
+            <td>${formatDate(record.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-buyer-reply-tracking/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalBuyerReplyTrackings").textContent = summary.totalBuyerReplyTrackings || 0;
+      document.getElementById("recordedBuyerReplyTrackingCount").textContent = summary.recordedBuyerReplyTrackingCount || 0;
+      document.getElementById("hotReplyCount").textContent = summary.hotReplyCount || 0;
+      document.getElementById("warmReplyCount").textContent = summary.warmReplyCount || 0;
+      document.getElementById("coldReplyCount").textContent = summary.coldReplyCount || 0;
+      document.getElementById("noReplyCount").textContent = summary.noReplyCount || 0;
+      document.getElementById("latestBuyerReplyStatus").textContent = summary.latestBuyerReplyStatus || "NONE";
+      document.getElementById("latestBuyerReplyTemperature").textContent = summary.latestBuyerReplyTemperature || "NONE";
+
+      const recordsResponse = await fetch("/api/controlled-buyer-gate-buyer-reply-trackings");
+      const recordsData = await recordsResponse.json();
+      allReplies = Array.isArray(recordsData.buyerReplyTrackings) ? recordsData.buyerReplyTrackings : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("temperatureFilter").addEventListener("change", renderRows);
+    document.getElementById("statusFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("replyRows").innerHTML =
+        `<tr><td colspan="15">Buyer Reply Tracking dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>
