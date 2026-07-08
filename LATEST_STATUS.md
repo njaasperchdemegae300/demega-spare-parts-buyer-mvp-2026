@@ -1,24 +1,31 @@
 # LATEST STATUS
 
 Current Phase:
-Version 38A — Controlled Buyer-Gate Follow-Up Decision Gate Foundation
+Version 38B — Controlled Buyer-Gate Follow-Up Decision Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Controlled Buyer-Gate Follow-Up Decision Gate foundation
-- Follow-up decision phrase requirement
-- Buyer reply tracking prerequisite
-- Manual decision channel requirement
-- Follow-up decision type
-- Follow-up priority
-- Manual action instruction
-- Duplicate follow-up decision blocking
-- Follow-up decision list API
-- Follow-up decision summary API
+- GET /controlled-buyer-gate-follow-up-decision
+- GET /controlled-buyer-gate-follow-up-decisions
+- Follow-Up Decision dashboard
+- Total follow-up decisions metric
+- Recorded decisions metric
+- Urgent decisions metric
+- High priority metric
+- Normal priority metric
+- Manual action required metric
+- Latest follow-up decision metric
+- Latest priority metric
+- Decision filter
+- Priority filter
+- Safety filter
+- Manual action instruction display
 
 Safety Confirmed:
+- Dashboard displays follow-up decision records only
+- Dashboard is read-only
 - Follow-up decision gate only
 - Follow-up decision record only
 - Controlled follow-up decision only
@@ -43,4 +50,4 @@ Safety Confirmed:
 - No pipeline movement
 
 Next Phase:
-Version 38B — Controlled Buyer-Gate Follow-Up Decision Dashboard Display
+Version 38C — Admin Hub Link Controlled Buyer-Gate Follow-Up Decision

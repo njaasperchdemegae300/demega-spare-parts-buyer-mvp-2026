@@ -2325,3 +2325,61 @@ Connect Controlled Buyer-Gate Buyer Reply Tracking into Admin Navigation Hub so 
 
 ## Next Phase After Approval
 Version 38A — Controlled Buyer-Gate Follow-Up Decision Gate Foundation
+
+# Version 38B — Controlled Buyer-Gate Follow-Up Decision Dashboard Display
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Display controlled buyer-gate follow-up decision records in a read-only dashboard. This shows admin manual decisions after buyer reply tracking.
+
+## Routes
+- GET /controlled-buyer-gate-follow-up-decision
+- GET /controlled-buyer-gate-follow-up-decisions
+- GET /api/controlled-buyer-gate-follow-up-decisions
+- GET /api/controlled-buyer-gate-follow-up-decision/summary
+
+## Features
+- Follow-Up Decision dashboard
+- Total follow-up decisions metric
+- Recorded decisions metric
+- Urgent decisions metric
+- High priority metric
+- Normal priority metric
+- Manual action required metric
+- Latest follow-up decision metric
+- Latest priority metric
+- Decision filter
+- Priority filter
+- Safety filter
+- Manual action instruction display
+
+## Safety
+- Read-only dashboard
+- Follow-up decision records display only
+- Follow-up decision gate only
+- Follow-up decision record only
+- Controlled follow-up decision only
+- Admin manual decision only
+- System execution blocked
+- Manual action required outside the system
+- No auto-follow-up
+- No auto-schedule
+- No auto-send WhatsApp
+- No auto-reply
+- No WhatsApp reading
+- No message scraping
+- No private-data scraping
+- No hidden harvesting
+- No inventory update
+- No stock reservation
+- No stock reduction
+- No accounting entry creation
+- No receipt creation
+- No invoice creation
+- No sale closing
+- No pipeline movement
+
+## Next Phase After Approval
+Version 38C — Admin Hub Link Controlled Buyer-Gate Follow-Up Decision

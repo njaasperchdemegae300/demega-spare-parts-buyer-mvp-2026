@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Follow-Up Decision Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 24px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 3900px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .urgent { background: #fee2e2; color: #991b1b; }
+    .high { background: #ffedd5; color: #9a3412; }
+    .normal { background: #dbeafe; color: #1e40af; }
+    .low { background: #f3f4f6; color: #374151; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+    pre { white-space: pre-wrap; background: #f9fafb; padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Follow-Up Decision Dashboard</h1>
+    <p>Read-only dashboard for admin manual follow-up decisions after buyer reply tracking.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Follow-Up Decisions</h2><strong id="totalFollowUpDecisions">0</strong></div>
+      <div class="card"><h2>Recorded Decisions</h2><strong id="recordedFollowUpDecisionCount">0</strong></div>
+      <div class="card"><h2>Urgent Decisions</h2><strong id="urgentFollowUpDecisionCount">0</strong></div>
+      <div class="card"><h2>High Priority</h2><strong id="highFollowUpDecisionCount">0</strong></div>
+      <div class="card"><h2>Normal Priority</h2><strong id="normalFollowUpDecisionCount">0</strong></div>
+      <div class="card"><h2>Manual Action Required</h2><strong id="manualActionRequiredCount">0</strong></div>
+      <div class="card"><h2>Latest Decision</h2><strong id="latestFollowUpDecision">NONE</strong></div>
+      <div class="card"><h2>Latest Priority</h2><strong id="latestFollowUpPriority">NONE</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Follow-Up Decision Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It records admin follow-up decisions only.
+        The system does not execute follow-up, auto-schedule, send WhatsApp, auto-reply,
+        read WhatsApp, scrape buyer messages, update inventory, create accounting entries,
+        close sales, or move pipeline.
+      </p>
+      <span class="badge safe">Follow-up decision gate only</span>
+      <span class="badge safe">Follow-up decision record only</span>
+      <span class="badge safe">Controlled follow-up decision only</span>
+      <span class="badge safe">Admin manual decision only</span>
+      <span class="badge safe">System execution blocked</span>
+      <span class="badge safe">Manual action outside system only</span>
+      <span class="badge safe">No auto-follow-up</span>
+      <span class="badge safe">No auto-schedule</span>
+      <span class="badge safe">No auto-send WhatsApp</span>
+      <span class="badge safe">No auto-reply</span>
+      <span class="badge safe">No WhatsApp reading</span>
+      <span class="badge safe">No buyer message scraping</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden harvesting</span>
+      <span class="badge safe">No inventory update</span>
+      <span class="badge safe">No stock reservation</span>
+      <span class="badge safe">No stock reduction</span>
+      <span class="badge safe">No accounting entry</span>
+      <span class="badge safe">No receipt</span>
+      <span class="badge safe">No invoice</span>
+      <span class="badge safe">No sale closing</span>
+      <span class="badge safe">No pipeline movement</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Decision Meaning</h2>
+      <span class="badge urgent">URGENT: act manually now</span>
+      <span class="badge high">HIGH: act manually soon</span>
+      <span class="badge normal">NORMAL: normal manual follow-up</span>
+      <span class="badge low">LOW / NONE: no immediate manual action</span>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled Buyer-Gate Follow-Up Decision Records</h2>
+      <p class="muted">Read-only list of admin manual decisions. This page does not execute follow-up.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search decision, buyer reply, part, vehicle..." />
+        <select id="priorityFilter">
+          <option value="">All priorities</option>
+          <option value="URGENT">URGENT</option>
+          <option value="HIGH">HIGH</option>
+          <option value="NORMAL">NORMAL</option>
+          <option value="LOW">LOW</option>
+          <option value="NONE">NONE</option>
+        </select>
+        <select id="decisionFilter">
+          <option value="">All decisions</option>
+          <option value="FOLLOW_UP_DECISION_CALL_BUYER_MANUALLY">CALL_BUYER_MANUALLY</option>
+          <option value="FOLLOW_UP_DECISION_SEND_PRODUCT_PROOF_MANUALLY">SEND_PRODUCT_PROOF_MANUALLY</option>
+          <option value="FOLLOW_UP_DECISION_NEGOTIATE_MANUALLY">NEGOTIATE_MANUALLY</option>
+          <option value="FOLLOW_UP_DECISION_SEND_LOCATION_MANUALLY">SEND_LOCATION_MANUALLY</option>
+          <option value="FOLLOW_UP_DECISION_WAIT_FOR_BUYER">WAIT_FOR_BUYER</option>
+          <option value="FOLLOW_UP_DECISION_CLOSE_AS_NOT_READY">CLOSE_AS_NOT_READY</option>
+          <option value="FOLLOW_UP_DECISION_COMPATIBILITY_CORRECTION_REQUIRED">COMPATIBILITY_CORRECTION_REQUIRED</option>
+          <option value="FOLLOW_UP_DECISION_NO_FOLLOW_UP_NOW">NO_FOLLOW_UP_NOW</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe records</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Decision Status</th>
+            <th>Slot</th>
+            <th>Source</th>
+            <th>Lead Reference</th>
+            <th>Buyer Request</th>
+            <th>Buyer Reply</th>
+            <th>Follow-Up Decision</th>
+            <th>Priority</th>
+            <th>Decision Reason</th>
+            <th>Manual Action Instruction</th>
+            <th>Decision Scope</th>
+            <th>Automation Safety</th>
+            <th>WhatsApp / Scraping Safety</th>
+            <th>Business Mutation Safety</th>
+            <th>Decided By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="decisionRows">
+          <tr><td colspan="16">Loading follow-up decision records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allDecisions = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function priorityClass(value) {
+      if (value === "URGENT") return "urgent";
+      if (value === "HIGH") return "high";
+      if (value === "NORMAL") return "normal";
+      return "low";
+    }
+
+    function hasRisk(record) {
+      return record.autoStartFollowUp === true ||
+        record.autoScheduleFollowUp === true ||
+        record.autoSendFollowUp === true ||
+        record.autoSendWhatsApp === true ||
+        record.systemSendWhatsApp === true ||
+        record.autoReplyToBuyer === true ||
+        record.autoReadWhatsApp === true ||
+        record.scrapeWhatsappMessages === true ||
+        record.privateMessageScraping === true ||
+        record.hiddenDataHarvesting === true ||
+        record.autoMovePipelineStage === true ||
+        record.autoCloseSale === true ||
+        record.autoCreateAccountingEntry === true ||
+        record.autoCreateReceipt === true ||
+        record.autoCreateInvoice === true ||
+        record.inventoryUpdated === true ||
+        record.stockReserved === true ||
+        record.stockReduced === true;
+    }
+
+    function getFilteredDecisions() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const priorityFilter = document.getElementById("priorityFilter").value;
+      const decisionFilter = document.getElementById("decisionFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allDecisions.filter(record => {
+        const risk = hasRisk(record);
+        const haystack = [
+          record.followUpDecisionStatus,
+          record.followUpDecision,
+          record.followUpPriority,
+          record.decisionReason,
+          record.manualActionInstruction,
+          record.decidedBy,
+          record.source,
+          record.leadReference,
+          record.partNeeded,
+          record.vehicleDetail,
+          record.buyerLocation,
+          record.buyerReplyStatus,
+          record.buyerReplyTemperature,
+          record.buyerReplyText
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!priorityFilter || record.followUpPriority === priorityFilter) &&
+          (!decisionFilter || record.followUpDecision === decisionFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("decisionRows");
+      const records = getFilteredDecisions();
+
+      if (!records.length) {
+        tbody.innerHTML = '<tr><td colspan="16">No matching follow-up decision records.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = records.map(record => {
+        const requestText = [
+          badge(`Part: ${record.partNeeded || "Not recorded"}`, "safe"),
+          badge(`Vehicle: ${record.vehicleDetail || "Not recorded"}`, "safe"),
+          badge(`Location: ${record.buyerLocation || "Not recorded"}`, "safe")
+        ].join("<br>");
+
+        const buyerReply = [
+          badge(`Status: ${record.buyerReplyStatus || "Not recorded"}`, "safe"),
+          badge(`Temp: ${record.buyerReplyTemperature || "Not recorded"}`, "safe"),
+          `<pre>${escapeHtml(record.buyerReplyText || "")}</pre>`
+        ].join("<br>");
+
+        const decisionScope = [
+          record.followUpDecisionGateOnly ? badge("Decision gate only", "safe") : badge("Gate risk", "danger"),
+          record.followUpDecisionRecordOnly ? badge("Record only", "safe") : badge("Record risk", "danger"),
+          record.controlledFollowUpDecisionOnly ? badge("Controlled decision", "safe") : badge("Control risk", "danger"),
+          record.adminManualDecisionOnly ? badge("Admin manual decision only", "safe") : badge("Manual decision missing", "danger"),
+          record.systemExecutionBlocked ? badge("System execution blocked", "safe") : badge("Execution risk", "danger"),
+          record.manualActionRequiredOutsideSystem ? badge("Manual action outside system", "safe") : badge("Manual action missing", "danger")
+        ].join("<br>");
+
+        const automationSafety = [
+          record.autoStartFollowUp ? badge("Auto follow-up risk", "danger") : badge("No auto-follow-up", "safe"),
+          record.autoScheduleFollowUp ? badge("Auto schedule risk", "danger") : badge("No auto-schedule", "safe"),
+          record.autoSendFollowUp ? badge("Auto send follow-up risk", "danger") : badge("No auto follow-up send", "safe"),
+          record.autoReplyToBuyer ? badge("Auto-reply risk", "danger") : badge("No auto-reply", "safe"),
+          record.autoMovePipelineStage ? badge("Pipeline move risk", "danger") : badge("No pipeline move", "safe")
+        ].join("<br>");
+
+        const whatsappSafety = [
+          record.autoSendWhatsApp ? badge("Auto WhatsApp send risk", "danger") : badge("No auto WhatsApp send", "safe"),
+          record.systemSendWhatsApp ? badge("System WhatsApp send risk", "danger") : badge("No system WhatsApp send", "safe"),
+          record.autoReadWhatsApp ? badge("WhatsApp read risk", "danger") : badge("No WhatsApp reading", "safe"),
+          record.scrapeWhatsappMessages ? badge("Scraping risk", "danger") : badge("No message scraping", "safe"),
+          record.privateMessageScraping ? badge("Private scraping risk", "danger") : badge("No private scraping", "safe"),
+          record.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe")
+        ].join("<br>");
+
+        const mutationSafety = [
+          record.inventoryUpdated ? badge("Inventory update risk", "danger") : badge("No inventory update", "safe"),
+          record.stockReserved ? badge("Stock reservation risk", "danger") : badge("No stock reservation", "safe"),
+          record.stockReduced ? badge("Stock reduction risk", "danger") : badge("No stock reduction", "safe"),
+          record.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          record.autoCreateReceipt ? badge("Receipt risk", "danger") : badge("No receipt", "safe"),
+          record.autoCreateInvoice ? badge("Invoice risk", "danger") : badge("No invoice", "safe"),
+          record.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(record.followUpDecisionStatus, record.followUpDecisionStatus === "FOLLOW_UP_DECISION_RECORDED" ? "safe" : "danger")}</td>
+            <td>${badge(`#${record.slotNumber}`, Number(record.slotNumber || 0) >= 1 && Number(record.slotNumber || 0) <= 15 ? "safe" : "danger")}</td>
+            <td>${badge(String(record.source || "").replaceAll("_", " ").toUpperCase(), record.source === "whatsapp_click_to_chat_inbound" ? "safe" : "danger")}</td>
+            <td>${escapeHtml(record.leadReference)}</td>
+            <td>${requestText}</td>
+            <td>${buyerReply}</td>
+            <td>${badge(record.followUpDecision || "NONE", "safe")}</td>
+            <td>${badge(record.followUpPriority || "NONE", priorityClass(record.followUpPriority))}</td>
+            <td><pre>${escapeHtml(record.decisionReason || "")}</pre></td>
+            <td><pre>${escapeHtml(record.manualActionInstruction || "")}</pre></td>
+            <td>${decisionScope}</td>
+            <td>${automationSafety}</td>
+            <td>${whatsappSafety}</td>
+            <td>${mutationSafety}</td>
+            <td>${escapeHtml(record.decidedBy)}</td>
+            <td>${formatDate(record.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-follow-up-decision/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalFollowUpDecisions").textContent = summary.totalFollowUpDecisions || 0;
+      document.getElementById("recordedFollowUpDecisionCount").textContent = summary.recordedFollowUpDecisionCount || 0;
+      document.getElementById("urgentFollowUpDecisionCount").textContent = summary.urgentFollowUpDecisionCount || 0;
+      document.getElementById("highFollowUpDecisionCount").textContent = summary.highFollowUpDecisionCount || 0;
+      document.getElementById("normalFollowUpDecisionCount").textContent = summary.normalFollowUpDecisionCount || 0;
+      document.getElementById("manualActionRequiredCount").textContent = summary.manualActionRequiredCount || 0;
+      document.getElementById("latestFollowUpDecision").textContent = summary.latestFollowUpDecision || "NONE";
+      document.getElementById("latestFollowUpPriority").textContent = summary.latestFollowUpPriority || "NONE";
+
+      const recordsResponse = await fetch("/api/controlled-buyer-gate-follow-up-decisions");
+      const recordsData = await recordsResponse.json();
+      allDecisions = Array.isArray(recordsData.followUpDecisions) ? recordsData.followUpDecisions : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("priorityFilter").addEventListener("change", renderRows);
+    document.getElementById("decisionFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("decisionRows").innerHTML =
+        `<tr><td colspan="16">Follow-Up Decision dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>
