@@ -152,3 +152,6 @@ Admin Hub Link Controlled Buyer-Gate Manual Quote Draft added.
 
 ### Version 36A
 Controlled Buyer-Gate Manual Send Confirmation Gate Foundation added.
+
+### Version 36B
+Controlled Buyer-Gate Manual Send Confirmation Dashboard Display added.

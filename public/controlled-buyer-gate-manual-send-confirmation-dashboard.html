@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demega Controlled Buyer-Gate Manual Send Confirmation Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f5f7fb; color: #1f2937; }
+    header { background: #111827; color: white; padding: 22px; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 6px 0 0; color: #d1d5db; }
+    main { padding: 22px; display: grid; gap: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+    .card, .panel { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+    .card h2 { margin: 0; font-size: 14px; color: #6b7280; }
+    .card strong { display: block; margin-top: 8px; font-size: 26px; color: #111827; }
+    .panel { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 3900px; }
+    th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; font-size: 14px; vertical-align: top; }
+    th { background: #f3f4f6; color: #374151; }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fef3c7; color: #92400e; font-size: 12px; white-space: nowrap; margin: 2px; }
+    .safe { background: #dcfce7; color: #166534; }
+    .danger { background: #fee2e2; color: #991b1b; }
+    .approved { background: #dcfce7; color: #166534; }
+    .warn { background: #fef3c7; color: #92400e; }
+    .muted { color: #6b7280; font-size: 13px; }
+    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    input, select { padding: 9px; border: 1px solid #d1d5db; border-radius: 8px; min-width: 220px; }
+    .warning { border-left: 5px solid #f59e0b; }
+    .success { border-left: 5px solid #22c55e; }
+    pre { white-space: pre-wrap; background: #f9fafb; padding: 12px; border-radius: 10px; border: 1px solid #e5e7eb; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Demega Controlled Buyer-Gate Manual Send Confirmation Dashboard</h1>
+    <p>Read-only dashboard for manual send confirmations. It records admin manual sending outside the system only.</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <div class="card"><h2>Total Send Confirmations</h2><strong id="totalManualSendConfirmations">0</strong></div>
+      <div class="card"><h2>Recorded Confirmations</h2><strong id="recordedManualSendConfirmationCount">0</strong></div>
+      <div class="card"><h2>Outside-System Sends</h2><strong id="manualOutsideSystemSendCount">0</strong></div>
+      <div class="card"><h2>Latest Status</h2><strong id="latestManualSendConfirmationStatus">NO_MANUAL_SEND_CONFIRMATION</strong></div>
+      <div class="card"><h2>Latest Source</h2><strong id="latestSource">NONE</strong></div>
+      <div class="card"><h2>Latest Send Channel</h2><strong id="latestManualSendChannel">NONE</strong></div>
+      <div class="card"><h2>Latest Currency</h2><strong id="latestCurrency">NONE</strong></div>
+      <div class="card"><h2>Latest Total Price</h2><strong id="latestTotalPrice">0</strong></div>
+      <div class="card"><h2>Next Gate</h2><strong>BUYER REPLY TRACKING</strong></div>
+    </section>
+
+    <section class="panel warning">
+      <h2>Manual Send Confirmation Safety Rule</h2>
+      <p class="muted">
+        This dashboard is read-only. It records that admin manually sent the quote outside the system.
+        The system does not send WhatsApp, does not send quote, does not send price, does not read WhatsApp,
+        does not scrape buyer messages, does not update inventory, does not create accounting entries, does not close sales,
+        and does not move pipeline.
+      </p>
+      <span class="badge safe">Manual send confirmation gate only</span>
+      <span class="badge safe">Manual send confirmation record only</span>
+      <span class="badge safe">Controlled manual send confirmation only</span>
+      <span class="badge safe">Admin manual send outside system only</span>
+      <span class="badge safe">Manual quote draft required first</span>
+      <span class="badge safe">System send blocked</span>
+      <span class="badge safe">System did not send WhatsApp</span>
+      <span class="badge safe">System did not send quote</span>
+      <span class="badge safe">System did not send price</span>
+      <span class="badge safe">System did not read WhatsApp</span>
+      <span class="badge safe">No buyer message scraping</span>
+      <span class="badge safe">No private-data scraping</span>
+      <span class="badge safe">No hidden data harvesting</span>
+      <span class="badge safe">No inventory update</span>
+      <span class="badge safe">No stock reservation</span>
+      <span class="badge safe">No stock reduction</span>
+      <span class="badge safe">No stock ledger entry</span>
+      <span class="badge safe">No accounting entry</span>
+      <span class="badge safe">No receipt</span>
+      <span class="badge safe">No invoice</span>
+      <span class="badge safe">No sale closing</span>
+      <span class="badge safe">No pipeline movement</span>
+      <span class="badge safe">No auto follow-up</span>
+      <span class="badge safe">Buyer reply tracking required next</span>
+    </section>
+
+    <section class="panel success">
+      <h2>Manual Send Confirmation Scope</h2>
+      <p class="muted">
+        This gate is not a sending tool. It only records what admin already did manually outside the system.
+      </p>
+      <span class="badge safe">MANUAL_SEND_CONFIRMATION_RECORDED</span>
+      <span class="badge safe">ADMIN_MANUAL_WHATSAPP_OUTSIDE_SYSTEM</span>
+      <span class="badge safe">SYSTEM_DID_NOT_SEND_QUOTE</span>
+      <span class="badge safe">SYSTEM_DID_NOT_SEND_PRICE</span>
+      <span class="badge safe">BUYER_REPLY_TRACKING_REQUIRED_NEXT</span>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled Buyer-Gate Manual Send Confirmation Records</h2>
+      <p class="muted">Read-only list of quote send confirmations manually performed outside the system.</p>
+
+      <div class="toolbar">
+        <input id="searchInput" placeholder="Search part, vehicle, channel, evidence, sender..." />
+        <select id="channelFilter">
+          <option value="">All channels</option>
+          <option value="admin_manual_whatsapp_outside_system">admin_manual_whatsapp_outside_system</option>
+        </select>
+        <select id="safetyFilter">
+          <option value="">All safety states</option>
+          <option value="safe">Safe confirmation records</option>
+          <option value="risk">Risk detected</option>
+        </select>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Confirmation Status</th>
+            <th>Slot</th>
+            <th>Source</th>
+            <th>Lead Reference</th>
+            <th>Buyer Request</th>
+            <th>Quote Details</th>
+            <th>Manual Send Evidence</th>
+            <th>Confirmation Scope</th>
+            <th>System Send Safety</th>
+            <th>WhatsApp / Scraping Safety</th>
+            <th>Inventory Safety</th>
+            <th>Business Mutation Safety</th>
+            <th>Sent By</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="confirmationRows">
+          <tr><td colspan="14">Loading manual send confirmation records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    let allConfirmations = [];
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function badge(text, type) {
+      return `<span class="badge ${type || ""}">${escapeHtml(text)}</span>`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return escapeHtml(value);
+      return escapeHtml(date.toLocaleString());
+    }
+
+    function sourceLabel(value) {
+      return String(value || "").replaceAll("_", " ").toUpperCase();
+    }
+
+    function hasRisk(record) {
+      return record.autoContactBuyer === true ||
+        record.contactRealBuyerAutomatically === true ||
+        record.startOutboundTraffic === true ||
+        record.startPaidAdsAutomatically === true ||
+        record.publishLeadFormAutomatically === true ||
+        record.autoSendWhatsApp === true ||
+        record.systemSendWhatsApp === true ||
+        record.sendWhatsApp === true ||
+        record.broadcastWhatsApp === true ||
+        record.autoReadWhatsApp === true ||
+        record.scrapeWhatsappMessages === true ||
+        record.privateMessageScraping === true ||
+        record.hiddenDataHarvesting === true ||
+        record.systemQuoteSentToBuyer === true ||
+        record.systemPriceSentToBuyer === true ||
+        record.quoteSentToBuyer === true ||
+        record.priceSentToBuyer === true ||
+        record.inventoryUpdated === true ||
+        record.stockReserved === true ||
+        record.stockReduced === true ||
+        record.autoUpdateInventory === true ||
+        record.reserveStockAutomatically === true ||
+        record.reduceStockAutomatically === true ||
+        record.autoCreateInventoryEvent === true ||
+        record.autoCreateStockLedgerEntry === true ||
+        record.autoCreateAccountingEntry === true ||
+        record.autoCreateReceipt === true ||
+        record.autoCreateInvoice === true ||
+        record.autoCloseSale === true ||
+        record.autoMovePipelineStage === true ||
+        record.autoStartFollowUp === true;
+    }
+
+    function getFilteredConfirmations() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const channelFilter = document.getElementById("channelFilter").value;
+      const safetyFilter = document.getElementById("safetyFilter").value;
+
+      return allConfirmations.filter(record => {
+        const risk = hasRisk(record);
+        const haystack = [
+          record.manualSendConfirmationStatus,
+          record.manualSendChannel,
+          record.manualSendEvidence,
+          record.manualSendNote,
+          record.sentBy,
+          record.source,
+          record.leadReference,
+          record.partNeeded,
+          record.vehicleDetail,
+          record.buyerLocation,
+          record.quotedPartName,
+          record.quotedCondition,
+          record.currency,
+          record.totalPrice
+        ].join(" ").toLowerCase();
+
+        return (!search || haystack.includes(search)) &&
+          (!channelFilter || record.manualSendChannel === channelFilter) &&
+          (!safetyFilter ||
+            (safetyFilter === "safe" && risk !== true) ||
+            (safetyFilter === "risk" && risk === true));
+      });
+    }
+
+    function renderRows() {
+      const tbody = document.getElementById("confirmationRows");
+      const records = getFilteredConfirmations();
+
+      if (!records.length) {
+        tbody.innerHTML = '<tr><td colspan="14">No matching manual send confirmation records.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = records.map(record => {
+        const risk = hasRisk(record);
+
+        const requestText = [
+          badge(`Part: ${record.partNeeded || "Not recorded"}`, "safe"),
+          badge(`Vehicle: ${record.vehicleDetail || "Not recorded"}`, "safe"),
+          badge(`Location: ${record.buyerLocation || "Not recorded"}`, "safe")
+        ].join("<br>");
+
+        const quoteDetails = [
+          badge(`Quoted part: ${record.quotedPartName || "Not recorded"}`, "safe"),
+          badge(`Condition: ${record.quotedCondition || "Not recorded"}`, "safe"),
+          badge(`Qty: ${record.quantity || 0}`, "safe"),
+          badge(`Total: ${record.currency || ""} ${record.totalPrice || 0}`, "safe")
+        ].join("<br>");
+
+        const evidence = [
+          badge(`Channel: ${record.manualSendChannel || "Not recorded"}`, record.manualSendChannel === "admin_manual_whatsapp_outside_system" ? "safe" : "danger"),
+          `<pre>${escapeHtml(record.manualSendEvidence || "")}</pre>`,
+          `<pre>${escapeHtml(record.manualSendNote || "")}</pre>`
+        ].join("<br>");
+
+        const confirmationScope = [
+          record.manualSendConfirmationGateOnly ? badge("Send confirmation gate only", "safe") : badge("Gate risk", "danger"),
+          record.manualSendConfirmationRecordOnly ? badge("Record only", "safe") : badge("Record risk", "danger"),
+          record.controlledManualSendConfirmationOnly ? badge("Controlled confirmation", "safe") : badge("Control risk", "danger"),
+          record.adminManualSendOutsideSystemOnly ? badge("Admin manual outside system", "safe") : badge("Manual outside missing", "danger"),
+          record.systemSendBlocked ? badge("System send blocked", "safe") : badge("System send block missing", "danger"),
+          record.manualSendRecordedOnly ? badge("Manual send recorded only", "safe") : badge("Recorded-only missing", "danger"),
+          record.buyerReplyTrackingRequiredNext ? badge("Buyer reply tracking next", "safe") : badge("Reply tracking missing", "danger"),
+          record.noAutoFollowUp ? badge("No auto follow-up", "safe") : badge("Auto follow-up risk", "danger")
+        ].join("<br>");
+
+        const systemSendSafety = [
+          record.systemQuoteSentToBuyer ? badge("System quote sent risk", "danger") : badge("System did not send quote", "safe"),
+          record.systemPriceSentToBuyer ? badge("System price sent risk", "danger") : badge("System did not send price", "safe"),
+          record.quoteSentToBuyer ? badge("Quote sent by system risk", "danger") : badge("Quote not sent by system", "safe"),
+          record.priceSentToBuyer ? badge("Price sent by system risk", "danger") : badge("Price not sent by system", "safe"),
+          record.adminManuallySentQuoteOutsideSystem ? badge("Admin manually sent outside system", "safe") : badge("Manual send not confirmed", "danger")
+        ].join("<br>");
+
+        const whatsAppSafety = [
+          record.autoSendWhatsApp ? badge("WhatsApp auto-send risk", "danger") : badge("No WhatsApp auto-send", "safe"),
+          record.systemSendWhatsApp ? badge("System WhatsApp send risk", "danger") : badge("No system WhatsApp send", "safe"),
+          record.autoReadWhatsApp ? badge("WhatsApp auto-read risk", "danger") : badge("No WhatsApp auto-read", "safe"),
+          record.scrapeWhatsappMessages ? badge("WhatsApp scraping risk", "danger") : badge("No WhatsApp scraping", "safe"),
+          record.privateMessageScraping ? badge("Private scraping risk", "danger") : badge("No private scraping", "safe"),
+          record.hiddenDataHarvesting ? badge("Hidden harvesting risk", "danger") : badge("No hidden harvesting", "safe")
+        ].join("<br>");
+
+        const inventorySafety = [
+          record.inventoryUpdated ? badge("Inventory update risk", "danger") : badge("No inventory update", "safe"),
+          record.stockReserved ? badge("Stock reservation risk", "danger") : badge("No stock reservation", "safe"),
+          record.stockReduced ? badge("Stock reduction risk", "danger") : badge("No stock reduction", "safe"),
+          record.autoCreateInventoryEvent ? badge("Inventory event risk", "danger") : badge("No inventory event", "safe"),
+          record.autoCreateStockLedgerEntry ? badge("Stock ledger risk", "danger") : badge("No stock ledger", "safe")
+        ].join("<br>");
+
+        const mutationSafety = risk ? badge("Risk detected", "danger") : [
+          record.autoCreateAccountingEntry ? badge("Accounting risk", "danger") : badge("No accounting entry", "safe"),
+          record.autoCreateReceipt ? badge("Receipt risk", "danger") : badge("No receipt", "safe"),
+          record.autoCreateInvoice ? badge("Invoice risk", "danger") : badge("No invoice", "safe"),
+          record.autoCloseSale ? badge("Sale close risk", "danger") : badge("No sale close", "safe"),
+          record.autoMovePipelineStage ? badge("Pipeline risk", "danger") : badge("No pipeline move", "safe"),
+          record.autoStartFollowUp ? badge("Auto follow-up risk", "danger") : badge("No auto follow-up", "safe")
+        ].join("<br>");
+
+        return `
+          <tr>
+            <td>${badge(record.manualSendConfirmationStatus, record.manualSendConfirmationStatus === "MANUAL_SEND_CONFIRMATION_RECORDED" ? "approved" : "danger")}</td>
+            <td>${badge(`#${record.slotNumber}`, Number(record.slotNumber || 0) >= 1 && Number(record.slotNumber || 0) <= 15 ? "safe" : "danger")}</td>
+            <td>${badge(sourceLabel(record.source), record.source === "whatsapp_click_to_chat_inbound" ? "safe" : "warn")}</td>
+            <td>${escapeHtml(record.leadReference)}</td>
+            <td>${requestText}</td>
+            <td>${quoteDetails}</td>
+            <td>${evidence}</td>
+            <td>${confirmationScope}</td>
+            <td>${systemSendSafety}</td>
+            <td>${whatsAppSafety}</td>
+            <td>${inventorySafety}</td>
+            <td>${mutationSafety}</td>
+            <td>${escapeHtml(record.sentBy)}</td>
+            <td>${formatDate(record.createdAt)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-buyer-gate-manual-send-confirmation/summary");
+      const summaryData = await summaryResponse.json();
+      const summary = summaryData.summary || {};
+
+      document.getElementById("totalManualSendConfirmations").textContent = summary.totalManualSendConfirmations || 0;
+      document.getElementById("recordedManualSendConfirmationCount").textContent = summary.recordedManualSendConfirmationCount || 0;
+      document.getElementById("manualOutsideSystemSendCount").textContent = summary.manualOutsideSystemSendCount || 0;
+      document.getElementById("latestManualSendConfirmationStatus").textContent = summary.latestManualSendConfirmationStatus || "NO_MANUAL_SEND_CONFIRMATION";
+      document.getElementById("latestSource").textContent = summary.latestSource || "NONE";
+      document.getElementById("latestManualSendChannel").textContent = summary.latestManualSendChannel || "NONE";
+      document.getElementById("latestCurrency").textContent = summary.latestCurrency || "NONE";
+      document.getElementById("latestTotalPrice").textContent = summary.latestTotalPrice || 0;
+
+      const recordsResponse = await fetch("/api/controlled-buyer-gate-manual-send-confirmations");
+      const recordsData = await recordsResponse.json();
+      allConfirmations = Array.isArray(recordsData.manualSendConfirmations) ? recordsData.manualSendConfirmations : [];
+
+      renderRows();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRows);
+    document.getElementById("channelFilter").addEventListener("change", renderRows);
+    document.getElementById("safetyFilter").addEventListener("change", renderRows);
+
+    loadDashboard().catch(error => {
+      document.getElementById("confirmationRows").innerHTML =
+        `<tr><td colspan="14">Manual Send Confirmation dashboard load failed: ${escapeHtml(error.message)}</td></tr>`;
+    });
+  </script>
+</body>
+</html>

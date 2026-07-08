@@ -1,30 +1,35 @@
 # LATEST STATUS
 
 Current Phase:
-Version 36A — Controlled Buyer-Gate Manual Send Confirmation Gate Foundation
+Version 36B — Controlled Buyer-Gate Manual Send Confirmation Dashboard Display
 
 Current Verdict:
 APPROVED
 
 Approved Features:
-- Controlled Buyer-Gate Manual Send Confirmation Gate foundation
-- Manual send confirmation phrase requirement
-- Manual quote draft prerequisite
-- Manual send channel requirement
-- Admin manual send outside system record
-- System-did-not-send quote confirmation
-- System-did-not-send price confirmation
-- System-did-not-send WhatsApp confirmation
-- Duplicate manual send confirmation blocking
-- Buyer reply tracking required next
-- Manual send confirmation list API
-- Manual send confirmation summary API
+- GET /controlled-buyer-gate-manual-send-confirmation
+- GET /controlled-buyer-gate-manual-send-confirmations
+- Manual Send Confirmation dashboard
+- Total manual send confirmations metric
+- Recorded manual send confirmation metric
+- Outside-system sends metric
+- Latest confirmation status metric
+- Latest source metric
+- Latest manual send channel metric
+- Latest currency metric
+- Latest total price metric
+- Manual send evidence display
+- Manual send channel filter
+- Safety filter
 
 Safety Confirmed:
+- Dashboard displays manual send confirmation records only
+- Dashboard is read-only
 - Manual send confirmation gate only
 - Manual send confirmation record only
 - Controlled manual send confirmation only
 - Admin manual send outside system only
+- Manual quote draft required first
 - System send blocked
 - System did not send WhatsApp
 - System did not send quote
@@ -46,4 +51,4 @@ Safety Confirmed:
 - Buyer reply tracking required next
 
 Next Phase:
-Version 36B — Controlled Buyer-Gate Manual Send Confirmation Dashboard Display
+Version 36C — Admin Hub Link Controlled Buyer-Gate Manual Send Confirmation
