@@ -42,6 +42,7 @@ const controlledBuyerGateBuyerReplyTrackingController = require("../controllers/
 const controlledBuyerGateFollowUpDecisionController = require("../controllers/controlled-buyer-gate-follow-up-decision.controller");
 const controlledBuyerGateFinalReadinessLockController = require("../controllers/controlled-buyer-gate-final-readiness-lock.controller");
 const controlledRealBuyerGateOpeningPreparationController = require("../controllers/controlled-real-buyer-gate-opening-preparation.controller");
+const controlled15LeadProofTestController = require("../controllers/controlled-15-lead-proof-test.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -987,6 +988,26 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/controlled-real-buyer-gate-opening-preparation/summary") {
     return controlledRealBuyerGateOpeningPreparationController.summaryController(req, res, sendJson);
+  }
+
+  if (method === "GET" && (url.pathname === "/controlled-15-lead-proof-test" || url.pathname === "/controlled-15-lead-proof-test-dashboard")) {
+    return controlled15LeadProofTestController.dashboardController(req, res, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-15-lead-proof-test/preview") {
+    return controlled15LeadProofTestController.previewController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/controlled-15-lead-proof-test/manual-lead/create") {
+    return controlled15LeadProofTestController.createManualLeadController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-15-lead-proof-test/leads") {
+    return controlled15LeadProofTestController.listController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-15-lead-proof-test/summary") {
+    return controlled15LeadProofTestController.summaryController(req, res, sendJson);
   }
 
   return sendJson(res, 404, {

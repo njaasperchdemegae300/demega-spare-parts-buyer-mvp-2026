@@ -2497,3 +2497,60 @@ Version 40A does not open buyer traffic. It records final go/no-go preparation o
 
 ## Next Business Stage After Approval
 Controlled 15-Lead Proof Test.
+
+# Business Stage 1A — Controlled 15-Lead Proof Test Manual Tracker
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Record the first 15 real inbound buyer requests manually after Version 40A approval.
+
+## Routes
+- GET /controlled-15-lead-proof-test
+- GET /controlled-15-lead-proof-test-dashboard
+- GET /api/controlled-15-lead-proof-test/preview
+- POST /api/controlled-15-lead-proof-test/manual-lead/create
+- GET /api/controlled-15-lead-proof-test/leads
+- GET /api/controlled-15-lead-proof-test/summary
+
+## Safety
+- Controlled proof test only
+- 15 inbound buyer requests only
+- Manual inbound only
+- Manual review only
+- Manual reply only
+- No auto-send
+- No spam
+- No unsolicited WhatsApp
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No WhatsApp sending by system
+- No auto-reply
+- No auto-follow-up
+- No WhatsApp reading
+- No buyer-message scraping
+- No inventory mutation
+- No accounting mutation
+- No sale closing
+- No pipeline movement
+- Scaling remains blocked until metrics prove success
+
+## Approved Sources
+- WhatsApp click-to-chat inbound
+- Owned RFQ landing page
+- Meta Lead Form
+- Google buyer-intent landing page
+- Public business inquiry form
+
+## Blocked Sources
+- Random WhatsApp blasting
+- Unsolicited WhatsApp
+- Private-data scraping
+- Hidden data harvesting
+- Jiji-like scraping treated as buyer source
+- Quote before stock confirmation
+- Quote before compatibility confirmation
+- Auto WhatsApp sending

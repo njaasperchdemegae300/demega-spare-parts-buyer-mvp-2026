@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Controlled 15-Lead Proof Test</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f8fafc; color: #172033; }
+    header { background: #0f172a; color: white; padding: 24px; }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    .notice, .panel, .card { background: white; border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; margin-bottom: 18px; box-shadow: 0 1px 4px rgba(15,23,42,.06); }
+    .notice { background: #fff7ed; border-color: #fed7aa; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .card h2 { margin: 0 0 8px; font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: .04em; }
+    .card strong { display: block; font-size: 24px; color: #111827; }
+    .badge { display: inline-block; padding: 7px 10px; border-radius: 999px; margin: 4px; font-size: 12px; font-weight: 700; border: 1px solid #cbd5e1; background: #f1f5f9; }
+    .safe { background: #dcfce7; border-color: #bbf7d0; }
+    .blocked { background: #fee2e2; border-color: #fecaca; }
+    input, select, textarea, button { width: 100%; box-sizing: border-box; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; margin-bottom: 12px; font-size: 14px; }
+    button { background: #0f766e; color: white; font-weight: 700; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; background: white; overflow: hidden; border-radius: 14px; }
+    th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top; font-size: 13px; }
+    th { background: #f1f5f9; color: #334155; text-transform: uppercase; font-size: 12px; letter-spacing: .04em; }
+    a { color: #0f766e; font-weight: 700; text-decoration: none; }
+    .small { color: #64748b; font-size: 12px; }
+    .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    #formMessage { font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Controlled 15-Lead Proof Test</h1>
+    <p>Manual inbound buyer request tracker. 15 leads only. No auto-send. No spam. No quote before stock and compatibility.</p>
+  </header>
+
+  <main>
+    <section class="notice">
+      <strong>BUSINESS STAGE 1A — CONTROLLED PROOF ONLY.</strong>
+      This dashboard records manually received inbound buyer requests only. It does not open traffic, start ads, publish lead forms, contact buyers, send WhatsApp, auto-reply, auto-follow-up, read WhatsApp, scrape buyer messages, mutate inventory, create accounting records, close sale, or move pipeline.
+    </section>
+
+    <section class="grid">
+      <div class="card"><h2>Total Recorded</h2><strong id="totalRecordedLeads">0</strong></div>
+      <div class="card"><h2>Lead Limit</h2><strong id="leadLimit">15</strong></div>
+      <div class="card"><h2>Remaining Slots</h2><strong id="remainingSlots">15</strong></div>
+      <div class="card"><h2>Real Intent Rate</h2><strong id="realBuyerIntentRate">0%</strong></div>
+      <div class="card"><h2>Hot/Warm Rate</h2><strong id="hotWarmRate">0%</strong></div>
+      <div class="card"><h2>Cap Reached</h2><strong id="capReached">NO</strong></div>
+    </section>
+
+    <section class="panel">
+      <h2>Safety Gate</h2>
+      <span class="badge safe">15 LEADS ONLY</span>
+      <span class="badge safe">MANUAL INBOUND ONLY</span>
+      <span class="badge safe">MANUAL REVIEW ONLY</span>
+      <span class="badge safe">MANUAL REPLY ONLY</span>
+      <span class="badge blocked">NO AUTO-SEND</span>
+      <span class="badge blocked">NO SPAM</span>
+      <span class="badge blocked">NO UNSOLICITED WHATSAPP</span>
+      <span class="badge blocked">NO PRIVATE SCRAPING</span>
+      <span class="badge blocked">NO HIDDEN HARVESTING</span>
+      <span class="badge blocked">NO QUOTE BEFORE STOCK</span>
+      <span class="badge blocked">NO QUOTE BEFORE COMPATIBILITY</span>
+      <span class="badge blocked">NO INVENTORY MUTATION</span>
+      <span class="badge blocked">NO ACCOUNTING MUTATION</span>
+      <span class="badge blocked">NO SALE CLOSING</span>
+      <span class="badge blocked">NO PIPELINE MOVEMENT</span>
+    </section>
+
+    <section class="panel">
+      <h2>Navigation</h2>
+      <p><a href="/admin-hub">Back to Admin Hub</a> · <a href="/controlled-real-buyer-gate-opening-preparation">Version 40A Preparation</a></p>
+    </section>
+
+    <section class="panel">
+      <h2>Record Manual Inbound Buyer Request</h2>
+      <div class="two">
+        <div>
+          <input id="buyerName" placeholder="Buyer name" />
+          <input id="buyerPhone" placeholder="Buyer phone / WhatsApp number" />
+          <input id="partNeeded" placeholder="Part needed e.g. Corolla 2005 alternator" />
+          <input id="vehicleDetails" placeholder="Vehicle details e.g. Toyota Corolla 2005" />
+          <input id="buyerLocation" placeholder="Buyer location e.g. Lagos, Ibadan, Abuja" />
+        </div>
+        <div>
+          <select id="source">
+            <option value="whatsapp_click_to_chat_inbound">WhatsApp click-to-chat inbound</option>
+            <option value="owned_rfq_landing_page">Owned RFQ landing page</option>
+            <option value="meta_lead_form">Meta Lead Form</option>
+            <option value="google_buyer_intent_landing_page">Google buyer-intent landing page</option>
+            <option value="public_business_inquiry_form">Public business inquiry form</option>
+          </select>
+          <select id="intentProof">
+            <option value="buyer_sent_message_first">Buyer sent message first</option>
+            <option value="buyer_filled_rfq_form">Buyer filled RFQ form</option>
+            <option value="buyer_submitted_meta_lead_form">Buyer submitted Meta Lead Form</option>
+            <option value="buyer_called_or_requested_quote">Buyer called or requested quote</option>
+            <option value="public_business_inquiry_received">Public business inquiry received</option>
+          </select>
+          <select id="manualReviewStatus">
+            <option value="NEW_INBOUND_NOT_REVIEWED">New inbound not reviewed</option>
+            <option value="ACCEPTED_FOR_MANUAL_REVIEW">Accepted for manual review</option>
+            <option value="PENDING_MORE_DETAILS">Pending more details</option>
+            <option value="REJECTED_NOT_REAL_BUYER">Rejected not real buyer</option>
+          </select>
+          <select id="temperature">
+            <option value="UNKNOWN">Unknown</option>
+            <option value="HOT">Hot</option>
+            <option value="WARM">Warm</option>
+            <option value="COLD">Cold</option>
+          </select>
+          <textarea id="adminNote" placeholder="Admin note"></textarea>
+        </div>
+      </div>
+      <button id="saveLeadButton">Record Manual Inbound Lead</button>
+      <p id="formMessage"></p>
+    </section>
+
+    <section class="panel">
+      <h2>Proof-Test Records</h2>
+      <input id="searchInput" placeholder="Search buyer, part, source, location, status..." />
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Buyer</th>
+            <th>Part / Vehicle</th>
+            <th>Source</th>
+            <th>Intent Proof</th>
+            <th>Status</th>
+            <th>Temperature</th>
+            <th>Safety</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="recordsBody">
+          <tr><td colspan="9">Loading records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const state = { leads: [] };
+
+    function value(id) {
+      return document.getElementById(id).value.trim();
+    }
+
+    function safeText(value) {
+      return value === undefined || value === null || value === "" ? "—" : String(value);
+    }
+
+    function setText(id, value) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = safeText(value);
+    }
+
+    function renderRecords() {
+      const body = document.getElementById("recordsBody");
+      const query = (document.getElementById("searchInput").value || "").toLowerCase();
+
+      const leads = state.leads.filter(record => JSON.stringify(record).toLowerCase().includes(query));
+
+      if (!leads.length) {
+        body.innerHTML = '<tr><td colspan="9">No controlled proof-test leads recorded yet.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = leads.map(record => `
+        <tr>
+          <td>${safeText(record.leadNumber)}</td>
+          <td><strong>${safeText(record.buyerName)}</strong><br><span class="small">${safeText(record.buyerPhone)}<br>${safeText(record.buyerLocation)}</span></td>
+          <td>${safeText(record.partNeeded)}<br><span class="small">${safeText(record.vehicleDetails)}</span></td>
+          <td>${safeText(record.source)}</td>
+          <td>${safeText(record.intentProof)}</td>
+          <td>${safeText(record.manualReviewStatus)}</td>
+          <td>${safeText(record.temperature)}</td>
+          <td class="small">
+            Manual inbound: ${record.manualInboundOnly === true ? "YES" : "CHECK"}<br>
+            No auto-send: ${record.noAutoSend === true ? "YES" : "CHECK"}<br>
+            No quote sent: ${record.quoteSentToBuyer === false ? "YES" : "CHECK"}<br>
+            No stock mutation: ${record.inventoryUpdated === false ? "YES" : "CHECK"}
+          </td>
+          <td>${safeText(record.createdAt)}</td>
+        </tr>
+      `).join("");
+    }
+
+    async function loadDashboard() {
+      const summaryResponse = await fetch("/api/controlled-15-lead-proof-test/summary");
+      const summaryJson = await summaryResponse.json();
+      const summary = summaryJson.summary || {};
+
+      setText("totalRecordedLeads", summary.totalRecordedLeads || 0);
+      setText("leadLimit", summary.leadLimit || 15);
+      setText("remainingSlots", summary.remainingSlots || 15);
+      setText("realBuyerIntentRate", (summary.realBuyerIntentRate || 0) + "%");
+      setText("hotWarmRate", (summary.hotWarmRate || 0) + "%");
+      setText("capReached", summary.capReached ? "YES" : "NO");
+
+      const listResponse = await fetch("/api/controlled-15-lead-proof-test/leads");
+      const listJson = await listResponse.json();
+      state.leads = listJson.leads || [];
+      renderRecords();
+    }
+
+    async function saveLead() {
+      const message = document.getElementById("formMessage");
+      message.textContent = "Saving manual inbound lead...";
+
+      const payload = {
+        buyerName: value("buyerName"),
+        buyerPhone: value("buyerPhone"),
+        partNeeded: value("partNeeded"),
+        vehicleDetails: value("vehicleDetails"),
+        buyerLocation: value("buyerLocation"),
+        source: value("source"),
+        intentProof: value("intentProof"),
+        permissionStatus: "inbound_or_opt_in",
+        manualReviewStatus: value("manualReviewStatus"),
+        temperature: value("temperature"),
+        adminNote: value("adminNote")
+      };
+
+      const response = await fetch("/api/controlled-15-lead-proof-test/manual-lead/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        message.textContent = "Blocked: " + ((result.errors || [result.error || "Unknown error"]).join(" | "));
+        return;
+      }
+
+      message.textContent = "Recorded safely. No WhatsApp sent. No quote sent. No automation executed.";
+      await loadDashboard();
+    }
+
+    document.getElementById("saveLeadButton").addEventListener("click", saveLead);
+    document.getElementById("searchInput").addEventListener("input", renderRecords);
+    loadDashboard();
+  </script>
+</body>
+</html>

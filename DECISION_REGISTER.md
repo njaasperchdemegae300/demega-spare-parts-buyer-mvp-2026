@@ -80,3 +80,6 @@ Controlled Buyer-Gate Final Readiness Lock Dashboard displays final readiness on
 
 ## Decision 25 — Version 40A Is Preparation Only
 Controlled Real-Buyer Gate Opening Preparation records the final go/no-go decision for the controlled 15-lead proof test. It must not open live traffic, activate buyer gate, start ads, publish forms, contact buyers, send WhatsApp, auto-reply, auto-follow-up, auto-schedule, read WhatsApp, scrape messages, mutate inventory, create accounting, close sales, or move pipeline. A separate manual launch decision is required.
+
+## Decision 26 — Controlled 15-Lead Proof Test Is Manual Inbound Only
+The first proof test is limited to 15 real inbound buyer requests. The system may record buyer requests manually but must not contact buyers, send WhatsApp, auto-reply, auto-follow-up, scrape private data, quote before stock confirmation, quote before compatibility confirmation, mutate inventory, create accounting records, close sale, or move pipeline.
