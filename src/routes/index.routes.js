@@ -41,6 +41,7 @@ const controlledBuyerGateManualSendConfirmationController = require("../controll
 const controlledBuyerGateBuyerReplyTrackingController = require("../controllers/controlled-buyer-gate-buyer-reply-tracking.controller");
 const controlledBuyerGateFollowUpDecisionController = require("../controllers/controlled-buyer-gate-follow-up-decision.controller");
 const controlledBuyerGateFinalReadinessLockController = require("../controllers/controlled-buyer-gate-final-readiness-lock.controller");
+const controlledRealBuyerGateOpeningPreparationController = require("../controllers/controlled-real-buyer-gate-opening-preparation.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -966,6 +967,26 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && url.pathname === "/api/leads") {
     return buyerIntakeController.listBuyerLeadsController(req, res, sendJson);
+  }
+
+  if (method === "GET" && (url.pathname === "/controlled-real-buyer-gate-opening-preparation" || url.pathname === "/controlled-real-buyer-gate-opening-preparation-dashboard")) {
+    return controlledRealBuyerGateOpeningPreparationController.dashboardController(req, res, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-real-buyer-gate-opening-preparation/preview") {
+    return controlledRealBuyerGateOpeningPreparationController.previewController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/controlled-real-buyer-gate-opening-preparation/create") {
+    return controlledRealBuyerGateOpeningPreparationController.createController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-real-buyer-gate-opening-preparations") {
+    return controlledRealBuyerGateOpeningPreparationController.listController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-real-buyer-gate-opening-preparation/summary") {
+    return controlledRealBuyerGateOpeningPreparationController.summaryController(req, res, sendJson);
   }
 
   return sendJson(res, 404, {

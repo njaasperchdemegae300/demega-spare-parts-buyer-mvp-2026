@@ -77,3 +77,6 @@ Controlled Buyer-Gate Final Readiness Lock records technical readiness only. It 
 
 ## Decision 24 — Final Readiness Lock Dashboard Is Read-Only
 Controlled Buyer-Gate Final Readiness Lock Dashboard displays final readiness only. It must not open live traffic, activate real buyer gate, start ads, publish lead forms, contact buyers, send WhatsApp, auto-reply, auto-follow-up, auto-schedule, read WhatsApp, scrape messages, mutate inventory, create accounting records, close sales, or move pipeline.
+
+## Decision 25 — Version 40A Is Preparation Only
+Controlled Real-Buyer Gate Opening Preparation records the final go/no-go decision for the controlled 15-lead proof test. It must not open live traffic, activate buyer gate, start ads, publish forms, contact buyers, send WhatsApp, auto-reply, auto-follow-up, auto-schedule, read WhatsApp, scrape messages, mutate inventory, create accounting, close sales, or move pipeline. A separate manual launch decision is required.

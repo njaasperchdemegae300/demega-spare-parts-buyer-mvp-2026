@@ -2447,3 +2447,53 @@ Create the controlled buyer-gate final readiness lock foundation. This records f
 
 ## Next Phase After Approval
 Version 39B — Controlled Buyer-Gate Final Readiness Lock Dashboard Display
+
+# Version 40A — Controlled Real-Buyer Gate Opening Preparation / Final Go-No-Go
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Record the final go/no-go preparation for the controlled real-buyer 15-lead proof test.
+
+## Routes
+- GET /controlled-real-buyer-gate-opening-preparation
+- GET /controlled-real-buyer-gate-opening-preparation-dashboard
+- GET /api/controlled-real-buyer-gate-opening-preparation/preview
+- POST /api/controlled-real-buyer-gate-opening-preparation/create
+- GET /api/controlled-real-buyer-gate-opening-preparations
+- GET /api/controlled-real-buyer-gate-opening-preparation/summary
+
+## Version 40A Rule
+Version 40A does not open buyer traffic. It records final go/no-go preparation only. A separate manual launch decision is still required.
+
+## Safety
+- Preparation only
+- Final go/no-go only
+- Controlled 15-lead proof test only
+- No live traffic opened
+- No real buyer gate opened
+- No outbound traffic started
+- No ads started
+- No lead forms published
+- No buyer contacted by system
+- No WhatsApp sent by system
+- No auto-reply
+- No auto-follow-up
+- No auto-schedule
+- No WhatsApp reading
+- No buyer-message scraping
+- No private-data scraping
+- No hidden data harvesting
+- No inventory mutation
+- No stock reservation
+- No stock reduction
+- No accounting mutation
+- No receipt creation
+- No invoice creation
+- No sale closing
+- No pipeline movement
+- Separate manual launch required
+
+## Next Business Stage After Approval
+Controlled 15-Lead Proof Test.

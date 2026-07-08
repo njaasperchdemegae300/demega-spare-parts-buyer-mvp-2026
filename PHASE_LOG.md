@@ -191,3 +191,6 @@ Controlled Buyer-Gate Final Readiness Lock Foundation added.
 
 ### Version 39B
 Controlled Buyer-Gate Final Readiness Lock Dashboard Display added.
+
+### Version 40A
+Controlled Real-Buyer Gate Opening Preparation / Final Go-No-Go added.

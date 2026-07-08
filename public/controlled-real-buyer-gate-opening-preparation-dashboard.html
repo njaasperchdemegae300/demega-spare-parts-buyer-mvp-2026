@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Controlled Real-Buyer Gate Opening Preparation Dashboard</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f8fafc; color: #172033; }
+    header { background: #0f172a; color: white; padding: 24px; }
+    main { max-width: 1280px; margin: 0 auto; padding: 24px; }
+    .notice, .panel, .card { background: white; border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; margin-bottom: 18px; box-shadow: 0 1px 4px rgba(15,23,42,.06); }
+    .notice { background: #fff7ed; border-color: #fed7aa; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px; }
+    .card h2 { margin: 0 0 8px; font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: .04em; }
+    .card strong { display: block; font-size: 24px; color: #111827; }
+    .badge { display: inline-block; padding: 7px 10px; border-radius: 999px; margin: 4px; font-size: 12px; font-weight: 700; border: 1px solid #cbd5e1; background: #f1f5f9; }
+    .safe { background: #dcfce7; border-color: #bbf7d0; }
+    .blocked { background: #fee2e2; border-color: #fecaca; }
+    table { width: 100%; border-collapse: collapse; background: white; overflow: hidden; border-radius: 14px; }
+    th, td { text-align: left; padding: 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top; font-size: 13px; }
+    th { background: #f1f5f9; color: #334155; text-transform: uppercase; font-size: 12px; letter-spacing: .04em; }
+    input { width: 100%; box-sizing: border-box; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; margin-bottom: 14px; }
+    a { color: #0f766e; font-weight: 700; text-decoration: none; }
+    .small { color: #64748b; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Controlled Real-Buyer Gate Opening Preparation / Final Go-No-Go</h1>
+    <p>Read-only preparation dashboard. It does not open traffic.</p>
+  </header>
+
+  <main>
+    <section class="notice">
+      <strong>VERSION 40A IS PREPARATION ONLY.</strong>
+      This dashboard does not open live buyer traffic, activate real buyer gate, start ads, publish lead forms, contact buyers, send WhatsApp, auto-reply, auto-follow-up, read WhatsApp, scrape buyer messages, mutate inventory, create accounting records, close sale, or move pipeline.
+    </section>
+
+    <section class="grid">
+      <div class="card"><h2>Total Preparations</h2><strong id="totalOpeningPreparations">0</strong></div>
+      <div class="card"><h2>Recorded Preparations</h2><strong id="recordedOpeningPreparationCount">0</strong></div>
+      <div class="card"><h2>Latest Status</h2><strong id="latestPreparationStatus">NONE</strong></div>
+      <div class="card"><h2>Go / No-Go</h2><strong id="latestGoNoGoDecision">NONE</strong></div>
+      <div class="card"><h2>Source</h2><strong id="latestApprovedOpeningSource">NONE</strong></div>
+      <div class="card"><h2>Lead Limit</h2><strong id="latestControlledLeadLimit">15</strong></div>
+    </section>
+
+    <section class="panel">
+      <h2>Safety Gate</h2>
+      <span class="badge safe">PREPARATION ONLY</span>
+      <span class="badge safe">FINAL GO/NO-GO ONLY</span>
+      <span class="badge safe">15-LEAD PROOF TEST ONLY</span>
+      <span class="badge blocked">NO LIVE TRAFFIC OPENED</span>
+      <span class="badge blocked">NO ADS STARTED</span>
+      <span class="badge blocked">NO LEAD FORMS PUBLISHED</span>
+      <span class="badge blocked">NO BUYER CONTACTED BY SYSTEM</span>
+      <span class="badge blocked">NO WHATSAPP SEND</span>
+      <span class="badge blocked">NO AUTO-REPLY</span>
+      <span class="badge blocked">NO AUTO-FOLLOW-UP</span>
+      <span class="badge blocked">NO PRIVATE SCRAPING</span>
+      <span class="badge blocked">NO HIDDEN HARVESTING</span>
+      <span class="badge blocked">NO INVENTORY MUTATION</span>
+      <span class="badge blocked">NO ACCOUNTING MUTATION</span>
+      <span class="badge blocked">NO SALE CLOSING</span>
+      <span class="badge blocked">NO PIPELINE MOVEMENT</span>
+      <span class="badge safe">SEPARATE MANUAL LAUNCH REQUIRED</span>
+    </section>
+
+    <section class="panel">
+      <h2>Navigation</h2>
+      <p><a href="/admin-hub">Back to Admin Hub</a> · <a href="/controlled-buyer-gate-final-readiness-lock">Final Readiness Lock Dashboard</a></p>
+    </section>
+
+    <section class="panel">
+      <h2>Opening Preparation Records</h2>
+      <input id="searchInput" placeholder="Search go/no-go decision, source, prepared by, or reason..." />
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Go / No-Go</th>
+            <th>Source</th>
+            <th>Lead Limit</th>
+            <th>Prepared By</th>
+            <th>Reason</th>
+            <th>Next Manual Action</th>
+            <th>Safety</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="recordsBody">
+          <tr><td colspan="9">Loading records...</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    const state = { records: [] };
+
+    function safeText(value) {
+      return value === undefined || value === null || value === "" ? "—" : String(value);
+    }
+
+    function setText(id, value) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = safeText(value);
+    }
+
+    function renderRecords() {
+      const body = document.getElementById("recordsBody");
+      const query = (document.getElementById("searchInput").value || "").toLowerCase();
+
+      const records = state.records.filter(record => JSON.stringify(record).toLowerCase().includes(query));
+
+      if (!records.length) {
+        body.innerHTML = '<tr><td colspan="9">No Version 40A preparation records found.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = records.map(record => `
+        <tr>
+          <td><strong>${safeText(record.preparationStatus)}</strong></td>
+          <td>${safeText(record.goNoGoDecision)}</td>
+          <td>${safeText(record.approvedOpeningSource)}</td>
+          <td>${safeText(record.controlledLeadLimit)}</td>
+          <td>${safeText(record.preparedBy)}</td>
+          <td>${safeText(record.preparationReason)}</td>
+          <td>${safeText(record.nextManualAction)}</td>
+          <td class="small">
+            Preparation only: ${record.preparationOnly === true ? "YES" : "CHECK"}<br>
+            No live traffic: ${record.noLiveTrafficOpened === true ? "YES" : "CHECK"}<br>
+            No ads: ${record.noAdsStarted === true ? "YES" : "CHECK"}<br>
+            No WhatsApp send: ${record.autoSendWhatsApp === false ? "YES" : "CHECK"}<br>
+            No inventory mutation: ${record.inventoryUpdated === false ? "YES" : "CHECK"}<br>
+            Separate manual launch: ${record.separateManualLaunchRequired === true ? "YES" : "CHECK"}
+          </td>
+          <td>${safeText(record.createdAt)}</td>
+        </tr>
+      `).join("");
+    }
+
+    async function loadDashboard() {
+      try {
+        const summaryResponse = await fetch("/api/controlled-real-buyer-gate-opening-preparation/summary");
+        const summaryJson = await summaryResponse.json();
+        const summary = summaryJson.summary || {};
+
+        setText("totalOpeningPreparations", summary.totalOpeningPreparations || 0);
+        setText("recordedOpeningPreparationCount", summary.recordedOpeningPreparationCount || 0);
+        setText("latestPreparationStatus", summary.latestPreparationStatus || "NO_OPENING_PREPARATION");
+        setText("latestGoNoGoDecision", summary.latestGoNoGoDecision || "NONE");
+        setText("latestApprovedOpeningSource", summary.latestApprovedOpeningSource || "NONE");
+        setText("latestControlledLeadLimit", summary.latestControlledLeadLimit || 15);
+
+        const listResponse = await fetch("/api/controlled-real-buyer-gate-opening-preparations");
+        const listJson = await listResponse.json();
+        state.records = listJson.openingPreparations || [];
+        renderRecords();
+      } catch (error) {
+        document.getElementById("recordsBody").innerHTML = `<tr><td colspan="9">Dashboard load error: ${safeText(error.message)}</td></tr>`;
+      }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderRecords);
+    loadDashboard();
+  </script>
+</body>
+</html>
