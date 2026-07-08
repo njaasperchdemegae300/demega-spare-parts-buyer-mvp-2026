@@ -38,6 +38,7 @@ const controlledBuyerGateManualCompatibilityCheckController = require("../contro
 const controlledBuyerGateFinalQuoteEligibilityController = require("../controllers/controlled-buyer-gate-final-quote-eligibility.controller");
 const controlledBuyerGateManualQuoteDraftController = require("../controllers/controlled-buyer-gate-manual-quote-draft.controller");
 const controlledBuyerGateManualSendConfirmationController = require("../controllers/controlled-buyer-gate-manual-send-confirmation.controller");
+const controlledBuyerGateBuyerReplyTrackingController = require("../controllers/controlled-buyer-gate-buyer-reply-tracking.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -331,6 +332,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/controlled-buyer-gate-manual-send-confirmation" || url.pathname === "/controlled-buyer-gate-manual-send-confirmations")) {
     return controlledBuyerGateManualSendConfirmationController.dashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-buyer-reply-tracking/preview") {
+    return controlledBuyerGateBuyerReplyTrackingController.previewController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/controlled-buyer-gate-buyer-reply-tracking/create") {
+    return controlledBuyerGateBuyerReplyTrackingController.createController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-buyer-reply-trackings") {
+    return controlledBuyerGateBuyerReplyTrackingController.listController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-buyer-reply-tracking/summary") {
+    return controlledBuyerGateBuyerReplyTrackingController.summaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-send-confirmation/preview") {

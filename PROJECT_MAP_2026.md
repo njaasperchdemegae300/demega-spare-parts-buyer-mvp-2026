@@ -2215,3 +2215,55 @@ Display controlled buyer-gate manual send confirmation records in a read-only da
 
 ## Next Phase After Approval
 Version 36C — Admin Hub Link Controlled Buyer-Gate Manual Send Confirmation
+
+# Version 37A — Controlled Buyer-Gate Buyer Reply Tracking Gate Foundation
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Create the controlled buyer-gate buyer reply tracking gate foundation. This records buyer replies manually observed by admin outside the system after manual send confirmation.
+
+## Routes
+- GET /api/controlled-buyer-gate-buyer-reply-tracking/preview
+- POST /api/controlled-buyer-gate-buyer-reply-tracking/create
+- GET /api/controlled-buyer-gate-buyer-reply-trackings
+- GET /api/controlled-buyer-gate-buyer-reply-tracking/summary
+
+## Features
+- Buyer reply tracking phrase requirement
+- Manual send confirmation prerequisite
+- Manual observation channel requirement
+- Buyer reply status
+- Buyer reply temperature
+- Manual observation note
+- Duplicate buyer reply tracking blocking
+- Follow-up decision gate required next
+- Buyer reply tracking list API
+- Buyer reply tracking summary API
+
+## Safety
+- Buyer reply tracking gate only
+- Buyer reply tracking record only
+- Controlled buyer reply tracking only
+- Admin manual observation outside system only
+- System did not read WhatsApp
+- System did not scrape buyer messages
+- System did not scrape private data
+- System did not harvest hidden data
+- No auto-reply
+- No auto-send WhatsApp
+- No auto-follow-up
+- No inventory update
+- No stock reservation
+- No stock reduction
+- No stock ledger entry
+- No accounting entry creation
+- No receipt creation
+- No invoice creation
+- No sale closing
+- No pipeline movement
+- Follow-up decision gate required next
+
+## Next Phase After Approval
+Version 37B — Controlled Buyer-Gate Buyer Reply Tracking Dashboard Display

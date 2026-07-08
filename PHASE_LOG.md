@@ -161,3 +161,6 @@ Admin Hub Link Controlled Buyer-Gate Manual Send Confirmation added.
 
 ### Version 36C
 Admin Hub Link Controlled Buyer-Gate Manual Send Confirmation added.
+
+### Version 37A
+Controlled Buyer-Gate Buyer Reply Tracking Gate Foundation added.

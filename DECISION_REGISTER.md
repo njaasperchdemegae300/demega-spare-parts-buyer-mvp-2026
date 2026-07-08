@@ -59,3 +59,6 @@ Controlled Buyer-Gate Manual Quote Draft prepares an internal draft only after f
 
 ## Decision 19 — Manual Send Confirmation Records Human Sending Only
 Controlled Buyer-Gate Manual Send Confirmation records that admin manually sent the prepared quote outside the system. The system must not send WhatsApp, send quote, send price, read buyer messages, scrape data, update inventory, reserve/reduce stock, create accounting records, create receipts/invoices, close sales, move pipeline, or auto-start follow-up. Buyer reply tracking is required next.
+
+## Decision 20 — Buyer Reply Tracking Records Manual Observation Only
+Controlled Buyer-Gate Buyer Reply Tracking records buyer replies manually observed by admin outside the system after manual send confirmation. The system must not read WhatsApp, scrape buyer messages, auto-reply, auto-send, auto-follow-up, update inventory, reserve/reduce stock, create accounting records, create receipts/invoices, close sales, or move pipeline. Follow-up decision gate is required next.
