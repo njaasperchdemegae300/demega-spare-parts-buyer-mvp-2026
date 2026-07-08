@@ -56,3 +56,6 @@ Controlled Buyer-Gate Final Quote Eligibility records quote readiness only after
 
 ## Decision 18 — Manual Quote Draft Before Any Buyer Sending
 Controlled Buyer-Gate Manual Quote Draft prepares an internal draft only after final quote eligibility is ELIGIBLE_FOR_MANUAL_QUOTE_DRAFT. Price may appear inside the internal draft, but the system must not send the quote or price to the buyer. Manual review before sending and manual send confirmation are required next.
+
+## Decision 19 — Manual Send Confirmation Records Human Sending Only
+Controlled Buyer-Gate Manual Send Confirmation records that admin manually sent the prepared quote outside the system. The system must not send WhatsApp, send quote, send price, read buyer messages, scrape data, update inventory, reserve/reduce stock, create accounting records, create receipts/invoices, close sales, move pipeline, or auto-start follow-up. Buyer reply tracking is required next.

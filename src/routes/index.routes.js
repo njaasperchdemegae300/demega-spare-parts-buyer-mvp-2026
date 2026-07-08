@@ -37,6 +37,7 @@ const controlledBuyerGateManualStockCheckController = require("../controllers/co
 const controlledBuyerGateManualCompatibilityCheckController = require("../controllers/controlled-buyer-gate-manual-compatibility-check.controller");
 const controlledBuyerGateFinalQuoteEligibilityController = require("../controllers/controlled-buyer-gate-final-quote-eligibility.controller");
 const controlledBuyerGateManualQuoteDraftController = require("../controllers/controlled-buyer-gate-manual-quote-draft.controller");
+const controlledBuyerGateManualSendConfirmationController = require("../controllers/controlled-buyer-gate-manual-send-confirmation.controller");
 const sendHtml = require("../utils/send-html");
 
 function routeRequest(req, res, sendJson) {
@@ -324,6 +325,22 @@ function routeRequest(req, res, sendJson) {
 
   if (method === "GET" && (url.pathname === "/controlled-buyer-gate-manual-quote-draft" || url.pathname === "/controlled-buyer-gate-manual-quote-drafts")) {
     return controlledBuyerGateManualQuoteDraftController.dashboardController(req, res, sendJson, sendHtml);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-send-confirmation/preview") {
+    return controlledBuyerGateManualSendConfirmationController.previewController(req, res, sendJson);
+  }
+
+  if (method === "POST" && url.pathname === "/api/controlled-buyer-gate-manual-send-confirmation/create") {
+    return controlledBuyerGateManualSendConfirmationController.createController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-send-confirmations") {
+    return controlledBuyerGateManualSendConfirmationController.listController(req, res, sendJson);
+  }
+
+  if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-send-confirmation/summary") {
+    return controlledBuyerGateManualSendConfirmationController.summaryController(req, res, sendJson);
   }
 
   if (method === "GET" && url.pathname === "/api/controlled-buyer-gate-manual-quote-draft/preview") {
