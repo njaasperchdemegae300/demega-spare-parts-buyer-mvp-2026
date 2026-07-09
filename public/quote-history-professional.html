@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Quote History</title>
+  <link rel="stylesheet" href="/demega-professional-ui.css">
+  <style>
+    body { margin:0; font-family:Arial,sans-serif; background:#f8fafc; color:#0f172a; }
+    .hero { background:#111827; color:white; padding:28px 16px; }
+    .wrap { width:min(1180px, calc(100% - 24px)); margin:auto; }
+    .panel { background:white; border:1px solid #e2e8f0; border-radius:18px; padding:18px; margin-top:18px; box-shadow:0 2px 8px rgba(15,23,42,.06); }
+    .quote { border:1px solid #e2e8f0; border-radius:14px; padding:14px; margin-top:12px; background:#fff; }
+    pre { white-space:pre-wrap; background:#f1f5f9; padding:14px; border-radius:14px; }
+  </style>
+</head>
+<body>
+  <header class="hero"><div class="wrap"><h1>Quote History</h1><p>Manual quote draft history. No WhatsApp sending and no automatic sales closing.</p></div></header>
+  <main class="wrap"><section class="panel"><h2>Saved Manual Quote Drafts</h2><div id="history">Loading...</div></section></main>
+  <script>
+    async function loadHistory() {
+      const res = await fetch("/api/quote-history");
+      const data = await res.json();
+      const items = data.items || [];
+      document.getElementById("history").innerHTML = items.length ? items.map(q => `
+        <div class="quote"><strong>${q.buyerName || "Buyer"} — ${q.decoded?.normalizedPart || "Part"}</strong><p>${q.createdAt || ""}</p><pre>${q.quoteText || ""}</pre></div>
+      `).join("") : "No manual quote drafts saved yet.";
+    }
+    loadHistory();
+  </script>
+</body>
+</html>

@@ -46,6 +46,36 @@ const controlled15LeadProofTestController = require("../controllers/controlled-1
 const sendHtml = require("../utils/send-html");
 
 
+
+// BUSINESS_STAGE_1E_HELPERS
+function businessStage1ECollectJsonBody(req, callback) {
+  let body = "";
+  req.on("data", chunk => {
+    body += chunk.toString();
+    if (body.length > 1024 * 1024) {
+      req.destroy();
+    }
+  });
+  req.on("end", () => {
+    try {
+      callback(body ? JSON.parse(body) : {});
+    } catch (_) {
+      callback({});
+    }
+  });
+}
+
+function businessStage1ESendJson(res, statusCode, payload) {
+  res.writeHead(statusCode, { "Content-Type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify(payload, null, 2));
+}
+
+function businessStage1ESendProfessionalHtml(res, html) {
+  const output = typeof injectDemegaProfessionalUi === "function" ? injectDemegaProfessionalUi(html) : html;
+  res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+  res.end(output);
+}
+
 function injectDemegaProfessionalUi(html) {
   const css = '<link rel="stylesheet" href="/demega-professional-ui.css">';
   const js = '<script defer src="/demega-professional-ui.js"></' + 'script>';
@@ -82,6 +112,76 @@ function routeRequest(req, res, sendJson) {
   // BUSINESS_STAGE_1D_FIX2_PROFESSIONAL_ADMIN_HUB_START
   // BUSINESS_STAGE_1D_FIX4_PROFESSIONAL_DASHBOARD_START
   // BUSINESS_STAGE_1D_FIX5_PROFESSIONAL_HOT_BUYERS_START
+  // BUSINESS_STAGE_1E_SPARE_PARTS_INTELLIGENCE_START
+  if (method === "GET" && (url.pathname === "/part-decoder" || url.pathname === "/part-decode/decode")) {
+    const fs = require("fs");
+    const path = require("path");
+    return businessStage1ESendProfessionalHtml(res, fs.readFileSync(path.join(process.cwd(), "public", "part-decoder-professional.html"), "utf8"));
+  }
+
+  if (method === "GET" && (url.pathname === "/inventory" || url.pathname === "/inventory-command-center")) {
+    const fs = require("fs");
+    const path = require("path");
+    return businessStage1ESendProfessionalHtml(res, fs.readFileSync(path.join(process.cwd(), "public", "inventory-professional.html"), "utf8"));
+  }
+
+  if (method === "GET" && (url.pathname === "/smart-match" || url.pathname === "/smart-match-command-center")) {
+    const fs = require("fs");
+    const path = require("path");
+    return businessStage1ESendProfessionalHtml(res, fs.readFileSync(path.join(process.cwd(), "public", "smart-match-professional.html"), "utf8"));
+  }
+
+  if (method === "GET" && (url.pathname === "/auto-quote" || url.pathname === "/auto-quote/smart-build")) {
+    const fs = require("fs");
+    const path = require("path");
+    return businessStage1ESendProfessionalHtml(res, fs.readFileSync(path.join(process.cwd(), "public", "auto-quote-professional.html"), "utf8"));
+  }
+
+  if (method === "GET" && (url.pathname === "/quote-history" || url.pathname === "/quote-drafts")) {
+    const fs = require("fs");
+    const path = require("path");
+    return businessStage1ESendProfessionalHtml(res, fs.readFileSync(path.join(process.cwd(), "public", "quote-history-professional.html"), "utf8"));
+  }
+
+  if (method === "POST" && url.pathname === "/api/part-decode/decode") {
+    return businessStage1ECollectJsonBody(req, body => {
+      const service = require("../services/spare-parts-intelligence.service");
+      businessStage1ESendJson(res, 200, service.decodePart(body));
+    });
+  }
+
+  if (method === "GET" && url.pathname === "/api/professional-inventory/items") {
+    const service = require("../services/spare-parts-intelligence.service");
+    return businessStage1ESendJson(res, 200, { ok: true, items: service.getInventoryItems() });
+  }
+
+  if (method === "POST" && url.pathname === "/api/professional-inventory/manual-upsert") {
+    return businessStage1ECollectJsonBody(req, body => {
+      const service = require("../services/spare-parts-intelligence.service");
+      businessStage1ESendJson(res, 200, service.manualUpsertInventory(body));
+    });
+  }
+
+  if (method === "POST" && url.pathname === "/api/smart-match/check") {
+    return businessStage1ECollectJsonBody(req, body => {
+      const service = require("../services/spare-parts-intelligence.service");
+      businessStage1ESendJson(res, 200, service.smartMatch(body));
+    });
+  }
+
+  if (method === "POST" && url.pathname === "/api/auto-quote/smart-build") {
+    return businessStage1ECollectJsonBody(req, body => {
+      const service = require("../services/spare-parts-intelligence.service");
+      businessStage1ESendJson(res, 200, service.buildSmartQuote(body));
+    });
+  }
+
+  if (method === "GET" && url.pathname === "/api/quote-history") {
+    const service = require("../services/spare-parts-intelligence.service");
+    return businessStage1ESendJson(res, 200, { ok: true, items: service.getQuoteHistory() });
+  }
+
+  // BUSINESS_STAGE_1E_SPARE_PARTS_INTELLIGENCE_END
   if (method === "GET" && (
     url.pathname === "/hot-buyers" ||
     url.pathname === "/hot-buyer-command-center" ||

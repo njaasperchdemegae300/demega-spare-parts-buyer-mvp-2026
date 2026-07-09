@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Part Decoder</title>
+  <link rel="stylesheet" href="/demega-professional-ui.css">
+  <style>
+    body { margin:0; font-family:Arial,sans-serif; background:#f8fafc; color:#0f172a; }
+    .hero { background:#111827; color:white; padding:28px 16px; }
+    .wrap { width:min(1180px, calc(100% - 24px)); margin:auto; }
+    .hero h1 { margin:0 0 8px; font-size:clamp(28px,4vw,40px); }
+    .hero p { margin:0; color:#dbeafe; }
+    .panel { background:white; border:1px solid #e2e8f0; border-radius:18px; padding:18px; margin-top:18px; box-shadow:0 2px 8px rgba(15,23,42,.06); }
+    textarea,input { width:100%; border:1px solid #cbd5e1; border-radius:12px; padding:12px; font-size:15px; }
+    textarea { min-height:130px; }
+    .btn { background:#0f766e; color:white; border:0; border-radius:12px; padding:12px 16px; font-weight:800; cursor:pointer; margin-top:12px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:14px; }
+    .card { background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:16px; }
+    .label { color:#64748b; font-size:12px; font-weight:800; text-transform:uppercase; }
+    .value { font-size:22px; font-weight:900; margin-top:6px; overflow-wrap:anywhere; }
+    pre { white-space:pre-wrap; background:#f1f5f9; padding:14px; border-radius:14px; overflow:auto; }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <h1>Part Decoder</h1>
+      <p>Decode buyer spare-parts requests into normalized part, vehicle, required checks, and safe next action.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="panel">
+      <h2>Decode Buyer Request</h2>
+      <p>Example: “Need Corolla 2005 alternator urgently in Ibadan.”</p>
+      <textarea id="requestText" placeholder="Type buyer request here..."></textarea>
+      <button class="btn" onclick="decode()">Decode Part Request</button>
+    </section>
+
+    <section class="panel" id="resultPanel" style="display:none;">
+      <h2>Decoded Result</h2>
+      <div class="grid">
+        <div class="card"><div class="label">Part</div><div class="value" id="part"></div></div>
+        <div class="card"><div class="label">Category</div><div class="value" id="category"></div></div>
+        <div class="card"><div class="label">Vehicle</div><div class="value" id="vehicle"></div></div>
+        <div class="card"><div class="label">Confidence</div><div class="value" id="confidence"></div></div>
+      </div>
+      <pre id="rawResult"></pre>
+    </section>
+  </main>
+
+  <script>
+    async function decode() {
+      const text = document.getElementById("requestText").value;
+      const res = await fetch("/api/part-decode/decode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+      const data = await res.json();
+      document.getElementById("resultPanel").style.display = "block";
+      document.getElementById("part").textContent = data.normalizedPart || "Unknown";
+      document.getElementById("category").textContent = data.category || "Unknown";
+      document.getElementById("vehicle").textContent = `${data.vehicle?.make || ""} ${data.vehicle?.model || ""} ${data.vehicle?.year || ""}`;
+      document.getElementById("confidence").textContent = `${data.confidence || 0}%`;
+      document.getElementById("rawResult").textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Safe Auto Quote Builder</title>
+  <link rel="stylesheet" href="/demega-professional-ui.css">
+  <style>
+    body { margin:0; font-family:Arial,sans-serif; background:#f8fafc; color:#0f172a; }
+    .hero { background:#111827; color:white; padding:28px 16px; }
+    .wrap { width:min(1180px, calc(100% - 24px)); margin:auto; }
+    .panel { background:white; border:1px solid #e2e8f0; border-radius:18px; padding:18px; margin-top:18px; box-shadow:0 2px 8px rgba(15,23,42,.06); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+    input,textarea { width:100%; border:1px solid #cbd5e1; border-radius:12px; padding:12px; font-size:15px; }
+    textarea { min-height:110px; }
+    label { display:block; font-weight:800; margin-top:10px; }
+    .btn { background:#0f766e; color:white; border:0; border-radius:12px; padding:12px 16px; font-weight:800; cursor:pointer; margin-top:12px; }
+    pre { white-space:pre-wrap; background:#f1f5f9; padding:14px; border-radius:14px; }
+    .note { background:#fff7ed; border:1px solid #fed7aa; color:#7c2d12; border-radius:14px; padding:12px; margin:12px 0; font-weight:700; }
+  </style>
+</head>
+<body>
+  <header class="hero"><div class="wrap"><h1>Safe Auto Quote Builder</h1><p>Build WhatsApp-ready manual quote drafts only after stock, compatibility, and admin review are confirmed.</p></div></header>
+  <main class="wrap">
+    <section class="panel">
+      <h2>Manual Quote Inputs</h2>
+      <div class="note">This does not send WhatsApp. It only prepares text for admin review.</div>
+      <div class="grid">
+        <input id="buyerName" placeholder="Buyer name">
+        <input id="buyerPhone" placeholder="Buyer phone">
+        <input id="text" placeholder="Part request e.g. Corolla 2005 alternator">
+        <input id="price" placeholder="Price e.g. ₦85,000">
+        <input id="pickup" placeholder="Pickup e.g. Ladipo, Lagos">
+        <input id="delivery" placeholder="Delivery note">
+      </div>
+      <label><input type="checkbox" id="stockConfirmed"> Stock confirmed manually</label>
+      <label><input type="checkbox" id="compatibilityConfirmed"> Compatibility confirmed manually</label>
+      <label><input type="checkbox" id="manualReview"> Manual admin review completed</label>
+      <button class="btn" onclick="buildQuote()">Build Manual Quote Draft</button>
+    </section>
+    <section class="panel"><h2>Quote Result</h2><pre id="result">No quote draft built yet.</pre></section>
+  </main>
+  <script>
+    async function buildQuote() {
+      const payload = {};
+      ["buyerName","buyerPhone","text","price","pickup","delivery"].forEach(id => payload[id] = document.getElementById(id).value);
+      payload.stockConfirmed = document.getElementById("stockConfirmed").checked;
+      payload.compatibilityConfirmed = document.getElementById("compatibilityConfirmed").checked;
+      payload.manualReview = document.getElementById("manualReview").checked;
+      const res = await fetch("/api/auto-quote/smart-build", { method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(payload) });
+      document.getElementById("result").textContent = JSON.stringify(await res.json(), null, 2);
+    }
+  </script>
+</body>
+</html>

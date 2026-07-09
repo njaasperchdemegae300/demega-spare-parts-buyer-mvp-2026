@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Inventory Command Center</title>
+  <link rel="stylesheet" href="/demega-professional-ui.css">
+  <style>
+    body { margin:0; font-family:Arial,sans-serif; background:#f8fafc; color:#0f172a; }
+    .hero { background:#111827; color:white; padding:28px 16px; }
+    .wrap { width:min(1180px, calc(100% - 24px)); margin:auto; }
+    .hero h1 { margin:0 0 8px; font-size:clamp(28px,4vw,40px); }
+    .hero p { margin:0; color:#dbeafe; }
+    .panel { background:white; border:1px solid #e2e8f0; border-radius:18px; padding:18px; margin-top:18px; box-shadow:0 2px 8px rgba(15,23,42,.06); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+    input,select,textarea { width:100%; border:1px solid #cbd5e1; border-radius:12px; padding:12px; font-size:15px; }
+    textarea { min-height:90px; }
+    .btn { background:#0f766e; color:white; border:0; border-radius:12px; padding:12px 16px; font-weight:800; cursor:pointer; margin-top:12px; }
+    .table-wrap { overflow-x:auto; border:1px solid #e2e8f0; border-radius:16px; margin-top:14px; }
+    table { width:100%; min-width:900px; border-collapse:collapse; }
+    th,td { text-align:left; padding:12px; border-bottom:1px solid #e5e7eb; }
+    th { background:#f8fafc; color:#475569; font-size:12px; text-transform:uppercase; }
+    .note { background:#fff7ed; border:1px solid #fed7aa; color:#7c2d12; border-radius:14px; padding:12px; margin:12px 0; font-weight:700; }
+  </style>
+</head>
+<body>
+  <header class="hero"><div class="wrap"><h1>Inventory Command Center</h1><p>Manual inventory records for stock and compatibility checks. No automatic stock mutation from buyer flow.</p></div></header>
+  <main class="wrap">
+    <section class="panel">
+      <h2>Manual Inventory Record</h2>
+      <div class="note">Only admin-recorded stock data is saved here. Buyer requests cannot mutate inventory automatically.</div>
+      <div class="grid">
+        <input id="partName" placeholder="Part name e.g. alternator">
+        <input id="vehicleMake" placeholder="Vehicle make e.g. Toyota">
+        <input id="vehicleModel" placeholder="Vehicle model e.g. Corolla">
+        <input id="yearFrom" placeholder="Year from e.g. 2003">
+        <input id="yearTo" placeholder="Year to e.g. 2008">
+        <select id="condition"><option>Tokunbo</option><option>New</option><option>Used Original</option><option>Needs confirmation</option></select>
+        <select id="quantityStatus"><option>Needs manual confirmation</option><option>Available</option><option>In stock</option><option>Not available</option></select>
+        <input id="priceFloor" placeholder="Price floor">
+        <input id="sellingPrice" placeholder="Selling price">
+        <input id="supplier" placeholder="Supplier / shop note">
+      </div>
+      <textarea id="compatibilityNotes" placeholder="Compatibility notes, socket, engine type, plug, part number..."></textarea>
+      <button class="btn" onclick="saveItem()">Save Manual Inventory Record</button>
+    </section>
+
+    <section class="panel">
+      <h2>Inventory Items</h2>
+      <div class="table-wrap"><table><thead><tr><th>Part</th><th>Vehicle</th><th>Years</th><th>Condition</th><th>Status</th><th>Price</th><th>Notes</th></tr></thead><tbody id="items"><tr><td colspan="7">Loading...</td></tr></tbody></table></div>
+    </section>
+  </main>
+  <script>
+    async function loadItems() {
+      const res = await fetch("/api/professional-inventory/items");
+      const data = await res.json();
+      const items = data.items || [];
+      document.getElementById("items").innerHTML = items.length ? items.map(i => `
+        <tr><td>${i.partName}</td><td>${i.vehicleMake} ${i.vehicleModel}</td><td>${i.yearFrom || "?"} - ${i.yearTo || "?"}</td><td>${i.condition}</td><td>${i.quantityStatus}</td><td>${i.sellingPrice || "—"}</td><td>${i.compatibilityNotes || "—"}</td></tr>
+      `).join("") : '<tr><td colspan="7">No inventory items recorded yet.</td></tr>';
+    }
+    async function saveItem() {
+      const payload = {};
+      ["partName","vehicleMake","vehicleModel","yearFrom","yearTo","condition","quantityStatus","priceFloor","sellingPrice","supplier","compatibilityNotes"].forEach(id => payload[id] = document.getElementById(id).value);
+      await fetch("/api/professional-inventory/manual-upsert", { method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(payload) });
+      loadItems();
+    }
+    loadItems();
+  </script>
+</body>
+</html>
