@@ -86,3 +86,6 @@ The first proof test is limited to 15 real inbound buyer requests. The system ma
 
 ## Decision 27 — WhatsApp Is Not Primary Traffic Source
 WhatsApp Status and old Ladipo WhatsApp contacts must not be used as the primary traffic source. WhatsApp is a communication, manual reply, and closing-support tool. Approved internet buyer-intent sources are required for the traffic-growth stage.
+
+## Decision 28 — Public URL Verification Required Before Traffic Gate
+The project must be deployed online and verified from Android phone and laptop before any approved buyer traffic gate is opened.

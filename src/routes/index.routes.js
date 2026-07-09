@@ -1010,6 +1010,12 @@ function routeRequest(req, res, sendJson) {
     return controlled15LeadProofTestController.summaryController(req, res, sendJson);
   }
 
+  if (method === "GET" && (url.pathname === "/online-deployment-public-url-verification" || url.pathname === "/public-url-verification")) {
+    const fs = require("fs");
+    const path = require("path");
+    return sendHtml(res, fs.readFileSync(path.join(process.cwd(), "public", "online-deployment-public-url-verification.html"), "utf8"));
+  }
+
   return sendJson(res, 404, {
     error: "Route not found",
     method,
