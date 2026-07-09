@@ -124,7 +124,8 @@
     "version:39a": "node tools/version39a-controlled-buyer-gate-final-readiness-lock-smoke-test.js",
     "version:39b": "node tools/version39b-controlled-buyer-gate-final-readiness-lock-dashboard-smoke-test.js",
     "version:40a": "node tools/version40a-controlled-real-buyer-gate-opening-preparation-smoke-test.js",
-    "business:stage1a": "node tools/business-stage1a-controlled-15-lead-proof-test-smoke-test.js"
+    "business:stage1a": "node tools/business-stage1a-controlled-15-lead-proof-test-smoke-test.js",
+    "business:stage1b": "node tools/business-stage1b-internet-deployment-readiness-smoke-test.js"
   },
   "keywords": [
     "spare-parts",

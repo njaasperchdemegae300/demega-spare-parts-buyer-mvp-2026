@@ -1,13 +1,35 @@
-# TRAFFIC SOURCE REGISTRY
+# Traffic Source Registry
 
-## Approved Buyer-Intent Sources
-These sources can be treated as buyer-intent sources when the buyer intentionally submits or requests:
+## New Strategic Classification
 
+### WhatsApp
+Status: Communication / reply / closing tool only.
+
+WhatsApp must not be treated as the main traffic source for the controlled internet growth stage.
+
+Allowed:
+- reply manually to buyers
+- receive buyer conversation after they come from approved internet sources
+- share WhatsApp contact button after buyer reaches approved landing page
+- manual communication only
+
+Blocked:
+- WhatsApp blasting
+- unsolicited WhatsApp
+- automatic WhatsApp sending
+- hidden WhatsApp scraping
+- reading WhatsApp messages by system
+- treating old WhatsApp contacts as proof of internet buyer traffic
+
+## Approved Internet Buyer-Intent Sources
+
+### Level 1
 - Owned RFQ landing page
-- WhatsApp click-to-chat inbound
+- Google buyer-intent landing page
 - Meta Lead Form
-- Google buyer-intent landing pages
-- Public business inquiry forms
+- Public business inquiry form
+
+### Level 2
 - Alibaba RFQ
 - Global Sources RFQ
 - Go4WorldBusiness
@@ -15,23 +37,12 @@ These sources can be treated as buyer-intent sources when the buyer intentionall
 - ExportHub
 
 ## Market Intelligence Only Unless Buyer Intent Is Proven
-These sources must not be treated as direct buyer leads unless clear buyer intent is proven:
-
 - Jiji-like platforms
-- eBay Motors
-- OEC / RepairLink
-- PartsTech
-- RockAuto
-- AutoZone
-- RevolutionParts
-- Car-Part.com
-- Marketparts
+- seller-heavy marketplaces
+- catalog sites
+- random listings
+- old WhatsApp contact list
+- old Ladipo buyer circle
 
-## Blocked Traffic Methods
-- Spam
-- Unsolicited WhatsApp blasting
-- Private-data scraping
-- Hidden personal data harvesting
-- Message scraping
-- Buying/selling private contact lists
-- Auto-contacting people without permission
+## Rule
+Traffic must be approved, inbound, consent-based, and buyer-intent based.

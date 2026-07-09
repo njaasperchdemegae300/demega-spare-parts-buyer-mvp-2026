@@ -83,3 +83,6 @@ Controlled Real-Buyer Gate Opening Preparation records the final go/no-go decisi
 
 ## Decision 26 — Controlled 15-Lead Proof Test Is Manual Inbound Only
 The first proof test is limited to 15 real inbound buyer requests. The system may record buyer requests manually but must not contact buyers, send WhatsApp, auto-reply, auto-follow-up, scrape private data, quote before stock confirmation, quote before compatibility confirmation, mutate inventory, create accounting records, close sale, or move pipeline.
+
+## Decision 27 — WhatsApp Is Not Primary Traffic Source
+WhatsApp Status and old Ladipo WhatsApp contacts must not be used as the primary traffic source. WhatsApp is a communication, manual reply, and closing-support tool. Approved internet buyer-intent sources are required for the traffic-growth stage.

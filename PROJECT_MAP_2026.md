@@ -2554,3 +2554,45 @@ Record the first 15 real inbound buyer requests manually after Version 40A appro
 - Quote before stock confirmation
 - Quote before compatibility confirmation
 - Auto WhatsApp sending
+
+# Business Stage 1B — Internet Deployment Readiness Gate
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Prepare the project to become available online before opening approved buyer traffic gates.
+
+## Strategic Correction
+WhatsApp Status and old Ladipo WhatsApp contacts are not the main traffic source.
+
+WhatsApp is classified as:
+- communication tool
+- manual reply tool
+- closing support tool
+
+## Approved Traffic Direction
+- Owned RFQ landing page
+- Google buyer-intent landing pages
+- Meta Lead Form
+- Public business inquiry forms
+- approved RFQ platforms later
+
+## Safety
+- No traffic gate opened
+- No buyer contacted
+- No WhatsApp sent
+- No auto-send
+- No spam
+- No unsolicited WhatsApp
+- No private-data scraping
+- No hidden data harvesting
+- No quote before stock confirmation
+- No quote before compatibility confirmation
+- No inventory mutation
+- No accounting mutation
+- No sale closing
+- No pipeline movement
+
+## Next Stage
+Business Stage 1C — Online Deployment Execution / Public URL Verification.

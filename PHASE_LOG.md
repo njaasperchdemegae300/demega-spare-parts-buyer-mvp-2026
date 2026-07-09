@@ -197,3 +197,6 @@ Controlled Real-Buyer Gate Opening Preparation / Final Go-No-Go added.
 
 ### Business Stage 1A
 Controlled 15-Lead Proof Test Manual Tracker added.
+
+### Business Stage 1B
+Internet Deployment Readiness Gate added. WhatsApp reclassified as communication / reply / closing tool only, not primary traffic source.
