@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Admin Hub — Professional Control Center</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      font-family: Arial, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      line-height: 1.45;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .shell { max-width: 1220px; margin: 0 auto; padding: 20px 14px 56px; }
+
+    .hero {
+      background: linear-gradient(135deg, #0f172a, #111827);
+      color: white;
+      padding: 34px 16px;
+    }
+
+    .hero-inner { max-width: 1220px; margin: 0 auto; }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(28px, 4vw, 44px); letter-spacing: -0.03em; }
+    .hero p { margin: 0; color: #dbeafe; font-size: 16px; }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #0f172a;
+      color: white;
+      font-weight: 800;
+      border: 0;
+      cursor: pointer;
+      max-width: 100%;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .btn.primary { background: #0f766e; }
+    .btn.warning { background: #92400e; }
+    .btn.light { background: white; color: #0f172a; }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin-top: -28px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .status-card, .panel, .module-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      box-shadow: 0 2px 9px rgba(15,23,42,.07);
+    }
+
+    .status-card { padding: 16px; }
+    .label { color: #64748b; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+    .value { margin-top: 6px; font-size: 24px; font-weight: 900; overflow-wrap: anywhere; }
+    .green { color: #047857; }
+    .amber { color: #b45309; }
+    .red { color: #b91c1c; }
+
+    .panel { padding: 18px; margin-top: 18px; }
+    .panel h2 { margin: 0 0 12px; font-size: 24px; letter-spacing: -0.02em; }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .step {
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      background: #ffffff;
+      min-height: 150px;
+    }
+
+    .step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: #0f172a;
+      color: white;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .step h3, .module-card h3 { margin: 0 0 8px; font-size: 18px; }
+    .step p, .module-card p { margin: 0 0 12px; color: #475569; }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .module-card { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 190px; }
+
+    .module-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .mini-link {
+      display: inline-flex;
+      padding: 8px 10px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 13px;
+      max-width: 100%;
+      white-space: normal;
+    }
+
+    .safety-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1.2;
+      white-space: normal;
+      max-width: 100%;
+    }
+
+    .pill.safe { background: #dcfce7; border: 1px solid #bbf7d0; color: #065f46; }
+    .pill.block { background: #fee2e2; border: 1px solid #fecaca; color: #7f1d1d; }
+
+    details {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    summary { cursor: pointer; font-weight: 900; }
+    .footer-note { text-align: center; color: #64748b; margin-top: 28px; font-size: 13px; }
+
+    @media (max-width: 640px) {
+      .shell { padding-left: 10px; padding-right: 10px; }
+      .panel { padding: 14px; }
+      .module-card, .step { min-height: auto; }
+      .value { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>Demega Admin Control Center</h1>
+      <p>Professional command center for online testing, buyer-proof workflow, stock checks, compatibility checks, manual quote preparation, and safe buyer tracking.</p>
+
+      <div class="top-actions">
+        <a class="btn primary" href="/controlled-15-lead-proof-test">Open 15-Lead Tracker</a>
+        <a class="btn light" href="/internet-deployment-readiness-gate">Internet Readiness</a>
+        <a class="btn light" href="/online-deployment-public-url-verification">Public URL Verification</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="status-grid" aria-label="Project status">
+      <div class="status-card">
+        <div class="label">Online Status</div>
+        <div class="value green">LIVE</div>
+      </div>
+      <div class="status-card">
+        <div class="label">Traffic Gate</div>
+        <div class="value red">CLOSED</div>
+      </div>
+      <div class="status-card">
+        <div class="label">Current Mode</div>
+        <div class="value amber">TESTING</div>
+      </div>
+      <div class="status-card">
+        <div class="label">Lead Limit</div>
+        <div class="value">15</div>
+      </div>
+      <div class="status-card">
+        <div class="label">WhatsApp Role</div>
+        <div class="value amber">CHAT ONLY</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Clean Operating Workflow</h2>
+      <div class="workflow">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Buyer Request</h3>
+          <p>Record real inbound buyer requests only. No fake leads and no outbound traffic blasting.</p>
+          <a class="mini-link" href="/controlled-15-lead-proof-test">Open Tracker</a>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Stock Check</h3>
+          <p>Confirm stock before any quote is prepared. No stock clarity means no quote.</p>
+          <a class="mini-link" href="/stock-confirmation-gate">Stock Gate</a>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Compatibility Check</h3>
+          <p>Confirm vehicle, year, part fitment, and condition before price is discussed.</p>
+          <a class="mini-link" href="/compatibility-confirmation-gate">Compatibility Gate</a>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Manual Quote Draft</h3>
+          <p>Prepare WhatsApp-ready text for admin review only. The system does not send.</p>
+          <a class="mini-link" href="/manual-quote-draft">Quote Draft</a>
+        </div>
+
+        <div class="step">
+          <div class="step-number">5</div>
+          <h3>Manual Reply Tracking</h3>
+          <p>Record buyer reply manually after admin observes the reply outside the system.</p>
+          <a class="mini-link" href="/buyer-reply-tracking">Reply Tracking</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Core Modules</h2>
+      <div class="module-grid">
+        <div class="module-card">
+          <div>
+            <h3>Buyer Intake & Proof</h3>
+            <p>Capture buyer requests, review proof, and protect the 15-lead test gate.</p>
+          </div>
+          <div class="module-links">
+            <a class="mini-link" href="/controlled-15-lead-proof-test">15-Lead Tracker</a>
+            <a class="mini-link" href="/buyer-dashboard">Buyer Dashboard</a>
+            <a class="mini-link" href="/hot-buyers">Hot Buyers</a>
+          </div>
+        </div>
+
+        <div class="module-card">
+          <div>
+            <h3>Stock & Compatibility</h3>
+            <p>Prevent wrong quote, wrong part, refund trouble, and customer disappointment.</p>
+          </div>
+          <div class="module-links">
+            <a class="mini-link" href="/inventory">Inventory</a>
+            <a class="mini-link" href="/stock-confirmation-gate">Stock Gate</a>
+            <a class="mini-link" href="/compatibility-confirmation-gate">Compatibility Gate</a>
+          </div>
+        </div>
+
+        <div class="module-card">
+          <div>
+            <h3>Quote & Manual Send</h3>
+            <p>Prepare quote drafts and copy-ready WhatsApp text. Admin sends manually only.</p>
+          </div>
+          <div class="module-links">
+            <a class="mini-link" href="/quote-eligibility-gate">Eligibility</a>
+            <a class="mini-link" href="/manual-quote-draft">Draft Builder</a>
+            <a class="mini-link" href="/manual-quote-copy">Copy Quote</a>
+            <a class="mini-link" href="/manual-quote-sent-confirmation">Sent Confirmation</a>
+          </div>
+        </div>
+
+        <div class="module-card">
+          <div>
+            <h3>Follow-Up & Outcome</h3>
+            <p>Track replies, follow-up decisions, deal outcomes, and manual final review.</p>
+          </div>
+          <div class="module-links">
+            <a class="mini-link" href="/buyer-reply-tracking">Reply Tracking</a>
+            <a class="mini-link" href="/buyer-reply-followup">Reply Follow-Up</a>
+            <a class="mini-link" href="/manual-deal-outcome">Deal Outcome</a>
+            <a class="mini-link" href="/manual-final-business-review">Final Review</a>
+          </div>
+        </div>
+
+        <div class="module-card">
+          <div>
+            <h3>Deployment & Testing</h3>
+            <p>Confirm online readiness from laptop and Android before any approved traffic gate opens.</p>
+          </div>
+          <div class="module-links">
+            <a class="mini-link" href="/internet-deployment-readiness-gate">Internet Readiness</a>
+            <a class="mini-link" href="/online-deployment-public-url-verification">Public URL Gate</a>
+            <a class="mini-link" href="/publish-ready-hub">Publish-Ready Hub</a>
+          </div>
+        </div>
+
+        <div class="module-card">
+          <div>
+            <h3>Action Queue</h3>
+            <p>See urgent manual actions without allowing the system to contact buyers automatically.</p>
+          </div>
+          <div class="module-links">
+            <a class="mini-link" href="/action-queue">Action Queue</a>
+            <a class="mini-link" href="/pipeline">Pipeline</a>
+            <a class="mini-link" href="/followups">Follow-Ups</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Safety Locks</h2>
+      <div class="safety-grid">
+        <span class="pill block">NO AUTO-SEND</span>
+        <span class="pill block">NO SPAM</span>
+        <span class="pill block">NO UNSOLICITED WHATSAPP</span>
+        <span class="pill block">NO PRIVATE SCRAPING</span>
+        <span class="pill block">NO HIDDEN HARVESTING</span>
+        <span class="pill block">NO QUOTE BEFORE STOCK</span>
+        <span class="pill block">NO QUOTE BEFORE COMPATIBILITY</span>
+        <span class="pill block">NO INVENTORY MUTATION</span>
+        <span class="pill block">NO ACCOUNTING MUTATION</span>
+        <span class="pill block">NO SALE CLOSING</span>
+        <span class="pill block">NO PIPELINE MOVEMENT</span>
+        <span class="pill safe">MANUAL REVIEW ONLY</span>
+        <span class="pill safe">15-LEAD TEST ONLY</span>
+        <span class="pill safe">TRAFFIC GATE CLOSED</span>
+      </div>
+
+      <details>
+        <summary>Show full operating rule</summary>
+        <p>This hub is for navigation, review, and internal testing only. It does not open WhatsApp, send messages, contact buyers, launch traffic, start ads, read private messages, scrape hidden data, close sales, move pipeline stages, mutate inventory, or create accounting entries.</p>
+      </details>
+    </section>
+
+    <p class="footer-note">Demega Spare Parts Buyer MVP 2026 — Professional online testing hub.</p>
+  </main>
+</body>
+</html>

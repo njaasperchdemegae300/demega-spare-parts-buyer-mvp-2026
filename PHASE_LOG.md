@@ -209,3 +209,6 @@ Public verification route repair added for /internet-deployment-readiness-gate a
 
 ### Business Stage 1D-PRE
 Public UI organization and publish-ready polish added. Clean control center created before Android + Laptop Agent Tool Verification.
+
+### Business Stage 1D-FIX-2
+Professional Admin Hub rebuild added. /admin-hub now routes to a clean publish-ready control center instead of the old scattered technical dashboard.
