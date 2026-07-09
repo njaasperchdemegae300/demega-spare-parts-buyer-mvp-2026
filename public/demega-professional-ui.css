@@ -1,0 +1,259 @@
+:root {
+  --dm-bg: #f8fafc;
+  --dm-ink: #0f172a;
+  --dm-muted: #475569;
+  --dm-line: #e2e8f0;
+  --dm-card: #ffffff;
+  --dm-dark: #111827;
+  --dm-green: #0f766e;
+  --dm-red: #991b1b;
+  --dm-amber: #92400e;
+}
+
+* {
+  box-sizing: border-box !important;
+}
+
+html,
+body {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  background: var(--dm-bg) !important;
+  color: var(--dm-ink) !important;
+  line-height: 1.45 !important;
+}
+
+body {
+  margin: 0 !important;
+}
+
+body.dm-professional-ui {
+  font-family: Arial, sans-serif !important;
+}
+
+header,
+main,
+section,
+.container,
+.panel,
+.card,
+[class*="container"],
+[class*="panel"],
+[class*="card"],
+[class*="dashboard"],
+[class*="hub"] {
+  max-width: 100% !important;
+  overflow-wrap: anywhere !important;
+}
+
+main,
+.dm-page-wrap {
+  width: min(1220px, calc(100% - 28px)) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+header {
+  background: var(--dm-dark) !important;
+  color: #ffffff !important;
+  padding: 26px 20px !important;
+}
+
+header h1,
+h1 {
+  font-size: clamp(28px, 4vw, 44px) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.035em !important;
+  margin-bottom: 8px !important;
+}
+
+h2 {
+  font-size: clamp(22px, 3vw, 30px) !important;
+  line-height: 1.15 !important;
+}
+
+h3 {
+  font-size: clamp(18px, 2.2vw, 22px) !important;
+  line-height: 1.2 !important;
+}
+
+p,
+li {
+  font-size: 15px !important;
+}
+
+.grid,
+.cards,
+[class*="grid"],
+[class*="cards"] {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)) !important;
+  gap: 14px !important;
+}
+
+.card,
+.panel,
+section,
+[class*="card"],
+[class*="panel"] {
+  border-radius: 16px !important;
+  border: 1px solid var(--dm-line) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.07) !important;
+}
+
+.card,
+[class*="card"] {
+  min-width: 0 !important;
+}
+
+.card strong,
+.card h3,
+[class*="card"] strong,
+[class*="card"] h3 {
+  overflow-wrap: anywhere !important;
+}
+
+.value,
+.stat,
+.metric,
+[class*="value"],
+[class*="stat"],
+[class*="metric"] {
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+.card .value,
+[class*="card"] .value,
+.card strong.value,
+[class*="card"] strong.value {
+  font-size: clamp(22px, 3vw, 32px) !important;
+  line-height: 1.1 !important;
+}
+
+button,
+a,
+.btn,
+[class*="btn"] {
+  max-width: 100% !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+input,
+select,
+textarea {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.badge,
+.pill,
+.tag,
+span[class*="badge"],
+span[class*="pill"],
+span[class*="tag"] {
+  white-space: normal !important;
+  line-height: 1.25 !important;
+  max-width: 100% !important;
+}
+
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+th,
+td {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  vertical-align: top !important;
+  padding: 11px 12px !important;
+}
+
+.dm-table-scroll {
+  width: 100% !important;
+  overflow-x: auto !important;
+  border-radius: 14px !important;
+  border: 1px solid var(--dm-line) !important;
+  background: #ffffff !important;
+}
+
+.dm-table-scroll table {
+  min-width: 860px !important;
+  border: 0 !important;
+}
+
+pre,
+code {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+}
+
+.dm-top-clean-nav {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: #0f172a;
+  color: white;
+  padding: 10px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.dm-top-clean-nav strong {
+  margin-right: 8px;
+}
+
+.dm-top-clean-nav a {
+  color: white !important;
+  background: rgba(255,255,255,.10);
+  padding: 8px 10px;
+  border-radius: 10px;
+  text-decoration: none !important;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.dm-top-clean-nav a:hover {
+  background: rgba(255,255,255,.18);
+}
+
+.dm-page-shell {
+  width: min(1220px, calc(100% - 28px));
+  margin: 18px auto 48px;
+}
+
+.dm-warning-box {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #7c2d12;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+@media (max-width: 700px) {
+  main,
+  .dm-page-wrap,
+  .dm-page-shell {
+    width: calc(100% - 18px) !important;
+  }
+
+  header {
+    padding: 22px 12px !important;
+  }
+
+  .grid,
+  .cards,
+  [class*="grid"],
+  [class*="cards"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dm-top-clean-nav {
+    position: static;
+  }
+}

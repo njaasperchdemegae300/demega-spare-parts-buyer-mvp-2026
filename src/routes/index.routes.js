@@ -45,6 +45,32 @@ const controlledRealBuyerGateOpeningPreparationController = require("../controll
 const controlled15LeadProofTestController = require("../controllers/controlled-15-lead-proof-test.controller");
 const sendHtml = require("../utils/send-html");
 
+
+function injectDemegaProfessionalUi(html) {
+  const css = '<link rel="stylesheet" href="/demega-professional-ui.css">';
+  const js = '<script defer src="/demega-professional-ui.js"></' + 'script>';
+
+  let output = String(html || "");
+
+  if (!output.includes("/demega-professional-ui.css")) {
+    if (output.includes("</head>")) {
+      output = output.replace("</head>", css + "\n</head>");
+    } else {
+      output = css + "\n" + output;
+    }
+  }
+
+  if (!output.includes("/demega-professional-ui.js")) {
+    if (output.includes("</body>")) {
+      output = output.replace("</body>", js + "\n</body>");
+    } else {
+      output = output + "\n" + js;
+    }
+  }
+
+  return output;
+}
+
 function routeRequest(req, res, sendJson) {
   const method = req.method;
   const url = new URL(req.url, `http://${req.headers.host}`);
@@ -54,6 +80,30 @@ function routeRequest(req, res, sendJson) {
   }
 
   // BUSINESS_STAGE_1D_FIX2_PROFESSIONAL_ADMIN_HUB_START
+  if (method === "GET" && url.pathname === "/demega-professional-ui.css") {
+    const fs = require("fs");
+    const path = require("path");
+    const css = fs.readFileSync(path.join(process.cwd(), "public", "demega-professional-ui.css"), "utf8");
+    res.writeHead(200, { "Content-Type": "text/css; charset=utf-8" });
+    res.end(css);
+    return;
+  }
+
+  if (method === "GET" && url.pathname === "/demega-professional-ui.js") {
+    const fs = require("fs");
+    const path = require("path");
+    const js = fs.readFileSync(path.join(process.cwd(), "public", "demega-professional-ui.js"), "utf8");
+    res.writeHead(200, { "Content-Type": "application/javascript; charset=utf-8" });
+    res.end(js);
+    return;
+  }
+
+  if (method === "GET" && url.pathname === "/buyer-dashboard") {
+    res.writeHead(302, { Location: "/dashboard" });
+    res.end();
+    return;
+  }
+
   if (method === "GET" && (
     url.pathname === "/admin-hub" ||
     url.pathname === "/admin-navigation-hub" ||
@@ -67,7 +117,7 @@ function routeRequest(req, res, sendJson) {
     const htmlPath = path.join(process.cwd(), "public", "admin-hub-professional.html");
     const html = fs.readFileSync(htmlPath, "utf8");
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(html);
+    res.end(injectDemegaProfessionalUi(html));
     return;
   }
   // BUSINESS_STAGE_1D_FIX2_PROFESSIONAL_ADMIN_HUB_END
@@ -1035,7 +1085,7 @@ function routeRequest(req, res, sendJson) {
     const htmlPath = path.join(process.cwd(), "public", "internet-deployment-readiness-gate.html");
     const html = fs.readFileSync(htmlPath, "utf8");
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(html);
+    res.end(injectDemegaProfessionalUi(html));
     return;
   }
 
@@ -1045,7 +1095,7 @@ function routeRequest(req, res, sendJson) {
     const htmlPath = path.join(process.cwd(), "public", "online-deployment-public-url-verification.html");
     const html = fs.readFileSync(htmlPath, "utf8");
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(html);
+    res.end(injectDemegaProfessionalUi(html));
     return;
   }
 
@@ -1055,7 +1105,7 @@ function routeRequest(req, res, sendJson) {
     const htmlPath = path.join(process.cwd(), "public", "publish-ready-hub.html");
     const html = fs.readFileSync(htmlPath, "utf8");
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(html);
+    res.end(injectDemegaProfessionalUi(html));
     return;
   }
 

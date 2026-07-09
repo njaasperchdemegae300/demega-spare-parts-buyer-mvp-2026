@@ -212,3 +212,6 @@ Public UI organization and publish-ready polish added. Clean control center crea
 
 ### Business Stage 1D-FIX-2
 Professional Admin Hub rebuild added. /admin-hub now routes to a clean publish-ready control center instead of the old scattered technical dashboard.
+
+### Business Stage 1D-FIX-3
+Global professional UI shell added across HTML routes. Added professional CSS/JS injection, clean top navigation, table wrapping, overflow control, and /buyer-dashboard alias repair.
