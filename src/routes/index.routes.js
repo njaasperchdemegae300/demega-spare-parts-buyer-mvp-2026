@@ -80,6 +80,21 @@ function routeRequest(req, res, sendJson) {
   }
 
   // BUSINESS_STAGE_1D_FIX2_PROFESSIONAL_ADMIN_HUB_START
+  // BUSINESS_STAGE_1D_FIX4_PROFESSIONAL_DASHBOARD_START
+  if (method === "GET" && (
+    url.pathname === "/dashboard" ||
+    url.pathname === "/buyer-dashboard"
+  )) {
+    const fs = require("fs");
+    const path = require("path");
+    const htmlPath = path.join(process.cwd(), "public", "dashboard-professional.html");
+    const html = fs.readFileSync(htmlPath, "utf8");
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(injectDemegaProfessionalUi(html));
+    return;
+  }
+  // BUSINESS_STAGE_1D_FIX4_PROFESSIONAL_DASHBOARD_END
+
   if (method === "GET" && url.pathname === "/demega-professional-ui.css") {
     const fs = require("fs");
     const path = require("path");

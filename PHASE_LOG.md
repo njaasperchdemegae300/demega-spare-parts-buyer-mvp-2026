@@ -215,3 +215,6 @@ Professional Admin Hub rebuild added. /admin-hub now routes to a clean publish-r
 
 ### Business Stage 1D-FIX-3
 Global professional UI shell added across HTML routes. Added professional CSS/JS injection, clean top navigation, table wrapping, overflow control, and /buyer-dashboard alias repair.
+
+### Business Stage 1D-FIX-4
+Professional buyer dashboard rebuild completed. /dashboard and /buyer-dashboard now point to a clean professional lead dashboard with KPI cards, clean filters, and a simplified readable table.

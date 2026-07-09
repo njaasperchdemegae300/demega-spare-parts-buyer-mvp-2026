@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Buyer Dashboard</title>
+  <link rel="stylesheet" href="/demega-professional-ui.css">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --line: #e2e8f0;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --green: #0f766e;
+      --red: #991b1b;
+      --amber: #92400e;
+      --blue: #1d4ed8;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, sans-serif;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f172a, #111827);
+      color: white;
+      padding: 28px 16px;
+    }
+
+    .hero-inner,
+    .shell {
+      width: min(1220px, calc(100% - 24px));
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #dbeafe;
+      font-size: 15px;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: white;
+      color: #0f172a;
+      border: 0;
+      text-decoration: none;
+      font-weight: 800;
+      min-height: 42px;
+    }
+
+    .btn.primary {
+      background: #0f766e;
+      color: white;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: -20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card,
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    }
+
+    .card {
+      padding: 16px;
+    }
+
+    .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .value {
+      margin-top: 8px;
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 900;
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+    }
+
+    .good { color: var(--green); }
+    .warn { color: var(--amber); }
+    .bad  { color: var(--red); }
+    .info { color: var(--blue); }
+
+    .shell {
+      padding: 18px 0 42px;
+    }
+
+    .panel {
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 32px;
+      letter-spacing: -0.03em;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .banner {
+      margin-top: 18px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #7c2d12;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-weight: 700;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      background: white;
+    }
+
+    .subnote {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1080px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+      white-space: normal;
+    }
+
+    th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #475569;
+      background: #f8fafc;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag.hot { background: #fee2e2; color: #991b1b; }
+    .tag.warm { background: #fef3c7; color: #92400e; }
+    .tag.cold { background: #dbeafe; color: #1d4ed8; }
+    .tag.neutral { background: #e2e8f0; color: #334155; }
+    .tag.safe { background: #dcfce7; color: #065f46; }
+    .tag.review { background: #ede9fe; color: #5b21b6; }
+
+    .empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>Demega Admin Lead Dashboard</h1>
+      <p>Professional buyer-lead review dashboard for manual review, safe scoring, and controlled buyer handling.</p>
+
+      <div class="top-actions">
+        <a class="btn primary" href="/admin-hub">Back to Admin Hub</a>
+        <a class="btn" href="/controlled-15-lead-proof-test">15-Lead Tracker</a>
+        <a class="btn" href="/hot-buyers">Hot Buyers</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="grid">
+      <div class="card">
+        <div class="label">Total Leads</div>
+        <div class="value" id="kpi-total">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Hot Leads</div>
+        <div class="value bad" id="kpi-hot">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Warm Leads</div>
+        <div class="value warn" id="kpi-warm">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Cold Leads</div>
+        <div class="value info" id="kpi-cold">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Needs Review</div>
+        <div class="value" id="kpi-review">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Safety Status</div>
+        <div class="value good">NO AUTO SEND</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Buyer Leads</h2>
+      <p>Read-only view. Manual review is required before reply, quote, stock confirmation, or compatibility confirmation.</p>
+
+      <div class="banner">
+        Safety Rule: This dashboard does not contact buyers, does not send WhatsApp, and does not prepare live traffic automatically.
+      </div>
+
+      <div class="filter-grid">
+        <input id="searchInput" type="text" placeholder="Search buyer, part, vehicle, location..." />
+        <select id="sourceFilter">
+          <option value="">All sources</option>
+        </select>
+        <select id="statusFilter">
+          <option value="">All review status</option>
+        </select>
+      </div>
+
+      <div class="subnote">
+        Recommended professional layout: fewer core columns in the main table, clean spacing, readable labels, and controlled review flow.
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Buyer</th>
+              <th>Phone</th>
+              <th>Part Needed</th>
+              <th>Vehicle</th>
+              <th>Location</th>
+              <th>Source</th>
+              <th>Temperature</th>
+              <th>Lead Score</th>
+              <th>Review Status</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody id="leadTableBody">
+            <tr><td colspan="10" class="empty">Loading buyer leads...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer-note">
+        Demega Buyer Dashboard — professional read-only review panel.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function normalizeResponse(payload) {
+      if (Array.isArray(payload)) return payload;
+      if (payload && Array.isArray(payload.leads)) return payload.leads;
+      if (payload && Array.isArray(payload.items)) return payload.items;
+      if (payload && payload.data && Array.isArray(payload.data)) return payload.data;
+      if (payload && payload.data && Array.isArray(payload.data.leads)) return payload.data.leads;
+      return [];
+    }
+
+    function asText(value, fallback = "—") {
+      if (value === null || value === undefined || value === "") return fallback;
+      return String(value);
+    }
+
+    function asNumber(value, fallback = 0) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : fallback;
+    }
+
+    function inferTemperature(lead) {
+      const t = String(
+        lead.temperature ||
+        lead.leadTemperature ||
+        lead.intentTemperature ||
+        ""
+      ).trim().toLowerCase();
+
+      if (t.includes("hot")) return "Hot";
+      if (t.includes("warm")) return "Warm";
+      if (t.includes("cold")) return "Cold";
+
+      const score = asNumber(
+        lead.leadScore ?? lead.score ?? lead.intentScore ?? lead.hotScore,
+        0
+      );
+
+      if (score >= 80) return "Hot";
+      if (score >= 50) return "Warm";
+      return "Cold";
+    }
+
+    function tempClass(value) {
+      if (value === "Hot") return "hot";
+      if (value === "Warm") return "warm";
+      if (value === "Cold") return "cold";
+      return "neutral";
+    }
+
+    function formatDate(value) {
+      if (!value) return "—";
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return String(value);
+      return d.toLocaleString();
+    }
+
+    function getReviewStatus(lead) {
+      return asText(
+        lead.reviewStatus ||
+        lead.status ||
+        lead.manualReviewStatus ||
+        lead.adminReviewStatus,
+        "New"
+      );
+    }
+
+    function getSource(lead) {
+      return asText(
+        lead.source ||
+        lead.trafficSource ||
+        lead.intakeSource ||
+        lead.channel,
+        "Unknown"
+      );
+    }
+
+    function getLeadScore(lead) {
+      return asNumber(
+        lead.leadScore ?? lead.score ?? lead.intentScore ?? lead.hotScore,
+        0
+      );
+    }
+
+    function getBuyerName(lead) {
+      return asText(lead.buyerName || lead.name || lead.buyer, "Unknown Buyer");
+    }
+
+    function getPhone(lead) {
+      return asText(lead.phone || lead.whatsapp || lead.whatsappNumber || lead.buyerPhone, "—");
+    }
+
+    function getPart(lead) {
+      return asText(lead.partNeeded || lead.part || lead.productNeeded || lead.request, "—");
+    }
+
+    function getVehicle(lead) {
+      return asText(lead.vehicle || lead.vehicleDetails || lead.carModel || lead.fitment, "—");
+    }
+
+    function getLocation(lead) {
+      return asText(lead.location || lead.buyerLocation || lead.city, "—");
+    }
+
+    let rawLeads = [];
+
+    function populateFilters(leads) {
+      const sourceFilter = document.getElementById("sourceFilter");
+      const statusFilter = document.getElementById("statusFilter");
+
+      const sources = [...new Set(leads.map(getSource))].filter(Boolean).sort();
+      const statuses = [...new Set(leads.map(getReviewStatus))].filter(Boolean).sort();
+
+      sourceFilter.innerHTML = '<option value="">All sources</option>' +
+        sources.map(s => `<option value="${s}">${s}</option>`).join("");
+
+      statusFilter.innerHTML = '<option value="">All review status</option>' +
+        statuses.map(s => `<option value="${s}">${s}</option>`).join("");
+    }
+
+    function renderKpis(leads) {
+      const hot = leads.filter(l => inferTemperature(l) === "Hot").length;
+      const warm = leads.filter(l => inferTemperature(l) === "Warm").length;
+      const cold = leads.filter(l => inferTemperature(l) === "Cold").length;
+      const review = leads.filter(l => /new|review|pending/i.test(getReviewStatus(l))).length;
+
+      document.getElementById("kpi-total").textContent = leads.length;
+      document.getElementById("kpi-hot").textContent = hot;
+      document.getElementById("kpi-warm").textContent = warm;
+      document.getElementById("kpi-cold").textContent = cold;
+      document.getElementById("kpi-review").textContent = review;
+    }
+
+    function renderTable(leads) {
+      const tbody = document.getElementById("leadTableBody");
+
+      if (!leads.length) {
+        tbody.innerHTML = '<tr><td colspan="10" class="empty">No matching buyer leads.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = leads.map(lead => {
+        const temp = inferTemperature(lead);
+        const review = getReviewStatus(lead);
+        return `
+          <tr>
+            <td>${getBuyerName(lead)}</td>
+            <td>${getPhone(lead)}</td>
+            <td>${getPart(lead)}</td>
+            <td>${getVehicle(lead)}</td>
+            <td>${getLocation(lead)}</td>
+            <td>${getSource(lead)}</td>
+            <td><span class="tag ${tempClass(temp)}">${temp}</span></td>
+            <td>${getLeadScore(lead)}</td>
+            <td><span class="tag review">${review}</span></td>
+            <td>${formatDate(lead.createdAt || lead.created || lead.date)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function applyFilters() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const source = document.getElementById("sourceFilter").value;
+      const status = document.getElementById("statusFilter").value;
+
+      const filtered = rawLeads.filter(lead => {
+        const hay = [
+          getBuyerName(lead),
+          getPhone(lead),
+          getPart(lead),
+          getVehicle(lead),
+          getLocation(lead),
+          getSource(lead),
+          getReviewStatus(lead)
+        ].join(" ").toLowerCase();
+
+        const searchMatch = !q || hay.includes(q);
+        const sourceMatch = !source || getSource(lead) === source;
+        const statusMatch = !status || getReviewStatus(lead) === status;
+
+        return searchMatch && sourceMatch && statusMatch;
+      });
+
+      renderKpis(filtered);
+      renderTable(filtered);
+    }
+
+    async function loadLeads() {
+      try {
+        const res = await fetch("/api/leads");
+        const payload = await res.json();
+        rawLeads = normalizeResponse(payload);
+        populateFilters(rawLeads);
+        applyFilters();
+      } catch (error) {
+        document.getElementById("leadTableBody").innerHTML =
+          '<tr><td colspan="10" class="empty">Unable to load buyer leads right now.</td></tr>';
+      }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", applyFilters);
+    document.getElementById("sourceFilter").addEventListener("change", applyFilters);
+    document.getElementById("statusFilter").addEventListener("change", applyFilters);
+
+    loadLeads();
+  </script>
+</body>
+</html>
