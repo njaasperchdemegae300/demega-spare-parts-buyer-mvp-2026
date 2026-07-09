@@ -1030,6 +1030,16 @@ function routeRequest(req, res, sendJson) {
     return;
   }
 
+  if (method === "GET" && (url.pathname === "/publish-ready-hub" || url.pathname === "/demega-control-center" || url.pathname === "/app")) {
+    const fs = require("fs");
+    const path = require("path");
+    const htmlPath = path.join(process.cwd(), "public", "publish-ready-hub.html");
+    const html = fs.readFileSync(htmlPath, "utf8");
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(html);
+    return;
+  }
+
   return sendJson(res, 404, {
     error: "Route not found",
     method,

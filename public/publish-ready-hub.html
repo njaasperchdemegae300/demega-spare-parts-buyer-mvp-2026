@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Publish-Ready Control Center</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; max-width: 100%; overflow-x: hidden; font-family: Arial, sans-serif; background: #f8fafc; color: #0f172a; line-height: 1.45; }
+    header { background: #111827; color: white; padding: 28px 18px; }
+    header .wrap, main { max-width: 1180px; margin: 0 auto; }
+    h1 { margin: 0 0 8px; font-size: clamp(28px, 4vw, 44px); }
+    h2 { margin-top: 0; }
+    p { margin: 8px 0; }
+    main { padding: 22px 14px 48px; }
+    .notice { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 16px; padding: 16px; margin-bottom: 18px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .card { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; box-shadow: 0 1px 5px rgba(15,23,42,.08); overflow-wrap: anywhere; }
+    .card strong { display: block; font-size: 18px; margin-bottom: 8px; }
+    .btn { display: inline-block; background: #0f172a; color: white; text-decoration: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; margin-top: 12px; max-width: 100%; }
+    .btn.alt { background: #0f766e; }
+    .btn.warn { background: #92400e; }
+    .badge { display: inline-block; margin: 5px 5px 5px 0; padding: 8px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; line-height: 1.2; white-space: normal; }
+    .safe { background: #dcfce7; border: 1px solid #bbf7d0; color: #064e3b; }
+    .blocked { background: #fee2e2; border: 1px solid #fecaca; color: #7f1d1d; }
+    .section { background: white; border: 1px solid #e5e7eb; border-radius: 16px; padding: 18px; margin: 18px 0; box-shadow: 0 1px 5px rgba(15,23,42,.06); }
+    .workflow { counter-reset: step; }
+    .step { position: relative; padding-left: 48px; margin-bottom: 14px; }
+    .step:before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 999px; background: #0f172a; color: white; display: grid; place-items: center; font-weight: 800; }
+    footer { text-align: center; color: #475569; padding: 20px; }
+  </style>
+
+<style id="demega-ui-polish">
+  * { box-sizing: border-box; }
+  html, body { max-width: 100%; overflow-x: hidden; }
+  body { line-height: 1.45; }
+  main, section, header, .container, .panel, .card { max-width: 100%; overflow-wrap: anywhere; }
+  .grid, .cards, [class*="grid"], [class*="cards"] { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important; }
+  table { display: block; width: 100%; overflow-x: auto; }
+  button, a { max-width: 100%; white-space: normal; }
+  .badge, .pill, span[class*="badge"], span[class*="pill"] { white-space: normal !important; line-height: 1.25; }
+  input, select, textarea { max-width: 100%; }
+</style>
+
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Demega Publish-Ready Control Center</h1>
+      <p>Organized command center for testing the project online before buyer traffic opens.</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="notice">
+      <strong>Current Status:</strong> Online testing is active. Buyer traffic gate is still closed. This page organizes the project so Android and laptop testing will be clean.
+    </div>
+
+    <section class="grid">
+      <div class="card">
+        <strong>1. Admin Control</strong>
+        <p>Open the full admin navigation hub. Use this for internal project review only.</p>
+        <a class="btn" href="/admin-hub">Open Admin Hub</a>
+      </div>
+
+      <div class="card">
+        <strong>2. Controlled 15-Lead Tracker</strong>
+        <p>Manual inbound buyer proof-test tracker. No auto-send. No traffic activation.</p>
+        <a class="btn alt" href="/controlled-15-lead-proof-test">Open 15-Lead Tracker</a>
+      </div>
+
+      <div class="card">
+        <strong>3. Internet Readiness Gate</strong>
+        <p>Confirms WhatsApp is only a chat/reply tool and traffic must come from approved internet sources.</p>
+        <a class="btn alt" href="/internet-deployment-readiness-gate">Open Readiness Gate</a>
+      </div>
+
+      <div class="card">
+        <strong>4. Public URL Verification</strong>
+        <p>Confirms the Render public URL is reachable from Android phone and laptop.</p>
+        <a class="btn alt" href="/online-deployment-public-url-verification">Open Public URL Gate</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Clean Testing Workflow</h2>
+      <div class="workflow">
+        <div class="step"><strong>Open public URL</strong><br>Confirm the project loads online, not only on localhost.</div>
+        <div class="step"><strong>Open Admin Hub</strong><br>Confirm internal navigation is visible and safe.</div>
+        <div class="step"><strong>Open 15-Lead Tracker</strong><br>Confirm manual lead tracker is visible and does not send messages.</div>
+        <div class="step"><strong>Open Readiness Gate</strong><br>Confirm traffic gate remains closed.</div>
+        <div class="step"><strong>Open Public URL Gate</strong><br>Confirm Android + laptop verification requirement.</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Safety Locks</h2>
+      <span class="badge blocked">NO TRAFFIC GATE OPENED</span>
+      <span class="badge blocked">NO ADS STARTED</span>
+      <span class="badge blocked">NO BUYER CONTACTED</span>
+      <span class="badge blocked">NO WHATSAPP SENT</span>
+      <span class="badge blocked">NO AUTO-REPLY</span>
+      <span class="badge blocked">NO AUTO-FOLLOW-UP</span>
+      <span class="badge blocked">NO PRIVATE SCRAPING</span>
+      <span class="badge blocked">NO HIDDEN HARVESTING</span>
+      <span class="badge blocked">NO QUOTE BEFORE STOCK</span>
+      <span class="badge blocked">NO QUOTE BEFORE COMPATIBILITY</span>
+      <span class="badge blocked">NO INVENTORY MUTATION</span>
+      <span class="badge blocked">NO ACCOUNTING MUTATION</span>
+      <span class="badge blocked">NO SALE CLOSING</span>
+      <span class="badge blocked">NO PIPELINE MOVEMENT</span>
+    </section>
+
+    <section class="section">
+      <h2>Approved Next Direction</h2>
+      <span class="badge safe">ANDROID TEST</span>
+      <span class="badge safe">LAPTOP TEST</span>
+      <span class="badge safe">AGENT TOOL VERIFICATION</span>
+      <span class="badge safe">APPROVED TRAFFIC SOURCES LATER</span>
+    </section>
+  </main>
+
+  <footer>
+    Demega Spare Parts Buyer MVP 2026 — Publish-ready testing hub.
+  </footer>
+</body>
+</html>
