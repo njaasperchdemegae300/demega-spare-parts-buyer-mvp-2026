@@ -203,3 +203,6 @@ Internet Deployment Readiness Gate added. WhatsApp reclassified as communication
 
 ### Business Stage 1C
 Online Deployment Execution / Public URL Verification local readiness added.
+
+### Business Stage 1C FIX-1
+Public verification route repair added for /internet-deployment-readiness-gate and /online-deployment-public-url-verification.

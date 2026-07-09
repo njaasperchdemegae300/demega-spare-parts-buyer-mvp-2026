@@ -1010,10 +1010,24 @@ function routeRequest(req, res, sendJson) {
     return controlled15LeadProofTestController.summaryController(req, res, sendJson);
   }
 
+  if (method === "GET" && (url.pathname === "/internet-deployment-readiness-gate" || url.pathname === "/deployment-readiness")) {
+    const fs = require("fs");
+    const path = require("path");
+    const htmlPath = path.join(process.cwd(), "public", "internet-deployment-readiness-gate.html");
+    const html = fs.readFileSync(htmlPath, "utf8");
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(html);
+    return;
+  }
+
   if (method === "GET" && (url.pathname === "/online-deployment-public-url-verification" || url.pathname === "/public-url-verification")) {
     const fs = require("fs");
     const path = require("path");
-    return sendHtml(res, fs.readFileSync(path.join(process.cwd(), "public", "online-deployment-public-url-verification.html"), "utf8"));
+    const htmlPath = path.join(process.cwd(), "public", "online-deployment-public-url-verification.html");
+    const html = fs.readFileSync(htmlPath, "utf8");
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(html);
+    return;
   }
 
   return sendJson(res, 404, {
