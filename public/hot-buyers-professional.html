@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Hot Buyers Command Center</title>
+  <link rel="stylesheet" href="/demega-professional-ui.css">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --line: #e2e8f0;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --green: #0f766e;
+      --red: #991b1b;
+      --amber: #92400e;
+      --blue: #1d4ed8;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, sans-serif;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f172a, #111827);
+      color: white;
+      padding: 28px 16px;
+    }
+
+    .hero-inner,
+    .shell {
+      width: min(1220px, calc(100% - 24px));
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #dbeafe;
+      font-size: 15px;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: white;
+      color: #0f172a;
+      border: 0;
+      text-decoration: none;
+      font-weight: 800;
+      min-height: 42px;
+    }
+
+    .btn.primary {
+      background: #0f766e;
+      color: white;
+    }
+
+    .shell {
+      padding: 18px 0 42px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: -20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card,
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    }
+
+    .card {
+      padding: 16px;
+    }
+
+    .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .value {
+      margin-top: 8px;
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 900;
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+    }
+
+    .good { color: var(--green); }
+    .warn { color: var(--amber); }
+    .bad  { color: var(--red); }
+    .info { color: var(--blue); }
+
+    .panel {
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 32px;
+      letter-spacing: -0.03em;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .banner {
+      margin-top: 18px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #7c2d12;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-weight: 700;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      background: white;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1040px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+      white-space: normal;
+    }
+
+    th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #475569;
+      background: #f8fafc;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag.hot { background: #fee2e2; color: #991b1b; }
+    .tag.warm { background: #fef3c7; color: #92400e; }
+    .tag.cold { background: #dbeafe; color: #1d4ed8; }
+    .tag.safe { background: #dcfce7; color: #065f46; }
+    .tag.review { background: #ede9fe; color: #5b21b6; }
+    .tag.neutral { background: #e2e8f0; color: #334155; }
+
+    .empty {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .manual-action-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 860px) {
+      .filter-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>Demega Hot Buyers Command Center</h1>
+      <p>Professional read-only ranking board for serious buyers, urgent requests, manual actions, and safe next-step review.</p>
+
+      <div class="top-actions">
+        <a class="btn primary" href="/admin-hub">Back to Admin Hub</a>
+        <a class="btn" href="/dashboard">Buyer Dashboard</a>
+        <a class="btn" href="/controlled-15-lead-proof-test">15-Lead Tracker</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="grid">
+      <div class="card">
+        <div class="label">Total Candidates</div>
+        <div class="value" id="kpi-total">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Hot Buyers</div>
+        <div class="value bad" id="kpi-hot">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Warm Buyers</div>
+        <div class="value warn" id="kpi-warm">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Urgent Buyers</div>
+        <div class="value bad" id="kpi-urgent">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Pending Manual Actions</div>
+        <div class="value info" id="kpi-actions">0</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Safety Status</div>
+        <div class="value good">READ ONLY</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Ranked Hot Buyers</h2>
+      <p>This page ranks serious buyers only. Admin must still verify stock, verify compatibility, prepare quote draft, and contact buyer manually.</p>
+
+      <div class="banner">
+        Safety Rule: No WhatsApp auto-send, no auto-contact, no auto-quote, no live traffic activation, and no pipeline movement from this page.
+      </div>
+
+      <div class="filter-grid">
+        <input id="searchInput" type="text" placeholder="Search buyer, phone, part, vehicle, location..." />
+        <select id="temperatureFilter">
+          <option value="">All temperature</option>
+          <option value="Hot">Hot</option>
+          <option value="Warm">Warm</option>
+          <option value="Cold">Cold</option>
+        </select>
+        <select id="actionFilter">
+          <option value="">All manual actions</option>
+          <option value="Verify Stock">Verify Stock</option>
+          <option value="Verify Compatibility">Verify Compatibility</option>
+          <option value="Call Buyer">Call Buyer</option>
+          <option value="Prepare Quote Draft">Prepare Quote Draft</option>
+          <option value="Manual Follow-Up">Manual Follow-Up</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Buyer</th>
+              <th>Phone</th>
+              <th>Part Needed</th>
+              <th>Vehicle</th>
+              <th>Location</th>
+              <th>Temperature</th>
+              <th>Hot Score</th>
+              <th>Pipeline Stage</th>
+              <th>Recommended Manual Action</th>
+              <th>Safety</th>
+            </tr>
+          </thead>
+          <tbody id="hotBuyerTableBody">
+            <tr><td colspan="11" class="empty">Loading hot buyers...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer-note">
+        Demega Hot Buyers Command Center — professional read-only ranking panel.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function asText(value, fallback = "—") {
+      if (value === null || value === undefined || value === "") return fallback;
+      return String(value);
+    }
+
+    function asNumber(value, fallback = 0) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : fallback;
+    }
+
+    function normalizeResponse(payload) {
+      if (Array.isArray(payload)) return payload;
+      if (payload && Array.isArray(payload.hotBuyers)) return payload.hotBuyers;
+      if (payload && Array.isArray(payload.buyers)) return payload.buyers;
+      if (payload && Array.isArray(payload.leads)) return payload.leads;
+      if (payload && Array.isArray(payload.items)) return payload.items;
+      if (payload && payload.data && Array.isArray(payload.data)) return payload.data;
+      if (payload && payload.data && Array.isArray(payload.data.hotBuyers)) return payload.data.hotBuyers;
+      if (payload && payload.data && Array.isArray(payload.data.leads)) return payload.data.leads;
+      return [];
+    }
+
+    async function tryFetchJson(url) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        return await res.json();
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function getBuyerName(item) {
+      return asText(item.buyerName || item.name || item.buyer || item.customerName, "Unknown Buyer");
+    }
+
+    function getPhone(item) {
+      return asText(item.phone || item.whatsapp || item.whatsappNumber || item.buyerPhone, "—");
+    }
+
+    function getPart(item) {
+      return asText(item.partNeeded || item.part || item.productNeeded || item.request, "—");
+    }
+
+    function getVehicle(item) {
+      return asText(item.vehicle || item.vehicleDetails || item.carModel || item.fitment, "—");
+    }
+
+    function getLocation(item) {
+      return asText(item.location || item.buyerLocation || item.city, "—");
+    }
+
+    function getPipelineStage(item) {
+      return asText(item.pipelineStage || item.stage || item.status || item.reviewStatus, "Manual Review");
+    }
+
+    function getHotScore(item) {
+      return asNumber(item.hotScore ?? item.leadScore ?? item.score ?? item.intentScore, 0);
+    }
+
+    function getTemperature(item) {
+      const raw = String(item.temperature || item.leadTemperature || item.intentTemperature || "").toLowerCase();
+      if (raw.includes("hot")) return "Hot";
+      if (raw.includes("warm")) return "Warm";
+      if (raw.includes("cold")) return "Cold";
+
+      const score = getHotScore(item);
+      if (score >= 80) return "Hot";
+      if (score >= 50) return "Warm";
+      return "Cold";
+    }
+
+    function getAction(item) {
+      const raw = asText(item.recommendedManualAction || item.manualAction || item.nextAction || "", "");
+
+      if (raw) return raw;
+
+      const stage = getPipelineStage(item).toLowerCase();
+      if (stage.includes("stock")) return "Verify Stock";
+      if (stage.includes("compat")) return "Verify Compatibility";
+      if (stage.includes("quote")) return "Prepare Quote Draft";
+      if (stage.includes("follow")) return "Manual Follow-Up";
+
+      return "Verify Stock";
+    }
+
+    function tagClass(temp) {
+      if (temp === "Hot") return "hot";
+      if (temp === "Warm") return "warm";
+      if (temp === "Cold") return "cold";
+      return "neutral";
+    }
+
+    let rawItems = [];
+
+    function renderKpis(items) {
+      const hot = items.filter(i => getTemperature(i) === "Hot").length;
+      const warm = items.filter(i => getTemperature(i) === "Warm").length;
+      const urgent = items.filter(i => {
+        const urgency = String(i.urgency || i.urgencyLevel || "").toLowerCase();
+        return urgency.includes("urgent") || getHotScore(i) >= 80;
+      }).length;
+      const actions = items.filter(i => getAction(i)).length;
+
+      document.getElementById("kpi-total").textContent = items.length;
+      document.getElementById("kpi-hot").textContent = hot;
+      document.getElementById("kpi-warm").textContent = warm;
+      document.getElementById("kpi-urgent").textContent = urgent;
+      document.getElementById("kpi-actions").textContent = actions;
+    }
+
+    function renderTable(items) {
+      const tbody = document.getElementById("hotBuyerTableBody");
+
+      if (!items.length) {
+        tbody.innerHTML = '<tr><td colspan="11" class="empty">No matching hot buyers.</td></tr>';
+        return;
+      }
+
+      const ranked = [...items].sort((a, b) => getHotScore(b) - getHotScore(a));
+
+      tbody.innerHTML = ranked.map((item, index) => {
+        const temp = getTemperature(item);
+        const action = getAction(item);
+
+        return `
+          <tr>
+            <td><strong>#${index + 1}</strong></td>
+            <td>${getBuyerName(item)}</td>
+            <td>${getPhone(item)}</td>
+            <td>${getPart(item)}</td>
+            <td>${getVehicle(item)}</td>
+            <td>${getLocation(item)}</td>
+            <td><span class="tag ${tagClass(temp)}">${temp}</span></td>
+            <td><strong>${getHotScore(item)}</strong></td>
+            <td><span class="tag review">${getPipelineStage(item)}</span></td>
+            <td><span class="tag neutral">${action}</span></td>
+            <td><span class="tag safe">Manual Only</span></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function applyFilters() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const temp = document.getElementById("temperatureFilter").value;
+      const action = document.getElementById("actionFilter").value;
+
+      const filtered = rawItems.filter(item => {
+        const hay = [
+          getBuyerName(item),
+          getPhone(item),
+          getPart(item),
+          getVehicle(item),
+          getLocation(item),
+          getTemperature(item),
+          getPipelineStage(item),
+          getAction(item)
+        ].join(" ").toLowerCase();
+
+        const searchMatch = !q || hay.includes(q);
+        const tempMatch = !temp || getTemperature(item) === temp;
+        const actionMatch = !action || getAction(item) === action;
+
+        return searchMatch && tempMatch && actionMatch;
+      });
+
+      renderKpis(filtered);
+      renderTable(filtered);
+    }
+
+    async function loadHotBuyers() {
+      const sources = [
+        "/api/hot-buyers/summary",
+        "/api/hot-buyers",
+        "/api/leads"
+      ];
+
+      let payload = null;
+
+      for (const url of sources) {
+        payload = await tryFetchJson(url);
+        if (payload) break;
+      }
+
+      rawItems = normalizeResponse(payload || {});
+      renderKpis(rawItems);
+      renderTable(rawItems);
+    }
+
+    document.getElementById("searchInput").addEventListener("input", applyFilters);
+    document.getElementById("temperatureFilter").addEventListener("change", applyFilters);
+    document.getElementById("actionFilter").addEventListener("change", applyFilters);
+
+    loadHotBuyers();
+  </script>
+</body>
+</html>

@@ -218,3 +218,6 @@ Global professional UI shell added across HTML routes. Added professional CSS/JS
 
 ### Business Stage 1D-FIX-4
 Professional buyer dashboard rebuild completed. /dashboard and /buyer-dashboard now point to a clean professional lead dashboard with KPI cards, clean filters, and a simplified readable table.
+
+### Business Stage 1D-FIX-5
+Professional Hot Buyers page rebuild completed. /hot-buyers, /hot-buyer-command-center, and /ranked-hot-buyers now point to a clean professional ranking page with KPI cards, clean filters, and a simplified readable table.

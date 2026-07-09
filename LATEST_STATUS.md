@@ -1,17 +1,18 @@
 # LATEST STATUS
 
 Current Phase:
-Business Stage 1D-FIX-4 — Professional Buyer Dashboard Rebuild
+Business Stage 1D-FIX-5 — Professional Hot Buyers Page Rebuild
 
 Current Verdict:
-LOCAL DASHBOARD REBUILD APPROVED
+LOCAL HOT BUYERS REBUILD APPROVED
 
 Added:
-- Professional /dashboard page
-- Professional /buyer-dashboard page
+- Professional /hot-buyers page
+- Professional /hot-buyer-command-center page
+- Professional /ranked-hot-buyers page
 - KPI summary cards
 - Clean filters
-- Simplified readable lead table
+- Simplified readable hot-buyer table
 - Read-only safety banner
 
 Safety Confirmed:
@@ -29,4 +30,4 @@ Safety Confirmed:
 - No pipeline movement
 
 Next Required Action:
-Push to GitHub, redeploy Render latest commit, then inspect /dashboard.
+Push to GitHub, redeploy Render latest commit, then inspect /hot-buyers.
