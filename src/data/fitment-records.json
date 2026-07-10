@@ -1,1 +1,69 @@
-[]
+[
+  {
+    "id": "FIT-TOY-COR-ALT-1ZZ-2003-2008",
+    "partName": "alternator",
+    "primaryPartNumber": "270600D040",
+    "crossReferenceNumbers": [
+      "270600D041",
+      "270600D042",
+      "1042103290",
+      "1042103291"
+    ],
+    "alternativePartNumbers": [
+      "ALTTOYCOR05",
+      "ALT1ZZCOROLLA",
+      "1ZZALTERNATOR"
+    ],
+    "vehicleMake": "Toyota",
+    "vehicleModel": "Corolla",
+    "yearFrom": 2003,
+    "yearTo": 2008,
+    "engineCode": "1ZZ",
+    "trim": "",
+    "transmission": "",
+    "fitmentGroup": "Toyota Corolla 1ZZ alternator family",
+    "compatibilityNotes": "Toyota Corolla 1ZZ alternator family. Admin must still confirm socket/plug, pulley, mounting, and amperage before quote.",
+    "restrictions": "Do not quote until physical stock, socket/plug, pulley, mounting, and compatibility are manually confirmed.",
+    "source": "admin starter seed fitment record",
+    "status": "POSSIBLE_MATCH_REQUIRES_CONFIRMATION",
+    "updatedAt": "2026-07-09T00:00:00.000Z",
+    "createdAt": "2026-07-09T00:00:00.000Z",
+    "safety": {
+      "manualRecordOnly": true,
+      "notAutoConfirmedFromBuyerFlow": true,
+      "quoteStillRequiresStockConfirmation": true
+    }
+  },
+  {
+    "id": "FIT-TOY-CAM-ALT-2AZ-2002-2006",
+    "partName": "alternator",
+    "primaryPartNumber": "2706028280",
+    "crossReferenceNumbers": [
+      "2706028281",
+      "1042103960"
+    ],
+    "alternativePartNumbers": [
+      "ALTTOYCAM2AZ",
+      "2AZALTERNATOR"
+    ],
+    "vehicleMake": "Toyota",
+    "vehicleModel": "Camry",
+    "yearFrom": 2002,
+    "yearTo": 2006,
+    "engineCode": "2AZ",
+    "trim": "",
+    "transmission": "",
+    "fitmentGroup": "Toyota Camry 2AZ alternator family",
+    "compatibilityNotes": "Toyota Camry 2AZ alternator family. Admin must confirm socket/plug and amperage.",
+    "restrictions": "Manual fitment confirmation required before quote.",
+    "source": "admin starter seed fitment record",
+    "status": "POSSIBLE_MATCH_REQUIRES_CONFIRMATION",
+    "updatedAt": "2026-07-09T00:00:00.000Z",
+    "createdAt": "2026-07-09T00:00:00.000Z",
+    "safety": {
+      "manualRecordOnly": true,
+      "notAutoConfirmedFromBuyerFlow": true,
+      "quoteStillRequiresStockConfirmation": true
+    }
+  }
+]

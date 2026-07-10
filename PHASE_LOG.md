@@ -230,3 +230,9 @@ Professional Spare Parts Intelligence Suite added: part decoder, safe auto quote
 
 ### Business Stage 1F
 Fitment Intelligence + Cross-Reference Engine added. Includes VIN/YMM/part-number search, cross-reference search, alternative compatible parts, manual fitment records, fitment quote gate, and professional /fitment page.
+
+### Business Stage 1F-FIX-1
+Fitment seed data and smart query repair added. The system now includes starter fitment records for Toyota Corolla 1ZZ alternator and Toyota Camry 2AZ alternator, with OEM/cross-reference/alternative numbers. Part-number search now gives a smart match for engine-code + part queries such as "1ZZ alternator" instead of only returning no records.
+
+### Business Stage 1F-FIX-1B
+Smart fitment query classification repaired. Engine-code + part text such as "1ZZ alternator" is now classified as SMART_TEXT_OR_ENGINE_PART_QUERY instead of failing the smart query test.
