@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demega Fitment Intelligence</title>
+  <link rel="stylesheet" href="/demega-professional-ui.css">
+  <style>
+    body { margin:0; font-family:Arial,sans-serif; background:#f8fafc; color:#0f172a; }
+    .hero { background:linear-gradient(135deg,#0f172a,#111827); color:white; padding:28px 16px; }
+    .wrap { width:min(1200px, calc(100% - 24px)); margin:auto; }
+    .hero h1 { margin:0 0 8px; font-size:clamp(28px,4vw,42px); letter-spacing:-.03em; }
+    .hero p { margin:0; color:#dbeafe; }
+    .panel { background:white; border:1px solid #e2e8f0; border-radius:18px; padding:18px; margin-top:18px; box-shadow:0 2px 8px rgba(15,23,42,.06); }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+    input,select,textarea { width:100%; border:1px solid #cbd5e1; border-radius:12px; padding:12px; font-size:15px; }
+    textarea { min-height:90px; }
+    .btn { background:#0f766e; color:white; border:0; border-radius:12px; padding:12px 16px; font-weight:800; cursor:pointer; margin-top:12px; }
+    .btn.dark { background:#0f172a; }
+    pre { white-space:pre-wrap; background:#f1f5f9; padding:14px; border-radius:14px; overflow:auto; }
+    .note { background:#fff7ed; border:1px solid #fed7aa; color:#7c2d12; border-radius:14px; padding:12px; margin:12px 0; font-weight:700; }
+    .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+    .tabs button { border:1px solid #cbd5e1; background:white; padding:10px 12px; border-radius:12px; font-weight:800; cursor:pointer; }
+    .tabs button.active { background:#0f172a; color:white; }
+    .section { display:none; }
+    .section.active { display:block; }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <h1>Fitment Intelligence + Cross-Reference Engine</h1>
+      <p>VIN / YMM / part-number search, cross-reference numbers, alternative compatible parts, and manual fitment gate.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="panel">
+      <h2>Fitment Control Rule</h2>
+      <div class="note">
+        This engine does not auto-quote or contact buyers. It only helps admin confirm compatibility before manual quote draft.
+      </div>
+      <div class="tabs">
+        <button class="active" onclick="showTab('search', this)">Fitment Search</button>
+        <button onclick="showTab('record', this)">Manual Fitment Record</button>
+        <button onclick="showTab('partnumber', this)">Part Number Search</button>
+        <button onclick="showTab('crossref', this)">Cross Reference</button>
+        <button onclick="showTab('alts', this)">Alternative Parts</button>
+      </div>
+    </section>
+
+    <section id="search" class="panel section active">
+      <h2>VIN / YMM Fitment Search</h2>
+      <div class="grid">
+        <input id="s_vin" placeholder="VIN optional">
+        <input id="s_year" placeholder="Year e.g. 2005">
+        <input id="s_make" placeholder="Make e.g. Toyota">
+        <input id="s_model" placeholder="Model e.g. Corolla">
+        <input id="s_engine" placeholder="Engine code optional">
+        <input id="s_part" placeholder="Part name e.g. alternator">
+        <input id="s_partnum" placeholder="Part number optional">
+      </div>
+      <textarea id="s_text" placeholder="Buyer request text e.g. Need Corolla 2005 alternator urgently"></textarea>
+      <button class="btn" onclick="fitmentSearch()">Run Fitment Search</button>
+      <pre id="searchResult">No search yet.</pre>
+    </section>
+
+    <section id="record" class="panel section">
+      <h2>Manual Fitment Record</h2>
+      <p>Use this to build your own trusted fitment/cross-reference database.</p>
+      <div class="grid">
+        <input id="r_part" placeholder="Part name e.g. alternator">
+        <input id="r_primary" placeholder="Primary part number">
+        <input id="r_cross" placeholder="Cross-reference numbers comma-separated">
+        <input id="r_alt" placeholder="Alternative compatible numbers comma-separated">
+        <input id="r_make" placeholder="Vehicle make">
+        <input id="r_model" placeholder="Vehicle model">
+        <input id="r_from" placeholder="Year from">
+        <input id="r_to" placeholder="Year to">
+        <input id="r_engine" placeholder="Engine code">
+        <input id="r_group" placeholder="Fitment group">
+      </div>
+      <textarea id="r_notes" placeholder="Compatibility notes"></textarea>
+      <textarea id="r_restrict" placeholder="Restrictions e.g. only automatic, socket type A"></textarea>
+      <label><input type="checkbox" id="r_confirmed"> Manually confirmed fitment</label>
+      <br>
+      <button class="btn" onclick="saveRecord()">Save Fitment Record</button>
+      <pre id="recordResult">No record saved yet.</pre>
+    </section>
+
+    <section id="partnumber" class="panel section">
+      <h2>Part Number Search</h2>
+      <input id="p_number" placeholder="Enter OEM / vendor / cross-reference part number">
+      <button class="btn" onclick="partNumberSearch()">Search Part Number</button>
+      <pre id="partNumberResult">No part number search yet.</pre>
+    </section>
+
+    <section id="crossref" class="panel section">
+      <h2>Cross-Reference Number Search</h2>
+      <input id="c_number" placeholder="Enter part number to find cross references">
+      <button class="btn" onclick="crossRefSearch()">Search Cross References</button>
+      <pre id="crossRefResult">No cross-reference search yet.</pre>
+    </section>
+
+    <section id="alts" class="panel section">
+      <h2>Alternative Compatible Parts</h2>
+      <div class="grid">
+        <input id="a_year" placeholder="Year">
+        <input id="a_make" placeholder="Make">
+        <input id="a_model" placeholder="Model">
+        <input id="a_part" placeholder="Part name">
+        <input id="a_number" placeholder="Part number optional">
+      </div>
+      <button class="btn" onclick="alternativeSearch()">Find Alternatives</button>
+      <pre id="altResult">No alternative search yet.</pre>
+    </section>
+  </main>
+
+  <script>
+    function showTab(id, btn) {
+      document.querySelectorAll(".section").forEach(x => x.classList.remove("active"));
+      document.querySelectorAll(".tabs button").forEach(x => x.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      btn.classList.add("active");
+    }
+
+    async function post(url, payload) {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      return await res.json();
+    }
+
+    async function fitmentSearch() {
+      const payload = {
+        vin: s_vin.value,
+        year: s_year.value,
+        make: s_make.value,
+        model: s_model.value,
+        engineCode: s_engine.value,
+        partName: s_part.value,
+        partNumber: s_partnum.value,
+        text: s_text.value
+      };
+      searchResult.textContent = JSON.stringify(await post("/api/fitment/search", payload), null, 2);
+    }
+
+    async function saveRecord() {
+      const payload = {
+        partName: r_part.value,
+        primaryPartNumber: r_primary.value,
+        crossReferenceNumbers: r_cross.value,
+        alternativePartNumbers: r_alt.value,
+        vehicleMake: r_make.value,
+        vehicleModel: r_model.value,
+        yearFrom: r_from.value,
+        yearTo: r_to.value,
+        engineCode: r_engine.value,
+        fitmentGroup: r_group.value,
+        compatibilityNotes: r_notes.value,
+        restrictions: r_restrict.value,
+        manualConfirmed: r_confirmed.checked
+      };
+      recordResult.textContent = JSON.stringify(await post("/api/fitment/manual-record", payload), null, 2);
+    }
+
+    async function partNumberSearch() {
+      partNumberResult.textContent = JSON.stringify(await post("/api/part-number/search", { partNumber: p_number.value }), null, 2);
+    }
+
+    async function crossRefSearch() {
+      crossRefResult.textContent = JSON.stringify(await post("/api/cross-reference/search", { partNumber: c_number.value }), null, 2);
+    }
+
+    async function alternativeSearch() {
+      const payload = {
+        year: a_year.value,
+        make: a_make.value,
+        model: a_model.value,
+        partName: a_part.value,
+        partNumber: a_number.value
+      };
+      altResult.textContent = JSON.stringify(await post("/api/compatible-alternatives/search", payload), null, 2);
+    }
+  </script>
+</body>
+</html>

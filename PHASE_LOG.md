@@ -227,3 +227,6 @@ Professional Spare Parts Intelligence Suite added: part decoder, safe auto quote
 
 ### Business Stage 1E
 Professional Spare Parts Intelligence Suite added: part decoder, safe auto quote builder, inventory command center, smart match, quote history, and protected APIs. Quote remains blocked until stock confirmation, compatibility confirmation, and manual review are present.
+
+### Business Stage 1F
+Fitment Intelligence + Cross-Reference Engine added. Includes VIN/YMM/part-number search, cross-reference search, alternative compatible parts, manual fitment records, fitment quote gate, and professional /fitment page.

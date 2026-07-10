@@ -48,6 +48,31 @@ const sendHtml = require("../utils/send-html");
 
 
 // BUSINESS_STAGE_1E_HELPERS
+
+// BUSINESS_STAGE_1F_HELPERS
+function businessStage1FCollectJsonBody(req, callback) {
+  let body = "";
+  req.on("data", chunk => {
+    body += chunk.toString();
+    if (body.length > 1024 * 1024) req.destroy();
+  });
+  req.on("end", () => {
+    try { callback(body ? JSON.parse(body) : {}); }
+    catch (_) { callback({}); }
+  });
+}
+
+function businessStage1FSendJson(res, statusCode, payload) {
+  res.writeHead(statusCode, { "Content-Type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify(payload, null, 2));
+}
+
+function businessStage1FSendHtml(res, html) {
+  const output = typeof injectDemegaProfessionalUi === "function" ? injectDemegaProfessionalUi(html) : html;
+  res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+  res.end(output);
+}
+
 function businessStage1ECollectJsonBody(req, callback) {
   let body = "";
   req.on("data", chunk => {
@@ -113,6 +138,64 @@ function routeRequest(req, res, sendJson) {
   // BUSINESS_STAGE_1D_FIX4_PROFESSIONAL_DASHBOARD_START
   // BUSINESS_STAGE_1D_FIX5_PROFESSIONAL_HOT_BUYERS_START
   // BUSINESS_STAGE_1E_SPARE_PARTS_INTELLIGENCE_START
+  // BUSINESS_STAGE_1F_FITMENT_INTELLIGENCE_START
+  if (method === "GET" && (
+    url.pathname === "/fitment" ||
+    url.pathname === "/fitment-search" ||
+    url.pathname === "/vin-search" ||
+    url.pathname === "/ymm-search" ||
+    url.pathname === "/part-number-search" ||
+    url.pathname === "/cross-reference" ||
+    url.pathname === "/alternative-compatible-parts"
+  )) {
+    const fs = require("fs");
+    const path = require("path");
+    return businessStage1FSendHtml(res, fs.readFileSync(path.join(process.cwd(), "public", "fitment-professional.html"), "utf8"));
+  }
+
+  if (method === "POST" && url.pathname === "/api/fitment/decode") {
+    return businessStage1FCollectJsonBody(req, body => {
+      const service = require("../services/fitment-intelligence.service");
+      businessStage1FSendJson(res, 200, service.decodeFitmentRequest(body));
+    });
+  }
+
+  if (method === "POST" && url.pathname === "/api/fitment/search") {
+    return businessStage1FCollectJsonBody(req, body => {
+      const service = require("../services/fitment-intelligence.service");
+      businessStage1FSendJson(res, 200, service.searchFitment(body));
+    });
+  }
+
+  if (method === "POST" && url.pathname === "/api/fitment/manual-record") {
+    return businessStage1FCollectJsonBody(req, body => {
+      const service = require("../services/fitment-intelligence.service");
+      businessStage1FSendJson(res, 200, service.manualUpsertFitmentRecord(body));
+    });
+  }
+
+  if (method === "POST" && url.pathname === "/api/part-number/search") {
+    return businessStage1FCollectJsonBody(req, body => {
+      const service = require("../services/fitment-intelligence.service");
+      businessStage1FSendJson(res, 200, service.searchPartNumber(body));
+    });
+  }
+
+  if (method === "POST" && url.pathname === "/api/cross-reference/search") {
+    return businessStage1FCollectJsonBody(req, body => {
+      const service = require("../services/fitment-intelligence.service");
+      businessStage1FSendJson(res, 200, service.searchCrossReference(body));
+    });
+  }
+
+  if (method === "POST" && url.pathname === "/api/compatible-alternatives/search") {
+    return businessStage1FCollectJsonBody(req, body => {
+      const service = require("../services/fitment-intelligence.service");
+      businessStage1FSendJson(res, 200, service.searchCompatibleAlternatives(body));
+    });
+  }
+
+  // BUSINESS_STAGE_1F_FITMENT_INTELLIGENCE_END
   if (method === "GET" && (url.pathname === "/part-decoder" || url.pathname === "/part-decode/decode")) {
     const fs = require("fs");
     const path = require("path");

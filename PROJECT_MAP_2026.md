@@ -2596,3 +2596,17 @@ WhatsApp is classified as:
 
 ## Next Stage
 Business Stage 1C — Online Deployment Execution / Public URL Verification.
+
+# Business Stage 1F — Fitment Intelligence + Cross-Reference Engine
+
+## Status
+ADDED TO PROJECT MAP
+
+## Purpose
+Add the professional fitment brain: VIN, YMM, part number, cross-reference, alternative compatible parts, and fitment quote gate.
+
+## Safety
+No auto-send, no auto-quote, no hidden scraping, no buyer contact, no traffic activation, and no quote before manual fitment + stock confirmation.
+
+## Next
+Business Stage 1G — Connect Fitment Gate Into Auto Quote + Smart Match Flow.
